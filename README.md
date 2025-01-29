@@ -20,7 +20,7 @@
             class: string,
             icon: string,
             items: array
-        },
+        }
 ```
 
 1. `name` (string): Название элемента. Может быть пустым для некоторых типов элементов.
