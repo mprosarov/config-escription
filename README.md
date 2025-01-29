@@ -14,7 +14,7 @@
 
 ```
         {
-        	name: sting
+            name: sting
             type: string,
             elemtype: string,
             class: string,
