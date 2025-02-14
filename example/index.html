@@ -21,17 +21,12 @@
 <script src="js/tabulator.min.js"></script>
 <script src="js/pageModule.js"></script>
 <script src="js/tableModule.js"></script>
-<script src="JSON/pageLayouts/pageLayout_main.js"></script> <!--Кофига главной страницы-->
-
+<script src="pageLayout_main.js"></script> <!--Кофига главной страницы-->
 <script src="js/index.js"></script>
-
 <script src="js/bootstrap.min.js"></script>
 <script src="js/sidebars.js"></script>
 
 <script>
-  // Так будем абсолютно на каждой странице (просто будут подключаться разные js)
-  // Строим общий макет из конфигурации
-  // Page.create(pageLayout);
   console.log('LAYOUT', pageLayout);
   NavBar.create(document.body,pageLayout.navbar);
   NavBar.updateNavbarCssVar();
@@ -49,17 +44,6 @@
         break;
     }
   }
-  // for(let i=0;i<pageLayout.length;i++){
-  //   let item = pageLayout[i];
-  //   switch (item.type) {
-  //     case 'table':
-  //       CreateTable.create(Page.getWorkplace(), item);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
   let navbar = document.querySelector(".navbar");
   navbar.querySelectorAll('.dropdown-item').forEach((el) => {
     el.addEventListener('click', function (e) { console.log(e.target.innerText) })

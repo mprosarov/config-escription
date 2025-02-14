@@ -1,7 +1,7 @@
 const CreateTable = (function (){
 
     function create(parent, config) {
-        contentTable = `<h5>${config["name"]}</h5>
+        contentTable = `<h6>${config["name"]}</h6>
                             <div id="${config["id"]}"></div>`;
         parent.insertAdjacentHTML("beforeend", contentTable);
 

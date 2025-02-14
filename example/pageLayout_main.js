@@ -91,6 +91,16 @@ const pageLayout = {
           },
         },
         {
+          name: "Проверка ОЭФ",
+          value: "",
+          type: "link",
+          action: {
+            params: [],
+            func: [],
+            url: "mainOEF/main_oef.html",
+          },
+        },        
+        {
           name: "ОЭФ",
           value: "",
           type: "dropdown",
@@ -102,7 +112,7 @@ const pageLayout = {
               action: {
                 params: [],
                 func: [],
-                url: "oef/checklist.html",
+                url: "mainOEF/checklist/checklist.html",
               },
             },
             {
@@ -112,7 +122,7 @@ const pageLayout = {
               action: {
                 params: [],
                 func: [],
-                url: "oef/oef.html",
+                url: "mainOEF/oef/oef.html",
               },
             },
             {
@@ -122,7 +132,7 @@ const pageLayout = {
               action: {
                 params: [],
                 func: [],
-                url: "oef/calculation.html",
+                url: "mainOEF/calculation/calculation.html",
               },
             },
           ],

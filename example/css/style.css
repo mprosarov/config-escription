@@ -1,21 +1,20 @@
-:root{
+:root {
     --headerHeigth: 78px;
     --offcanvasTopHeigth: 30vh;
     --offcanvasRightWidth: 400px;
     --offcanvasLeftWidth: 400px;
 }
-
-/* Изменил стандортаное позиционирование bootstrap'a чтоб панельни рисовались относительно родителя*/
-/* .offcanvas {
-    position: absolute;
-} */
-
-h5 {
-    text-align: center;
-    margin-top: 2rem;
-    color: steelblue;
+#workPlace{
+    padding: 16px 4px;
+}
+.dropdown-item {
+    font-size: 0.9rem;
 }
 
+.tabulator {
+    font-size: 12px;
+    _font-size: 0.9rem;
+}
 .tabulator .tabulator-header .tabulator-col,
 .tabulator-row .tabulator-cell {
     border-right: 1px solid #ddd;
@@ -36,28 +35,47 @@ h5 {
 }
 
 .nav-link {
-    color: #495057 ;
+    color: #495057;
 }
-body{
+
+.nav-link.active {
+    color: #3c88c7 !important;
+}
+
+.navbar {
+    z-index: 1058;
+}
+.nav {
+    _padding-top: 2rem;
+}
+
+.navbar-brand {
+    color: steelblue !important;
+    font-weight: 600;
+}
+
+h6 {
+    text-align: center;
+    margin-top: 1rem;
+    color: steelblue;
+}
+body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    font-size: 0.9rem
 }
-#workPlace{
+
+#workPlace {
     position: relative;
     overflow: auto;
     /* flex: 1; */
     height: calc(100vh - var(--headerHeigth));
 }
-.nav-link.active {
-    color: #0d6efd !important;
-}
-.navbar{
-    /* height: var(--headerHeigth); */
-    z-index: 1058;
-}
+
+
 /************************LEFT****************************/
-.offcanvas.show>button[data-type="sidebar"]{
+.offcanvas.show>button[data-type="sidebar"] {
     background-color: rgb(240, 240, 240)
 }
 
@@ -75,17 +93,20 @@ body{
     background-repeat: no-repeat;
     background-position: center;
 }
+
 .offcanvas.show>button.btn-outline-start {
     background: url(../svg/caret-left.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-color: rgb(240, 240, 240);
 }
+
 .offcanvas-start {
     /* height: calc(100vh - var(--headerHeigth)); */
     top: var(--headerHeigth);
     width: var(--offcanvasLeftWidth);
 }
+
 /************************RIGHT****************************/
 .btn-outline-end {
     position: absolute;
@@ -101,17 +122,20 @@ body{
     background-repeat: no-repeat;
     background-position: center;
 }
-.offcanvas.show>button.btn-outline-end{
-        background: url(../svg/caret-right.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-color: rgb(240, 240, 240);
+
+.offcanvas.show>button.btn-outline-end {
+    background: url(../svg/caret-right.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgb(240, 240, 240);
 }
+
 .offcanvas-end {
     top: var(--headerHeigth);
     width: var(--offcanvasRightWidth);
 
 }
+
 /*************************TOP*****************************/
 .btn-outline-top {
     position: absolute;
@@ -128,12 +152,13 @@ body{
     background-position: center;
 }
 
-.offcanvas.show>button.btn-outline-top{
+.offcanvas.show>button.btn-outline-top {
     background: url(../svg/caret-up.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-color: rgb(240, 240, 240);
 }
+
 /*************************Bottom*****************************/
 .btn-outline-bottom {
     position: absolute;
@@ -149,21 +174,23 @@ body{
     background-repeat: no-repeat;
     background-position: center;
 }
-.offcanvas.show>button.btn-outline-bottom{
+
+.offcanvas.show>button.btn-outline-bottom {
     background: url(../svg/caret-down.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-color: rgb(240, 240, 240)
 }
+
 /* .btn-outline-bottom-toggle {
     background: url(../svg/caret-down.svg);
     background-repeat: no-repeat;
     background-position: center;
 } */
-.navbar{
+.navbar {
     padding-top: 0;
-  }
+}
+
 .offcanvas-top {
     top: var(--headerHeigth);
 }
-
