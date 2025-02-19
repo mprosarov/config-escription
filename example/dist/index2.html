@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Выезжающие панели</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 60px;
+            /* Отступ для верхней панели */
+        }
+
+        #leftSidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            /* Начальное положение за пределами экрана */
+            width: 250px;
+            height: 100%;
+            background: #f8f9fa;
+            transition: left 0.3s;
+            z-index: 1000;
+        }
+
+        #leftSidebar.active {
+            left: 0;
+            /* Положение при активации */
+        }
+
+        #rightSidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            /* Начальное положение за пределами экрана */
+            width: 250px;
+            height: 100%;
+            background: #f8f9fa;
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        #rightSidebar.active {
+            right: 0;
+            /* Положение при активации */
+        }
+
+        #topSidebar {
+            position: fixed;
+            top: -200px;
+            /* Начальное положение за пределами экрана */
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: #f8f9fa;
+            transition: top 0.3s;
+            z-index: 1000;
+        }
+
+        #topSidebar.active {
+            top: 0;
+            /* Положение при активации */
+        }
+        #closeLeftSidebar{
+            position: absolute;
+            left: 225px;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Верхняя панель -->
+    <div id="topSidebar">
+        <h2>Верхняя панель</h2>
+        <p>Содержимое верхней панели.</p>
+        <button class="btn btn-default" id="closeTopSidebar">Закрыть</button>
+    </div>
+    <button class="btn btn-primary" id="openTopSidebar">Открыть панель сверху</button>
+
+    <!-- Левая панель -->
+    <div id="leftSidebar">
+        <h2>Левая панель</h2>
+        <p>Содержимое левой панели.</p>
+        <button class="btn btn-default" id="closeLeftSidebar">Закрыть</button>
+    </div>
+    <button class="btn btn-primary" id="openLeftSidebar">Открыть панель слева</button>
+
+    <!-- Правая панель -->
+    <div id="rightSidebar">
+        <h2>Правая панель</h2>
+        <p>Содержимое правой панели.</p>
+        <button class="btn btn-default" id="closeRightSidebar">Закрыть</button>
+    </div>
+    <button class="btn btn-primary" id="openRightSidebar">Открыть панель справа</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Верхняя панель
+            $('#openTopSidebar').click(function () {
+                $('#topSidebar').addClass('active');
+            });
+            $('#closeTopSidebar').click(function () {
+                $('#topSidebar').removeClass('active');
+            });
+
+            // Левая панель
+            $('#openLeftSidebar').click(function () {
+                $('#leftSidebar').addClass('active');
+            });
+            $('#closeLeftSidebar').click(function () {
+                $('#leftSidebar').toggleClass('active');
+            });
+
+            // Правая панель
+            $('#openRightSidebar').click(function () {
+                $('#rightSidebar').addClass('active');
+            });
+            $('#closeRightSidebar').click(function () {
+                $('#rightSidebar').removeClass('active');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

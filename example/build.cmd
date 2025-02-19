@@ -1,0 +1,2 @@
+chcp 65001
+npx rig src/_app.js > dist/js/app.js && echo Создан файл app.js && npx rig src/_vendors.js > dist/js/vendors.js && echo Создан файл vendors.js со всеми внешними библиотеками && npx rig src/_app.css > dist/css/app.css && echo Создан файл app.css со всеми стилями
