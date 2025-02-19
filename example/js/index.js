@@ -30,7 +30,6 @@ function createBody(tabs, parent){
 
             tab.insertAdjacentHTML('beforeend', contentUL);
             let cTab = tab.lastChild;
-            console.log(cTab)
 
             for(let j=0; j<tabs[i].items.length;j++)
             {

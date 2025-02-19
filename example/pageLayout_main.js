@@ -282,6 +282,7 @@ const pageLayout = {
       type: "sidebar",
       position: "end",
       items: [
+
         {
           type: "tabs",
           items: [
@@ -322,7 +323,7 @@ const pageLayout = {
                       },
                     },
                   ],
-                },
+                }              
               ],
             },
             {
@@ -392,6 +393,7 @@ const pageLayout = {
     },
   ],
   page: [
+   
     {
       name: "",
       type: "button-group",
@@ -433,6 +435,109 @@ const pageLayout = {
           type: "tab",
           tab_name: "8(8д)ТЗР",
           items: [
+            {
+              type: "select",
+              name: "",
+              multiple: "multiple",
+              items: [
+                {
+                  name: "Один",
+                  value: 1,
+                  selected: "selected",
+                  action: {
+                    params: [],
+                    func: []                    
+                  }
+                },
+                {
+                  name: "Два",
+                  value: 2,
+                  selected: "",
+                  action: {
+                    params: [],
+                    func: []                    
+                  }
+                },
+                {
+                  name: "Три",
+                  value: 3,
+                  selected: "",
+                  action: {
+                    params: [],
+                    func: []                    
+                  }
+                }
+              ],
+
+            },
+            {
+              type: "radio",
+              name: "radio-name",
+              class: "form-check-inline",
+              items: [
+                {
+                  id: "r_id_1",
+                  name: "Радио_1",
+                  action: {
+                    params: [],
+                    func: []
+                  },
+                  status: "unabled",
+                  checked: "",                                    
+                },
+                {
+                  id: "r_id_2",
+                  name: "Радио_2",
+                  action: {
+                    params: [],
+                    func: []
+                  },
+                  status: "unabled",
+                  checked: "",
+                },                 
+
+              ]
+            },                  
+            {
+              id: "cb_id_3",
+              name: "свич(чекбокс)",
+              type: "checkbox",
+              role :"switch",
+              checked: "checked",
+              action: {
+                params: [],
+                func: []
+              },
+              status: "unabled",
+              class: "form-switch"
+            },               
+            {
+              id: "cb_id_1",
+              name: "Флажок_1(чекбокс)",
+              type: "checkbox",
+              role: "",
+              checked: "",
+              action: {
+                params: [],
+                func: []
+              },
+              status: "unabled",
+              class: "form-check-inline"
+            },                  
+            {
+              id: "cb_id_2",
+              name: "Флажок_2(чекбокс)",
+              checked: "checked",
+              type: "checkbox",
+              role: "",
+              action: {
+                params: [],
+                func: []
+              },
+              status: "disabled",
+              class: "form-check-inline"
+            },              
+             
             {
               name: "",
               type: "button-group",
