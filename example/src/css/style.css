@@ -43,7 +43,7 @@ body{
     flex-direction: column;
     overflow: hidden;
 }
-#workPlace{
+.app-page{
     position: relative;
     overflow: auto;
     /* flex: 1; */

@@ -17,5 +17,6 @@
 <script src="JSON/pageLayouts/pageLayout_template.js"></script> <!--Кофига главной страницы-->
 <script>
 // Тут какой-то запрос кофигурации с сервера
-if(config['navbar']) PageBuilder.createMainNavBar(config.navbar);
+// Например: let config = await fetch("/config");
+PageBuilder.createPage(config);
 </script>

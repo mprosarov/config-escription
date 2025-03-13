@@ -3,6 +3,7 @@
 //=========================================
 const PageBuilder = (function(){
     let navbar = null;
+    let domPage = null;
     //Коллекция компонентов
     let components = {}
     //Добавление компонента в общий список
@@ -22,9 +23,19 @@ const PageBuilder = (function(){
     function createMainNavBar(config){
         navbar = new NavBar(document.body, config);
     }
+    // создать страницу по конфигурации
+    function createPage(config){
+        if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
+        document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
+        domPage = document.body.lastElementChild;
+        if(config["page"]){
+            config.page.forEach(item => {PageBuilder.create(domPage,item);});
+        }
+    }
     return {
       addComponent,
       create,
+      createPage,
       createMainNavBar
     };
 })();
