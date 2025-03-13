@@ -28,6 +28,9 @@ const PageBuilder = (function(){
         if(config["page"]){
             config.page.forEach(item => {PageBuilder.create(domPage,item);});
         }
+        if (config["sidebars"]) {
+            PageBuilder.create(document.body,config["sidebars"]);
+        }
     }
     return {
       addComponent,
