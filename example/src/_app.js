@@ -10,3 +10,5 @@
 //= elements/cButton.js
 //= elements/cRadioGroup.js
 //= elements/cTableTabulator.js
+//= elements/cTabs.js
+//= elements/cSidebar.js

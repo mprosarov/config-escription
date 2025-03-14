@@ -31,6 +31,9 @@ const PageBuilder = (function(){
         if(config["page"]){
             config.page.forEach(item => {PageBuilder.create(domPage,item);});
         }
+        if (config["sidebars"]) {
+            PageBuilder.create(document.body,config["sidebars"]);
+        }
     }
     return {
       addComponent,
@@ -241,3 +244,99 @@ class TableTabulator extends BaseElement {
     }
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
+/*
+ 1. Создать класс который наследуется от класса BaseElement
+ 2. Создать статическое свойство компонента TYPE, которое соответствует типу(поле typr) компонента в конфигурации.
+ 3. Переопределить конструктор и передать в конструктор родительского класса параметры элемента.
+ 4. Переопределить метод создания компонента(create), в котором будет создан элемент и добавлен в родительский элемент.
+*/
+
+class Tabs extends BaseElement {
+    static TYPE = "tabs";
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+
+    create() {
+        let globalID = 1;
+        let contentTab, contentUL;
+        globalID++;
+        this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>');
+        let tabBox = this.parentElement.lastElementChild;
+        let tabs = this.config.items;
+        for (let i=0; i<tabs.length; i++) {
+            contentTab = `<li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-${globalID}-${i}" data-bs-toggle="tab" data-bs-target="#tab-${globalID}-${i}-pane" type="button" role="tab" aria-controls="tab-${globalID}-${i}-pane" aria-selected="false">${tabs[i]["tab_name"]}</button>
+                            </li>`;
+            tabBox.insertAdjacentHTML("beforeend", contentTab);
+        }
+        tabBox.firstElementChild.querySelector("button").click();
+        this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content" style="padding: 15px;"></div>');
+        let tab = this.parentElement.lastElementChild;
+        for (let i=0; i<tabs.length; i++) {
+            if (i==0) contentUL = `<div class="tab-pane fade show active" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
+            else contentUL = `<div class="tab-pane fade" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
+            
+            tab.insertAdjacentHTML("beforeend", contentUL);
+            for (let j = 0; j < tabs[i].items.length; j++) 
+                PageBuilder.create(tab.lastElementChild,tabs[i].items[j]);
+        }
+    }
+}
+PageBuilder.addComponent(Tabs.TYPE, Tabs);
+/*
+ 1. Создать класс который наследуется от класса BaseElement
+ 2. Создать статическое свойство компонента TYPE, которое соответствует типу(поле typr) компонента в конфигурации.
+ 3. Переопределить конструктор и передать в конструктор родительского класса параметры элемента.
+ 4. Переопределить метод создания компонента(create), в котором будет создан элемент и добавлен в родительский элемент.
+*/
+
+class SideBar extends BaseElement {
+    static TYPE = "sidebar";
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+
+    create() {
+        // const _allSidebars = [];
+        // let openCount = 0;
+        //     let obj = this.config.items
+        //   let content = `<div class="offcanvas offcanvas-${obj.position}" tabindex="-1">
+        //                     <button style="font-size: 0; z-index: 1060;" data-btn="btn-outline-${obj.position}" class="btn btn-outline-${obj.position} btn-sm" data-type="sidebar" type="button" aria-controls="${obj.id}"></button>
+        //                     <div class="offcanvas-body"></div>
+        //                </div>`;
+        //   this.parentElement.insertAdjacentHTML("beforeend", content);
+        //   //Проходим по дочерним элементам у sidebara
+        //   parentForChild = this.parentElement.lastElementChild.querySelector(".offcanvas-body");
+        //   for(let i=0;i<this.config.items.length;i++){
+        //     PageBuilder.create(parentForChild,this.config.items[i]);
+        //   }
+        //   let sidebarBS = new bootstrap.Offcanvas(this.parentElement.lastElementChild);
+        //   sidebarBS._element.querySelector(`button[data-type="sidebar"]`).onclick = function () {
+        //     sidebarBS.toggle();
+        //   };
+        //   _allSidebars.push(sidebarBS);
+        //   sidebarBS._element.addEventListener("hidden.bs.offcanvas", (event) => {
+        //     openCount--;
+        //   });
+        //   sidebarBS._element.addEventListener("show.bs.offcanvas", (event) => {
+        //     openCount++;
+        //   });
+       
+        // function _initEvent(){
+        //   window.addEventListener("click", (e) => {
+        //     if(openCount<2) return;
+        //     if (!e.target.closest(".offcanvas") && !e.target.closest(`[data-type="sidebar"]`)) {
+        //       _allSidebars.forEach((offcanvas) => {
+        //         offcanvas.hide();
+        //       });
+        //     }
+        //   });
+        // };
+        //   _initEvent();
+
+    }
+}
+PageBuilder.addComponent(SideBar.TYPE, SideBar);

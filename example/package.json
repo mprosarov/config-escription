@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "rigger": "^1.0.1"
+  },
+  "dependencies": {
+    "example": "file:"
   }
 }
