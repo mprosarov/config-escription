@@ -38,6 +38,65 @@ const config = {
       },
     ],
   },
+  sidebars:[
+    {
+    type: "sidebar",
+    position: "end",
+    items: [
+      {
+        type: "tabs",
+        items: [
+          {
+            type: "tab",
+            tab_name: "8(8д)ТЗР11",
+            items: [
+              {
+                name: "",
+                type: "button-group",
+                elemtype: "button-group",
+                items: [
+                  {
+                    name: "",
+                    class: "secondary",
+                    icon: "svgSave",
+                    action: {
+                      params: [],
+                      func: [],
+                    },
+                  },
+                  {
+                    name: "",
+                    icon: "svgRefresh",
+                    class: "secondary",
+                    action: {
+                      params: [],
+                      func: [],
+                    },
+                  },
+                  {
+                    name: "",
+                    class: "secondary",
+                    icon: "svgCancel",
+                    action: {
+                      params: [],
+                      func: [],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "tab",
+            tab_name: "10(10д)ДЗП",
+            items: [
+            ],
+          },
+        ],
+      },
+    ],
+  }
+],
   page: [
     {
       type: "button",
@@ -121,6 +180,45 @@ const config = {
         ],
         renderGorizontal: "virtual",
       },
+    },    
+    //Tabs
+    {
+      type: "tabs",
+      items: [
+        
+        {
+          type: "tab",
+          tab_name: "8(8д)ТЗР",
+          items: [
+            {
+              type: "radio-group",
+              name: "radio-name",
+              inline: "form-check-inline", // не обязательный параметр, по умолчанию "false"
+              items: [
+                {
+                  id: "r_id_3",
+                  label: "Радио_в_табе_1",
+                  status: "unabled",
+                  checked: "",
+                },
+                {
+                  id: "r_id_4",
+                  label: "Радио_в_табе_2",
+                  status: "unabled",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: "tab",
+          tab_name: "10(10д)ДЗП",
+          items: [
+
+          ],
+        },
+      ],
     },
+
   ],
 };
