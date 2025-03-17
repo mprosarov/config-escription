@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   // Проверяем, что запрос идет по пути /config
   if (parsedUrl.pathname === "/config") {
     //Если параметр name указан в запросе, то используем его в качестве имени файла, иначе используем имя по умолчанию
-    const fileName = 'index';
+    let fileName = 'index';
     if(query.name) fileName = query.name;
     const filePath = path.join(__dirname, 'pageConfig' , `${fileName}.json`);
 
