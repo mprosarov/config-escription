@@ -7,16 +7,17 @@
 
 class Tabs extends BaseElement {
     static TYPE = "tabs";
+    static idCounter = 0; // Статическое свойство для хранения счетчика
     constructor(parentElement, config) {
         super(parentElement, config);
+        Tabs.idCounter++;// Увеличиваем счетчик на 1 при создании нового экземпляра
         this.create();
     }
 
     create() {
-        let globalID = 1;
+        let globalID = Tabs.idCounter;
         let contentTab, contentUL;
-        globalID++;
-        this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>');
+        this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>'); // убери тут id="myTab"
         let tabBox = this.parentElement.lastElementChild;
         let tabs = this.config.items;
         for (let i=0; i<tabs.length; i++) {
@@ -38,4 +39,5 @@ class Tabs extends BaseElement {
         }
     }
 }
+
 PageBuilder.addComponent(Tabs.TYPE, Tabs);
