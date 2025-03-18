@@ -44,6 +44,7 @@ const PageBuilder = (function(){
         }
     }
     function create(parentElement,config) {
+        
         if(!components[config.type]){
             throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
         }
@@ -62,8 +63,8 @@ const PageBuilder = (function(){
             config.page.forEach(item => {PageBuilder.create(domPage,item);});
         }
         if (config["sidebars"]) {
-            PageBuilder.create(document.body,config["sidebars"]);
-        }
+            config["sidebars"].forEach(item=>{PageBuilder.create(document.body,item)})
+       }
     }
     //Очистить страницу
     function clear(){
@@ -298,16 +299,17 @@ PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
 
 class Tabs extends BaseElement {
     static TYPE = "tabs";
+    static idCounter = 0; // Статическое свойство для хранения счетчика
     constructor(parentElement, config) {
         super(parentElement, config);
+        Tabs.idCounter++;// Увеличиваем счетчик на 1 при создании нового экземпляра
         this.create();
     }
 
     create() {
-        let globalID = 1;
+        let globalID = Tabs.idCounter;
         let contentTab, contentUL;
-        globalID++;
-        this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>');
+        this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>'); // убери тут id="myTab"
         let tabBox = this.parentElement.lastElementChild;
         let tabs = this.config.items;
         for (let i=0; i<tabs.length; i++) {
@@ -329,6 +331,7 @@ class Tabs extends BaseElement {
         }
     }
 }
+
 PageBuilder.addComponent(Tabs.TYPE, Tabs);
 /*
  1. Создать класс который наследуется от класса BaseElement
@@ -337,50 +340,51 @@ PageBuilder.addComponent(Tabs.TYPE, Tabs);
  4. Переопределить метод создания компонента(create), в котором будет создан элемент и добавлен в родительский элемент.
 */
 
-class SideBar extends BaseElement {
+class SideBar {
     static TYPE = "sidebar";
-    constructor(parentElement, config) {
-        super(parentElement, config);
+    static openCount = 0;
+    constructor (parentElement, config) {
+        this.parentElement = parentElement;
+        this.config = config;
         this.create();
     }
 
     create() {
-        // const _allSidebars = [];
-        // let openCount = 0;
-        //     let obj = this.config.items
-        //   let content = `<div class="offcanvas offcanvas-${obj.position}" tabindex="-1">
-        //                     <button style="font-size: 0; z-index: 1060;" data-btn="btn-outline-${obj.position}" class="btn btn-outline-${obj.position} btn-sm" data-type="sidebar" type="button" aria-controls="${obj.id}"></button>
-        //                     <div class="offcanvas-body"></div>
-        //                </div>`;
-        //   this.parentElement.insertAdjacentHTML("beforeend", content);
-        //   //Проходим по дочерним элементам у sidebara
-        //   parentForChild = this.parentElement.lastElementChild.querySelector(".offcanvas-body");
-        //   for(let i=0;i<this.config.items.length;i++){
-        //     PageBuilder.create(parentForChild,this.config.items[i]);
-        //   }
-        //   let sidebarBS = new bootstrap.Offcanvas(this.parentElement.lastElementChild);
-        //   sidebarBS._element.querySelector(`button[data-type="sidebar"]`).onclick = function () {
-        //     sidebarBS.toggle();
-        //   };
-        //   _allSidebars.push(sidebarBS);
-        //   sidebarBS._element.addEventListener("hidden.bs.offcanvas", (event) => {
-        //     openCount--;
-        //   });
-        //   sidebarBS._element.addEventListener("show.bs.offcanvas", (event) => {
-        //     openCount++;
-        //   });
+        const _allSidebars = [];
+          let content = `<div class="offcanvas offcanvas-${this.config.position}" tabindex="-1">
+                            <button style="font-size: 0; z-index: 1060;" data-btn="btn-outline-${this.config.position}" class="btn btn-outline-${this.config.position} btn-sm" data-type="sidebar" type="button" aria-controls="${this.config.id}"></button>
+                            <div class="offcanvas-body"></div>
+                       </div>`;
+          this.parentElement.insertAdjacentHTML("beforeend", content);
+          //Проходим по дочерним элементам у sidebara
+          parentForChild = this.parentElement.lastElementChild.querySelector(".offcanvas-body");
+          for(let i=0; i<this.config.items; i++){
+                PageBuilder.create(parentForChild,this.config.items[i]);
+          }
+
+          let sidebarBS = new bootstrap.Offcanvas(this.parentElement.lastElementChild);
+          sidebarBS._element.querySelector(`button[data-type="sidebar"]`).onclick = function () {
+            sidebarBS.toggle();
+          };
+          _allSidebars.push(sidebarBS);
+          sidebarBS._element.addEventListener("hidden.bs.offcanvas", (event) => {
+            openCount--;
+          });
+          sidebarBS._element.addEventListener("show.bs.offcanvas", (event) => {
+            openCount++;
+          });
        
-        // function _initEvent(){
-        //   window.addEventListener("click", (e) => {
-        //     if(openCount<2) return;
-        //     if (!e.target.closest(".offcanvas") && !e.target.closest(`[data-type="sidebar"]`)) {
-        //       _allSidebars.forEach((offcanvas) => {
-        //         offcanvas.hide();
-        //       });
-        //     }
-        //   });
-        // };
-        //   _initEvent();
+        function _initEvent(){
+          window.addEventListener("click", (e) => {
+            if(openCount<2) return;
+            if (!e.target.closest(".offcanvas") && !e.target.closest(`[data-type="sidebar"]`)) {
+              _allSidebars.forEach((offcanvas) => {
+                offcanvas.hide();
+              });
+            }
+          });
+        };
+          _initEvent();
 
     }
 }

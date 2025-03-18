@@ -41,6 +41,7 @@ const PageBuilder = (function(){
         }
     }
     function create(parentElement,config) {
+        
         if(!components[config.type]){
             throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
         }
@@ -59,8 +60,8 @@ const PageBuilder = (function(){
             config.page.forEach(item => {PageBuilder.create(domPage,item);});
         }
         if (config["sidebars"]) {
-            PageBuilder.create(document.body,config["sidebars"]);
-        }
+            config["sidebars"].forEach(item=>{PageBuilder.create(document.body,item)})
+       }
     }
     //Очистить страницу
     function clear(){
