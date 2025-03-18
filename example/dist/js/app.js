@@ -343,6 +343,7 @@ PageBuilder.addComponent(Tabs.TYPE, Tabs);
 class SideBar {
     static TYPE = "sidebar";
     static openCount = 0;
+    static _allSidebars = [];
     constructor (parentElement, config) {
         this.parentElement = parentElement;
         this.config = config;
@@ -350,15 +351,17 @@ class SideBar {
     }
 
     create() {
-        const _allSidebars = [];
+
           let content = `<div class="offcanvas offcanvas-${this.config.position}" tabindex="-1">
                             <button style="font-size: 0; z-index: 1060;" data-btn="btn-outline-${this.config.position}" class="btn btn-outline-${this.config.position} btn-sm" data-type="sidebar" type="button" aria-controls="${this.config.id}"></button>
                             <div class="offcanvas-body"></div>
                        </div>`;
           this.parentElement.insertAdjacentHTML("beforeend", content);
           //Проходим по дочерним элементам у sidebara
+          var parentForChild;
           parentForChild = this.parentElement.lastElementChild.querySelector(".offcanvas-body");
-          for(let i=0; i<this.config.items; i++){
+
+          for(let i=0; i<this.config.items.length; i++){
                 PageBuilder.create(parentForChild,this.config.items[i]);
           }
 
@@ -366,19 +369,19 @@ class SideBar {
           sidebarBS._element.querySelector(`button[data-type="sidebar"]`).onclick = function () {
             sidebarBS.toggle();
           };
-          _allSidebars.push(sidebarBS);
+          SideBar._allSidebars.push(sidebarBS);
           sidebarBS._element.addEventListener("hidden.bs.offcanvas", (event) => {
-            openCount--;
+            SideBar.openCount--;
           });
           sidebarBS._element.addEventListener("show.bs.offcanvas", (event) => {
-            openCount++;
+            SideBar.openCount++;
           });
        
         function _initEvent(){
           window.addEventListener("click", (e) => {
-            if(openCount<2) return;
+            if(SideBar.openCount<2) return;
             if (!e.target.closest(".offcanvas") && !e.target.closest(`[data-type="sidebar"]`)) {
-              _allSidebars.forEach((offcanvas) => {
+              SideBar._allSidebars.forEach((offcanvas) => {
                 offcanvas.hide();
               });
             }

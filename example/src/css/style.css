@@ -1,14 +1,9 @@
-:root{
+:root {
     --headerHeigth: 78px;
     --offcanvasTopHeigth: 30vh;
     --offcanvasRightWidth: 400px;
     --offcanvasLeftWidth: 400px;
 }
-
-/* Изменил стандортаное позиционирование bootstrap'a чтоб панельни рисовались относительно родителя*/
-/* .offcanvas {
-    position: absolute;
-} */
 
 h5 {
     text-align: center;
@@ -36,28 +31,33 @@ h5 {
 }
 
 .nav-link {
-    color: #495057 ;
+    color: #495057;
 }
-body{
+
+body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
-.app-page{
+
+.app-page {
     position: relative;
     overflow: auto;
     /* flex: 1; */
     height: calc(100vh - var(--headerHeigth));
 }
+
 .nav-link.active {
     color: #0d6efd !important;
 }
-.navbar{
+
+.navbar {
     /* height: var(--headerHeigth); */
     z-index: 1058;
 }
+
 /************************LEFT****************************/
-.offcanvas.show>button[data-type="sidebar"]{
+.offcanvas.show>button[data-type="sidebar"] {
     background-color: rgb(240, 240, 240)
 }
 
@@ -71,21 +71,24 @@ body{
     border: 1px solid #bfbfbf;
     transform: translateY(-50%);
     top: 50vh;
-    background: url(../svg/caret-right.svg);
-    background-repeat: no-repeat;
-    background-position: center;
 }
-.offcanvas.show>button.btn-outline-start {
-    background: url(../svg/caret-left.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: rgb(240, 240, 240);
+.btn-outline-start::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F234';
+    font-family: 'bootstrap-icons';
 }
+
+.offcanvas.show>button.btn-outline-start::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F230';
+    font-family: 'bootstrap-icons';
+}
+
 .offcanvas-start {
-    /* height: calc(100vh - var(--headerHeigth)); */
     top: var(--headerHeigth);
     width: var(--offcanvasLeftWidth);
 }
+
 /************************RIGHT****************************/
 .btn-outline-end {
     position: absolute;
@@ -97,21 +100,25 @@ body{
     border: 1px solid #bfbfbf;
     top: 50vh;
     transform: translateY(-50%);
-    background: url(../svg/caret-left.svg);
-    background-repeat: no-repeat;
-    background-position: center;
 }
-.offcanvas.show>button.btn-outline-end{
-        background: url(../svg/caret-right.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-color: rgb(240, 240, 240);
+
+.btn-outline-end::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F230';
+    font-family: 'bootstrap-icons';
 }
+
+.offcanvas.show>button.btn-outline-end::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F234';
+    font-family: 'bootstrap-icons';
+}
+
 .offcanvas-end {
     top: var(--headerHeigth);
     width: var(--offcanvasRightWidth);
-
 }
+
 /*************************TOP*****************************/
 .btn-outline-top {
     position: absolute;
@@ -123,17 +130,20 @@ body{
     transform: translateX(-50%);
     padding: 0;
     border: 1px solid #bfbfbf;
-    background: url(../svg/caret-down.svg);
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.offcanvas.show>button.btn-outline-top{
-    background: url(../svg/caret-up.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: rgb(240, 240, 240);
+.btn-outline-top::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F22C';
+    font-family: 'bootstrap-icons';
 }
+
+.offcanvas.show>button.btn-outline-top::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F238';
+    font-family: 'bootstrap-icons';
+}
+
 /*************************Bottom*****************************/
 .btn-outline-bottom {
     position: absolute;
@@ -145,25 +155,25 @@ body{
     transform: translateX(-50%);
     padding: 0;
     border: 1px solid #bfbfbf;
-    background: url(../svg/caret-up.svg);
-    background-repeat: no-repeat;
-    background-position: center;
 }
-.offcanvas.show>button.btn-outline-bottom{
-    background: url(../svg/caret-down.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: rgb(240, 240, 240)
+
+.btn-outline-bottom::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F238';
+    font-family: 'bootstrap-icons';
 }
-/* .btn-outline-bottom-toggle {
-    background: url(../svg/caret-down.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-} */
-.navbar{
+
+.offcanvas.show>button.btn-outline-bottom::before {
+    font: normal normal normal 14px / 1 FontAwesome;
+    content: '\F22C';
+    font-family: 'bootstrap-icons';
+}
+.navbar {
     padding-top: 0;
-  }
+}
+.navbar-expand {
+    padding-bottom: 0;
+}
 .offcanvas-top {
     top: var(--headerHeigth);
 }
-

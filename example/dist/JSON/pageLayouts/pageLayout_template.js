@@ -1,7 +1,8 @@
 const config = {
   navbar: {
     titlePosition: "right",
-    menuPosition: "bottom",
+    menuPosition: "top",
+
     items: [
       {
         type: "menu",
@@ -41,6 +42,63 @@ const config = {
   sidebars:[
     {
     type: "sidebar",
+    position: "top",
+    items: [
+      {
+        type: "tabs",
+        items: [
+          {
+            type: "tab",
+            tab_name: "8(8д)ТЗР11",
+            items: [
+              {
+                type: "button",
+                icon: "printer",
+                text: "Кнопка",
+              }
+
+            ],
+          },
+          {
+            type: "tab",
+            tab_name: "10(10д)ДЗП",
+            items: [
+              {
+                type: "menu",
+                items: [
+                  {
+                    title: "Главная",
+                    submenu: [
+                      {
+                        title: "Уровень-1.1",
+                        link: "/",
+                        submenu: [
+                          {
+                            title: "Уровень-1-1",
+                          },
+                        ],
+                      },
+                      {
+                        title: "Уровень-1.2",
+                        link: "/",
+                        submenu: [
+                          {
+                            title: "Уровень-1-1",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              }
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: "sidebar",
     position: "end",
     items: [
       {
@@ -50,6 +108,11 @@ const config = {
             type: "tab",
             tab_name: "8(8д)ТЗР11",
             items: [
+              {
+                type: "button",
+                icon: "printer",
+                text: "Кнопка",
+              }
 
             ],
           },
@@ -57,6 +120,34 @@ const config = {
             type: "tab",
             tab_name: "10(10д)ДЗП",
             items: [
+              {
+                type: "menu",
+                items: [
+                  {
+                    title: "Главная",
+                    submenu: [
+                      {
+                        title: "Уровень-1.1",
+                        link: "/",
+                        submenu: [
+                          {
+                            title: "Уровень-1-1",
+                          },
+                        ],
+                      },
+                      {
+                        title: "Уровень-1.2",
+                        link: "/",
+                        submenu: [
+                          {
+                            title: "Уровень-1-1",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              }
             ],
           },
         ],
