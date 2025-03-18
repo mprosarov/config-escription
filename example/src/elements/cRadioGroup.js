@@ -24,6 +24,7 @@ class RadioGroup extends BaseElement {
                     </div>`;
     }
     block.insertAdjacentHTML("beforeend", content);
+    BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
     return block;
   }
 }

@@ -1,3 +1,5 @@
+// У конечного пункта могут быть варианты действий (переход на страницу или что-то другое)
+// свойство "action": "redirect" - загрузка новой страницы, по имени конфигурации json, указанной в свойстве "link"
 class Menu {
   static TYPE = "menu";
   constructor(parent, menuData) {
@@ -47,11 +49,14 @@ class Menu {
     // Если нет подменю - возвращаем элемент
     if (!item.submenu || item.submenu.length == 0){
       //TODO: проверять какое действие нужно делать если нет подменю
-      a_element.onclick = () => {
-        event.preventDefault();
-        console.log(item.link)
-        PageBuilder.loadPageConfig(item.link);
+      // если есть свойство и  action равно redirect, то загружаем страницу по имени из свойства link
+      if(!item['action'] || item['action'] == 'redirect'){
+        a_element.onclick = () => {
+          event.preventDefault();
+          PageBuilder.loadPageConfig(item.link);
+        };
       }
+
       return li_element;
     }
     // У пункта есть подменю - добавляем необходимые классы

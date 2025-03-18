@@ -1,8 +1,13 @@
 {
   "navbar": {
-    "titlePosition": "right",
+    "titlePosition": "left",
     "menuPosition": "bottom",
     "items": [
+      {
+        "type": "header",
+        "text": "ОЭФ",
+        "size": "5"
+      },
       {
         "type": "menu",
         "items": [
@@ -14,6 +19,8 @@
                 "link": "/",
                 "submenu": [
                   {
+                    "action":"redirect",
+                    "link":"index",
                     "title": "Уровень-1-1"
                   }
                 ]

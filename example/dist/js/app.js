@@ -83,6 +83,81 @@ const PageBuilder = (function(){
 /*=========================================
              cMenu.js
 =========================================*/
+//TODO:Сделоать объект в котором, указано на какое свойсво в конфиге смотреть, для каждого свойства указать какой параметр менять в style,
+//какие единицы измерения использовать
+/*
+{
+    configKey:"ИмяКлюча",
+    values:[
+        {
+            configName:"ИмяКлюча",
+            styleName:"ИмяСтиля(paddingTop)" ,
+            demension:"px",
+        }
+    ]
+}
+
+*/
+
+const CONFIG_PAGE = {
+  STYLE: "Оформление",
+  PADDING_STYLE: "ВнутренниеОтступы",
+  PADDING_TOP: "ВерхнийОтсуп",
+  PADDING_BOTTOM: "НижнийОтступ",
+  COLOR_STYLE: "Цвет",
+  COLOR_BG: "ЦветФона",
+  COLOR_TEXT: "ЦветТекста",
+  MARGIN_STYLE: "ВнешниеОтступы",
+  MARGIN_TOP: "ВерхнийОтсуп",
+  MARGIN_LEFT: "ЛевыйОтсуп",
+  MARGIN_RIGHT: "ПравыйОтсуп",
+  MARGIN_BOTTOM: "НижнийОтступ",
+};
+class BaseElement {
+  constructor(parentElement, config) {
+    this.parentElement = parentElement;
+    this.config = config;
+  }
+  static applyCss(element, config) {
+    if (!config[CONFIG_PAGE.STYLE]) return;
+    const style = config[CONFIG_PAGE.STYLE];
+    if (style[CONFIG_PAGE.PADDING_STYLE]) {
+      if (style[CONFIG_PAGE.PADDING_STYLE][CONFIG_PAGE.PADDING_TOP]) {
+        element.style.paddingTop = style[CONFIG_PAGE.PADDING_STYLE][CONFIG_PAGE.PADDING_TOP] + "px";
+      }
+      if (style[CONFIG_PAGE.PADDING_STYLE][CONFIG_PAGE.PADDING_BOTTOM]) {
+        element.style.paddingBottom = style[CONFIG_PAGE.PADDING_STYLE][CONFIG_PAGE.PADDING_BOTTOM] + "px";
+      }
+    }
+    // Применение цветов
+    if (style[CONFIG_PAGE.COLOR_STYLE]) {
+      if (style[CONFIG_PAGE.COLOR_STYLE][CONFIG_PAGE.COLOR_BG]) {
+        element.style.backgroundColor = style[CONFIG_PAGE.COLOR_STYLE][CONFIG_PAGE.COLOR_BG];
+      }
+      if (style[CONFIG_PAGE.COLOR_STYLE][CONFIG_PAGE.COLOR_TEXT]) {
+        element.style.color = style[CONFIG_PAGE.COLOR_STYLE][CONFIG_PAGE.COLOR_TEXT];
+      }
+    }
+    // Применение внешних отступов
+    if (style[CONFIG_PAGE.MARGIN_STYLE]) {
+        let marginStyle = style[CONFIG_PAGE.MARGIN_STYLE];
+        if(marginStyle[CONFIG_PAGE.MARGIN_TOP]) {
+            element.style.marginTop = marginStyle[CONFIG_PAGE.MARGIN_TOP] + "px";
+        }
+        if(marginStyle[CONFIG_PAGE.MARGIN_BOTTOM]) {
+            element.style.marginBottom = marginStyle[CONFIG_PAGE.MARGIN_BOTTOM] + "px";
+        }
+        if(marginStyle[CONFIG_PAGE.MARGIN_LEFT]) {
+            element.style.marginLeft = marginStyle[CONFIG_PAGE.MARGIN_LEFT] + "px";
+        }
+        if(marginStyle[CONFIG_PAGE.MARGIN_RIGHT]) {
+            element.style.marginRight = marginStyle[CONFIG_PAGE.MARGIN_RIGHT] + "px";
+        }
+    }
+  }
+}
+// У конечного пункта могут быть варианты действий (переход на страницу или что-то другое)
+// свойство "action": "redirect" - загрузка новой страницы, по имени конфигурации json, указанной в свойстве "link"
 class Menu {
   static TYPE = "menu";
   constructor(parent, menuData) {
@@ -132,11 +207,14 @@ class Menu {
     // Если нет подменю - возвращаем элемент
     if (!item.submenu || item.submenu.length == 0){
       //TODO: проверять какое действие нужно делать если нет подменю
-      a_element.onclick = () => {
-        event.preventDefault();
-        console.log(item.link)
-        PageBuilder.loadPageConfig(item.link);
+      // если есть свойство и  action равно redirect, то загружаем страницу по имени из свойства link
+      if(!item['action'] || item['action'] == 'redirect'){
+        a_element.onclick = () => {
+          event.preventDefault();
+          PageBuilder.loadPageConfig(item.link);
+        };
       }
+
       return li_element;
     }
     // У пункта есть подменю - добавляем необходимые классы
@@ -191,6 +269,9 @@ class NavBar {
                     case Button.TYPE:
                         PageBuilder.create(this.buttonsBlock, item);
                         break;
+                    case Header.TYPE:
+                        PageBuilder.create(this.titleBlock, item);
+                        break;
                     default:
                         console.warn(`Неизвестный тип компонента: ${item.type}`);
                         break;
@@ -200,19 +281,12 @@ class NavBar {
    }
 }
 PageBuilder.addComponent(NavBar.TYPE, NavBar);
-class BaseElement {
-    constructor (parentElement, config) {
-        this.parentElement = parentElement;
-        this.config = config;
-    }
-}
 class Button extends BaseElement {
     static TYPE = 'button';
     constructor(parentElement, config) {
         super(parentElement, config);
         this.create();
     }
-
     create() {
         let icon = '';
         let text = '';
@@ -223,6 +297,8 @@ class Button extends BaseElement {
             text = this.config.text;
         }
         this.parentElement.insertAdjacentHTML("beforeend", `<button class="btn btn-outline-secondary btn-sm">${icon}${text}</button>`);
+        let dom = this.parentElement.lastElementChild;
+        BaseElement.applyCss(dom, this.config);
     }
 }
 PageBuilder.addComponent(Button.TYPE, Button);
@@ -252,6 +328,7 @@ class RadioGroup extends BaseElement {
                     </div>`;
     }
     block.insertAdjacentHTML("beforeend", content);
+    BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
     return block;
   }
 }
@@ -392,3 +469,35 @@ class SideBar {
     }
 }
 PageBuilder.addComponent(SideBar.TYPE, SideBar);
+/*
+Пример конфигурации компонента:
+ {
+     "type": "header",
+     "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, aperiam?",
+     "size": "3"
+ }
+*/
+class Header extends BaseElement {
+  static TYPE = "header";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+
+  create() {
+    let headerSize = "";
+    let text = "";
+    if (this.config.text) {
+      text = this.config.text;
+    }
+    if (this.config.size) {
+        headerSize = "h" + this.config.size;
+    } else {
+        headerSize = "h1";
+    }
+    this.parentElement.insertAdjacentHTML("beforeend", `<div class="${headerSize}">${text}</div>`);
+    let dom = this.parentElement.lastElementChild;
+    BaseElement.applyCss(dom,this.config);
+  }
+}
+PageBuilder.addComponent(Header.TYPE, Header);
