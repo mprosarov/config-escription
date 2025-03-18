@@ -4,6 +4,10 @@ const url = require("url");
 const path = require("path");
 
 const server = http.createServer((req, res) => {
+  // Устанавливаем заголовки CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   // Парсим URL и параметры запроса
   const parsedUrl = url.parse(req.url, true);
   const query = parsedUrl.query;
@@ -11,9 +15,9 @@ const server = http.createServer((req, res) => {
   // Проверяем, что запрос идет по пути /config
   if (parsedUrl.pathname === "/config") {
     //Если параметр name указан в запросе, то используем его в качестве имени файла, иначе используем имя по умолчанию
-    let fileName = 'index';
-    if(query.name) fileName = query.name;
-    const filePath = path.join(__dirname, 'pageConfig' , `${fileName}.json`);
+    let fileName = "index";
+    if (query.name) fileName = query.name;
+    const filePath = path.join(__dirname, "pageConfig", `${fileName}.json`);
 
     // Читаем файл
     fs.readFile(filePath, "utf8", (err, data) => {

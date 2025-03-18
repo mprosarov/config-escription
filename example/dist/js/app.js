@@ -2,6 +2,7 @@
 //           pageBuilder.js
 //=========================================
 const PageBuilder = (function(){
+    const URL = "http://localhost:3000/config";
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
@@ -12,6 +13,35 @@ const PageBuilder = (function(){
           throw new Error(`Компонент с таким типом уже существует. type=${type}`);
         }
         components[type] = component;
+    }
+    // Загрузить json конфигурацию страницы с сервера по имени файла
+    async function loadPageConfig(configName,params){
+        // очищаем страницу, чтобы построить новую по загруженной конфигурации
+        clear();
+        // показываем лоадер
+        document.body.insertAdjacentHTML("beforeend", `<section class="loader-container">
+                                                            <div class="dot"></div>
+                                                            <div class="dot"></div>
+                                                            <div class="dot"></div>
+                                                            <div class="dot"></div>
+                                                            <div class="dot"></div>
+                                                        </section>`);
+        let loader = document.body.querySelector(".loader-container");
+        try {
+          let response = await fetch(`${URL}?name=${configName}`);
+          let config = await response.json();
+          console.log(response);
+          // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
+          if(response.status !== 200){
+            throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
+          }
+          // создаем страницу по загруженной конфигурации
+          createPage(config);
+          // удаляем лоадер
+          loader.remove();
+        } catch (error) {
+            loader.innerHTML = `<div class="loader-error">${error.message}</div>`;
+        }
     }
     function create(parentElement,config) {
         if(!components[config.type]){
@@ -35,11 +65,18 @@ const PageBuilder = (function(){
             PageBuilder.create(document.body,config["sidebars"]);
         }
     }
+    //Очистить страницу
+    function clear(){
+        // проходим по всем элементам на странице и удаляем их
+        let nodes = [...document.body.children].filter(node => node.nodeName !== "SCRIPT")
+        nodes.forEach(node => node.parentElement.removeChild(node));
+   }
     return {
       addComponent,
       create,
       createPage,
-      createMainNavBar
+      createMainNavBar,
+      loadPageConfig
     };
 })();
 /*=========================================
@@ -92,7 +129,15 @@ class Menu {
     const li_element = parentEl.lastElementChild;
     const a_element = li_element.lastElementChild;
     // Если нет подменю - возвращаем элемент
-    if (!item.submenu || item.submenu.length == 0) return li_element;
+    if (!item.submenu || item.submenu.length == 0){
+      //TODO: проверять какое действие нужно делать если нет подменю
+      a_element.onclick = () => {
+        event.preventDefault();
+        console.log(item.link)
+        PageBuilder.loadPageConfig(item.link);
+      }
+      return li_element;
+    }
     // У пункта есть подменю - добавляем необходимые классы
     li_element.classList.add("dropend");
     a_element.classList.add("dropdown-toggle");

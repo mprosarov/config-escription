@@ -45,7 +45,15 @@ class Menu {
     const li_element = parentEl.lastElementChild;
     const a_element = li_element.lastElementChild;
     // Если нет подменю - возвращаем элемент
-    if (!item.submenu || item.submenu.length == 0) return li_element;
+    if (!item.submenu || item.submenu.length == 0){
+      //TODO: проверять какое действие нужно делать если нет подменю
+      a_element.onclick = () => {
+        event.preventDefault();
+        console.log(item.link)
+        PageBuilder.loadPageConfig(item.link);
+      }
+      return li_element;
+    }
     // У пункта есть подменю - добавляем необходимые классы
     li_element.classList.add("dropend");
     a_element.classList.add("dropdown-toggle");
