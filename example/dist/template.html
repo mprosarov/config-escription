@@ -14,10 +14,8 @@
 
 <script src="js/vendors.js"></script>
 <script src="js/app.js"></script>
-<script src="JSON/pageLayouts/pageLayout_template.js"></script> <!--Кофига главной страницы-->
 <script>
 // Тут какой-то запрос кофигурации с сервера
 // Например: let config = await fetch("/config");
-PageBuilder.createPage(config);
-console.log(config)
+PageBuilder.loadPageConfig('index');
 </script>

@@ -1,8 +1,23 @@
 {
   "navbar": {
     "titlePosition": "right",
-    "menuPosition": "bottom",
+    "menuPosition": "top",
     "items": [
+      {
+        "type": "header",
+        "text": "Главная",
+        "size": "5",
+        "Оформление":{
+          "ВнутренниеОтступы":{
+            "ВерхнийОтсуп":10,
+            "НижнийОтступ":50
+          },
+          "Цвет":{
+            "ЦветФона":"#0000ff",
+            "ЦветТекста":"#ff0000"
+          }
+        }
+      },
       {
         "type": "menu",
         "items": [
@@ -14,31 +29,103 @@
                 "link": "/",
                 "submenu": [
                   {
-                    "title": "Уровень-1-1",
-                  },
-                ],
+                    "action": "redirect",
+                    "link": "oef",
+                    "title": "Уровень-1-1"
+                  }
+                ]
               },
               {
                 "title": "Уровень-1.2",
                 "link": "/",
                 "submenu": [
                   {
-                    "title": "Уровень-1-1",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+                    "title": "Уровень-1-1"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
         "type": "button",
         "icon": "printer",
         "text": "Кнопка",
-      },
-    ],
+        "Оформление": {
+          "ВнутренниеОтступы": {
+            "ВерхнийОтсуп": 10,
+            "НижнийОтступ": 50
+          },
+          "Цвет": {
+            "ЦветФона": "#0000ff",
+            "ЦветТекста": "#ff0000"
+          },
+          "ВнешниеОтступы": {
+            "ПравыйОтсуп": 50,
+            "ВерхнийОтсуп": 50
+          }
+        }
+      }
+    ]
   },
   "sidebars": [
+    {
+      "type": "sidebar",
+      "position": "top",
+      "items": [
+        {
+          "type": "tabs",
+          "items": [
+            {
+              "type": "tab",
+              "tab_name": "8(8д)ТЗР11",
+              "items": [
+                {
+                  "type": "button",
+                  "icon": "printer",
+                  "text": "Кнопка"
+                }
+              ]
+            },
+            {
+              "type": "tab",
+              "tab_name": "10(10д)ДЗП",
+              "items": [
+                {
+                  "type": "menu",
+                  "items": [
+                    {
+                      "title": "Главная",
+                      "submenu": [
+                        {
+                          "title": "Уровень-1.1",
+                          "link": "/",
+                          "submenu": [
+                            {
+                              "title": "Уровень-1-1"
+                            }
+                          ]
+                        },
+                        {
+                          "title": "Уровень-1.2",
+                          "link": "/",
+                          "submenu": [
+                            {
+                              "title": "Уровень-1-1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     {
       "type": "sidebar",
       "position": "end",
@@ -51,56 +138,61 @@
               "tab_name": "8(8д)ТЗР11",
               "items": [
                 {
-                  "name": "",
-                  "type": "button-group",
-                  "elemtype": "button-group",
-                  "items": [
-                    {
-                      "name": "",
-                      "class": "secondary",
-                      "icon": "svgSave",
-                      "action": {
-                        "params": [],
-                        "func": [],
-                      },
-                    },
-                    {
-                      "name": "",
-                      "icon": "svgRefresh",
-                      "class": "secondary",
-                      "action": {
-                        "params": [],
-                        "func": [],
-                      },
-                    },
-                    {
-                      "name": "",
-                      "class": "secondary",
-                      "icon": "svgCancel",
-                      "action": {
-                        "params": [],
-                        "func": [],
-                      },
-                    },
-                  ],
-                },
-              ],
+                  "type": "button",
+                  "icon": "printer",
+                  "text": "Кнопка"
+                }
+              ]
             },
             {
               "type": "tab",
               "tab_name": "10(10д)ДЗП",
-              "items": [],
-            },
-          ],
-        },
-      ],
-    },
+              "items": [
+                {
+                  "type": "menu",
+                  "items": [
+                    {
+                      "title": "Главная",
+                      "submenu": [
+                        {
+                          "title": "Уровень-1.1",
+                          "link": "/",
+                          "submenu": [
+                            {
+                              "title": "Уровень-1-1"
+                            }
+                          ]
+                        },
+                        {
+                          "title": "Уровень-1.2",
+                          "link": "/",
+                          "submenu": [
+                            {
+                              "title": "Уровень-1-1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   ],
   "page": [
+      {
+        "type": "header",
+        "text": "Это главная страница",
+        "size": "2"
+      },
     {
       "type": "button",
       "icon": "printer",
-      "text": "Кнопка",
+      "text": "Кнопка"
     },
     {
       "type": "menu",
@@ -113,42 +205,55 @@
               "link": "/",
               "submenu": [
                 {
-                  "title": "Уровень-1-1",
-                },
-              ],
+                  "title": "Уровень-1-1"
+                }
+              ]
             },
             {
               "title": "Уровень-1.2",
               "link": "/",
               "submenu": [
                 {
-                  "title": "Уровень-1-1",
-                },
-              ],
-            },
-          ],
-        },
-      ],
+                  "title": "Уровень-1-1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "type": "radio-group",
       "name": "radio-name",
-      //inline: "form-check-inline", // не обязательный параметр, по умолчанию "false"
+        "Оформление": {
+          "ВнешниеОтступы":{
+            "ЛевыйОтсуп":50,
+            "ПравыйОтсуп":50,
+            "ВерхнийОтсуп":50
+          },
+          "ВнутренниеОтступы": {
+            "ВерхнийОтсуп": 10,
+            "НижнийОтступ": 50
+          },
+          "Цвет": {
+            "ЦветФона": "#0000ff",
+            "ЦветТекста": "#ff0000"
+          }
+        },
       "items": [
         {
           "id": "r_id_1",
           "label": "Радио_1",
           "status": "unabled",
-          "checked": "",
+          "checked": ""
         },
         {
           "id": "r_id_2",
           "label": "Радио_2",
-          "status": "unabled",
-        },
-      ],
+          "status": "unabled"
+        }
+      ]
     },
-    // Таблица
     {
       "id": "table_id_8d",
       "type": "table-tabulator",
@@ -156,14 +261,14 @@
       "tdata": {
         "data": [
           {
-            "1": "Чек-лист",
+            "1": "Чек-лист"
           },
           {
-            "1": "ОЭФ",
+            "1": "ОЭФ"
           },
           {
-            "1": "Калькуляция",
-          },
+            "1": "Калькуляция"
+          }
         ],
         "layout": "fitColumns",
         "resizableRows": true,
@@ -236,12 +341,11 @@
           {
             "title": "Дата последнего изменения",
             "field": "17"
-          },
+          }
         ],
-        "renderGorizontal": "virtual",
-      },
+        "renderGorizontal": "virtual"
+      }
     },
-    //Tabs
     {
       "type": "tabs",
       "items": [
@@ -252,29 +356,29 @@
             {
               "type": "radio-group",
               "name": "radio-name",
-              "inline": "form-check-inline", // не обязательный параметр, по умолчанию "false"
+              "inline": "form-check-inline",
               "items": [
                 {
                   "id": "r_id_3",
                   "label": "Радио_в_табе_1",
                   "status": "unabled",
-                  "checked": "",
+                  "checked": ""
                 },
                 {
                   "id": "r_id_4",
                   "label": "Радио_в_табе_2",
-                  "status": "unabled",
-                },
-              ],
-            },
-          ],
+                  "status": "unabled"
+                }
+              ]
+            }
+          ]
         },
         {
           "type": "tab",
           "tab_name": "10(10д)ДЗП",
-          "items": [],
-        },
-      ],
-    },
-  ],
-};
+          "items": []
+        }
+      ]
+    }
+  ]
+}

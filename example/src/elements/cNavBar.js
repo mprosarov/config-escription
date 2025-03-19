@@ -36,6 +36,9 @@ class NavBar {
                     case Button.TYPE:
                         PageBuilder.create(this.buttonsBlock, item);
                         break;
+                    case Header.TYPE:
+                        PageBuilder.create(this.titleBlock, item);
+                        break;
                     default:
                         console.warn(`Неизвестный тип компонента: ${item.type}`);
                         break;
