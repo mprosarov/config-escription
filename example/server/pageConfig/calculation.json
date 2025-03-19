@@ -1,0 +1,18 @@
+{
+    "navbar": {
+      "titlePosition": "right",
+      "menuPosition": "top",
+      "items": [
+        {
+          "type": "header",
+          "text": "Калькуляция",
+          "size": "5"
+        },
+        {
+          "type": "button",
+          "icon": "printer",
+          "text": "Кнопка"
+        }
+      ]
+    }
+}    

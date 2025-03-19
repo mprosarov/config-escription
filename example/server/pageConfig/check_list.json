@@ -1,0 +1,157 @@
+{
+    "navbar": {
+      "titlePosition": "right",
+      "menuPosition": "top",
+      "items": [
+        {
+          "type": "header",
+          "text": "Чек-лист",
+          "size": "5"
+        },
+        {
+          "type": "button",
+          "icon": "printer",
+          "text": "Кнопка"
+        }
+      ]
+    },
+    "page": [
+      {
+        "type": "tabs",
+        "items": [
+            {
+                "type": "tab",
+                "tab_name": "Форма 10",
+                "items": [
+                    {
+                        "id" : "table-tabulator_id_10form",
+                        "type": "table-tabulator",
+                        "name" : "Форма 10",
+                        "tdata" : {
+                            "data": [{},{},{}],
+                            "layout": "fitColumns",
+                            "resizableRows": true,
+                            "columnHeaderVertAlign": "middle",
+                            "columns":[
+                                {"title":"111","field":"1"},
+                                {"title":"Листы модели","field":"2"},
+                                {"title":"Результат","field":"3"},
+                                {"title":"Значение 1","field":"4"},
+                                {"title":"Значение 2","field":"5"},
+                                {"title":"Сумма расхождений","field":"6"}
+                            ],
+                            "renderGorizontal": "virtual"
+                        }
+                    }
+                ]
+            },
+
+            {
+                "type": "tab",
+                "tab_name": "Форма 11",
+                "items": [
+                    {
+                        "id" : "table-tabulator_id_11form",
+                        "name" : "Форма 11",
+                        "type": "table-tabulator",
+                        "tdata" : {
+                            "data": [{},{},{}],
+                            "layout": "fitColumns",
+                            "resizableRows": true,
+                            "columnHeaderVertAlign": "middle",
+                            "columns":[
+                                {"title":"111","field":"1"},
+                                {"title":"Листы модели","field":"2"},
+                                {"title":"Результат","field":"3"},
+                                {"title":"Значение 1","field":"4"},
+                                {"title":"Значение 2","field":"5"},
+                                {"title":"Сумма расхождений","field":"6"}
+                            ],
+                            "renderGorizontal": "virtual"
+                        }
+                    }              
+                ]
+            },
+            {
+                "type": "tab",
+                "tab_name": "Форма 12",
+                "items": [
+                    {
+                        "id" : "table-tabulator_id_12form",
+                        "name" : "Форма 12",
+                        "type": "table-tabulator",
+                        "tdata" : {
+                            "data": [{},{},{}],
+                            "layout": "fitColumns",
+                            "resizableRows": true,
+                            "columnHeaderVertAlign": "middle",
+                            "columns":[
+                                {"title":"111","field":"1"},
+                                {"title":"Листы модели","field":"2"},
+                                {"title":"Результат","field":"3"},
+                                {"title":"Значение 1","field":"4"},
+                                {"title":"Значение 2","field":"5"},
+                                {"title":"Сумма расхождений","field":"6"}
+                            ],
+                            "renderGorizontal": "virtual"
+                        }
+                    }
+                              ]
+            },
+            {
+                "type": "tab",
+                "tab_name": "Форма 22",
+                "items": [
+                    {
+                        "id" : "table-tabulator_id_22form",
+                        "name" : "Форма 22",
+                        "type": "table-tabulator",
+                        "tdata" : {
+                            "data": [{},{},{}],
+                            "layout": "fitColumns",
+                            "resizableRows": true,
+                            "columnHeaderVertAlign": "middle",
+                            "columns":[
+                                {"title":"111","field":"1"},
+                                {"title":"Листы модели","field":"2"},
+                                {"title":"Результат","field":"3"},
+                                {"title":"Значение 1","field":"4"},
+                                {"title":"Значение 2","field":"5"},
+                                {"title":"Сумма расхождений","field":"6"}
+                            ],
+                            "renderGorizontal": "virtual"
+                        }
+                    }
+                ]
+            },
+
+            {
+                "type": "tab",
+                "tab_name": "Форма 23",
+                "items": [
+                    {
+                        "id" : "table-tabulator_id_23form",
+                        "name": "Форма 23",
+                        "type": "table-tabulator",
+                        "tdata" : {
+                            "data": [{},{},{}],
+                            "layout": "fitColumns",
+                            "resizableRows": true,
+                            "columnHeaderVertAlign": "middle",
+                            "columns":[
+                                {"title":"111","field":"1"},
+                                {"title":"Листы модели","field":"2"},
+                                {"title":"Результат","field":"3"},
+                                {"title":"Значение 1","field":"4"},
+                                {"title":"Значение 2","field":"5"},
+                                {"title":"Сумма расхождений","field":"6"}
+                            ],
+                            "renderGorizontal": "virtual"
+                        }
+                    }
+                ]
+            }            
+        ]
+    }
+    ]
+}
