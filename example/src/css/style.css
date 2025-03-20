@@ -4,7 +4,16 @@
     --offcanvasRightWidth: 400px;
     --offcanvasLeftWidth: 400px;
 }
-
+.btn{
+    min-width: fit-content;
+}
+.navbar-nav {
+    gap: 8px;
+}
+.flex{
+    display:flex;
+    gap: 8px;
+}
 h5 {
     text-align: center;
     margin-top: 2rem;

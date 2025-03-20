@@ -278,6 +278,12 @@ class NavBar {
                     case Button.TYPE:
                         PageBuilder.create(this.buttonsBlock, item);
                         break;
+                    case ButtonGroup.TYPE:
+                        PageBuilder.create(this.buttonsBlock, item);
+                        break; 
+                    case CheckBoxGroup.TYPE:
+                        PageBuilder.create(this.buttonsBlock, item);
+                        break;         
                     case Header.TYPE:
                         PageBuilder.create(this.titleBlock, item);
                         break;
@@ -311,6 +317,30 @@ class Button extends BaseElement {
     }
 }
 PageBuilder.addComponent(Button.TYPE, Button);
+class ButtonGroup extends BaseElement {
+    static TYPE = 'button-group';
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+    create() {
+        let content = "";
+        for (let i = 0; i < this.config.items.length; i++){
+            let icon = '';
+            let text = '';
+            if(this.config.items[i].icon)
+                icon = `<i class="bi bi-${this.config.items[i].icon}${(this.config.items[i].text)?' me-2':''}"></i>`;
+            if(this.config.items[i].text)
+                text = this.config.items[i].text;
+            content += `<button class="btn btn-outline-${this.config.items[i].class} btn-sm" type="button">${icon}${text}</button>`;
+        } 
+        let result = `<div class="input-group">${content}</div>`;
+        this.parentElement.insertAdjacentHTML("beforeend", result);
+        let dom = this.parentElement.lastElementChild;
+        BaseElement.applyCss(dom, this.config);
+    }
+}
+PageBuilder.addComponent(ButtonGroup.TYPE, ButtonGroup);
 /*
  1. Создать класс который наследуется от класса BaseElement
  2. Создать статическое свойство компонента TYPE, которое соответствует типу(поле typr) компонента в конфигурации.
@@ -342,6 +372,32 @@ class RadioGroup extends BaseElement {
   }
 }
 PageBuilder.addComponent(RadioGroup.TYPE, RadioGroup);
+class CheckBoxGroup extends BaseElement {
+    static TYPE = 'checkbox';
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+    create() {
+      this.parentElement.insertAdjacentHTML("beforeend", `<div class="form-group ${this.config.inline ? "flex" : ""}"></div>`);
+      let block = this.parentElement.lastElementChild;          
+      let content = "";
+      for (let i = 0; i < this.config.items.length; i++) {
+        let item = this.config.items[i];
+        content += `<div class="form-check ${item.role ? "form-switch" : ""} ">
+                          <input class="form-check-input" type='checkbox' role="${item.role}" value="${item.value}" id="${item.id}" ${item.status} ${item.checked ? "checked" : ""} >
+                          <label class="form-check-label" for=${item.id}>
+                            ${item.label}
+                          </label>
+                      </div>`;
+      }
+  
+      block.insertAdjacentHTML("beforeend", content);
+      BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
+      return block;
+     }
+}
+PageBuilder.addComponent(CheckBoxGroup.TYPE, CheckBoxGroup);
 class TableTabulator extends BaseElement {
     static TYPE = 'table-tabulator';
     constructor(parentElement, config) {

@@ -28,7 +28,9 @@ main {
   overflow-x: auto;
   overflow-y: hidden;
 }
-
+.offcanvas-body {
+  padding: 1rem 0rem;
+}
 .dropdown-toggle { outline: 0; }
 button[data-type="sidebar"]{
   background-color:rgb(240, 240, 240)
@@ -144,7 +146,16 @@ button[data-type="sidebar"]{
     --offcanvasRightWidth: 400px;
     --offcanvasLeftWidth: 400px;
 }
-
+.btn{
+    min-width: fit-content;
+}
+.navbar-nav {
+    gap: 8px;
+}
+.flex{
+    display:flex;
+    gap: 8px;
+}
 h5 {
     text-align: center;
     margin-top: 2rem;

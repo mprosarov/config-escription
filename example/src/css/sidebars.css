@@ -14,7 +14,9 @@ main {
   overflow-x: auto;
   overflow-y: hidden;
 }
-
+.offcanvas-body {
+  padding: 1rem 0rem;
+}
 .dropdown-toggle { outline: 0; }
 button[data-type="sidebar"]{
   background-color:rgb(240, 240, 240)
