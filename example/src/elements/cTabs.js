@@ -27,7 +27,7 @@ class Tabs extends BaseElement {
             tabBox.insertAdjacentHTML("beforeend", contentTab);
         }
         tabBox.firstElementChild.querySelector("button").click();
-        this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content" style="padding: 15px;"></div>');
+        this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content"></div>');
         let tab = this.parentElement.lastElementChild;
         for (let i=0; i<tabs.length; i++) {
             if (i==0) contentUL = `<div class="tab-pane fade show active" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;

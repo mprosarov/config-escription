@@ -311,7 +311,7 @@ class Button extends BaseElement {
         if(this.config.text){
             text = this.config.text;
         }
-        this.parentElement.insertAdjacentHTML("beforeend", `<button class="btn btn-outline-secondary btn-sm">${icon}${text}</button>`);
+        this.parentElement.insertAdjacentHTML("beforeend", `<button style="width: fit-content;" class="btn btn-outline-secondary btn-sm">${icon}${text}</button>`);
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);
     }
@@ -461,7 +461,7 @@ class Tabs extends BaseElement {
             tabBox.insertAdjacentHTML("beforeend", contentTab);
         }
         tabBox.firstElementChild.querySelector("button").click();
-        this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content" style="padding: 15px;"></div>');
+        this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content"></div>');
         let tab = this.parentElement.lastElementChild;
         for (let i=0; i<tabs.length; i++) {
             if (i==0) contentUL = `<div class="tab-pane fade show active" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
@@ -566,3 +566,43 @@ class Header extends BaseElement {
   }
 }
 PageBuilder.addComponent(Header.TYPE, Header);
+class Select extends BaseElement {
+    static TYPE = 'select';
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+    create() {
+      let content = "";
+      for (let i = 0; i < this.config.items.length; i++) {
+        let item = this.config.items[i];
+        content += `<option value=${item.value} ${item.selected}>${item.name}</option>`;
+      }
+      this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group mb-3">
+        <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.disabled}>${content}</select>` );
+      let position = "";  
+      if(this.config.labelPosition == 'left') position = "afterbegin"
+      else position = "beforeend"
+      let dom = this.parentElement.lastElementChild;
+      dom.insertAdjacentHTML(position,`<label class="input-group-text">
+        ${this.config.label}
+        </label></div>`) 
+      BaseElement.applyCss(dom, this.config);
+  }
+}
+PageBuilder.addComponent(Select.TYPE, Select);
+class InputField extends BaseElement {
+    static TYPE = 'input';
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+    create() {
+        this.parentElement.insertAdjacentHTML("beforeend", `<div class="form-floating">
+                <input type="${this.config.dataType}" class="form-control" id="${this.config.id}" ${this.config.disabled} placeholder="">
+                <label for="${this.config.id}">${this.config.label}</label></div>`);
+        let dom = this.parentElement.lastElementChild;
+        BaseElement.applyCss(dom, this.config);
+    }
+}
+PageBuilder.addComponent(InputField.TYPE, InputField);

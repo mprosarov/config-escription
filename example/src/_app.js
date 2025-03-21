@@ -16,3 +16,5 @@
 //= elements/cTabs.js
 //= elements/cSidebar.js
 //= elements/cHeader.js
+//= elements/cSelect.js
+//= elements/cInputField.js

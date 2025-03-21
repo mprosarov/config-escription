@@ -13,7 +13,7 @@ class Button extends BaseElement {
         if(this.config.text){
             text = this.config.text;
         }
-        this.parentElement.insertAdjacentHTML("beforeend", `<button class="btn btn-outline-secondary btn-sm">${icon}${text}</button>`);
+        this.parentElement.insertAdjacentHTML("beforeend", `<button style="width: fit-content;" class="btn btn-outline-secondary btn-sm">${icon}${text}</button>`);
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);
     }
