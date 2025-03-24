@@ -18,3 +18,4 @@
 //= elements/cHeader.js
 //= elements/cSelect.js
 //= elements/cInputField.js
+//= elements/cItemsBlock.js

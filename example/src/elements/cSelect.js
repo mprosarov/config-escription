@@ -10,7 +10,7 @@ class Select extends BaseElement {
         let item = this.config.items[i];
         content += `<option value=${item.value} ${item.selected}>${item.name}</option>`;
       }
-      this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group mb-3">
+      this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group input-group-sm mb-3">
         <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.disabled}>${content}</select>` );
       let position = "";  
       if(this.config.labelPosition == 'left') position = "afterbegin"

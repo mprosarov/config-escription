@@ -578,7 +578,7 @@ class Select extends BaseElement {
         let item = this.config.items[i];
         content += `<option value=${item.value} ${item.selected}>${item.name}</option>`;
       }
-      this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group mb-3">
+      this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group input-group-sm mb-3">
         <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.disabled}>${content}</select>` );
       let position = "";  
       if(this.config.labelPosition == 'left') position = "afterbegin"
@@ -598,11 +598,28 @@ class InputField extends BaseElement {
         this.create();
     }
     create() {
-        this.parentElement.insertAdjacentHTML("beforeend", `<div class="form-floating">
-                <input type="${this.config.dataType}" class="form-control" id="${this.config.id}" ${this.config.disabled} placeholder="">
-                <label for="${this.config.id}">${this.config.label}</label></div>`);
+        this.parentElement.insertAdjacentHTML("beforeend", `<div class="input-group input-group-sm mb-3">
+  <span class="input-group-text" id="${this.config.id}">${this.config.label}</span>
+  <input type="${this.config.dataType}" class="form-control" aria-label="" aria-describedby="${this.config.id}" ${this.config.disabled} >
+</div>`);
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);
     }
 }
 PageBuilder.addComponent(InputField.TYPE, InputField);
+class ItemsBlock extends BaseElement {
+    static TYPE = 'block';
+    constructor(parentElement, config) {
+        super(parentElement, config);
+        this.create();
+    }
+    create() {
+        this.parentElement.insertAdjacentHTML("beforeend", `<div class="itemsBlock d-flex flex-fill flex-${this.config.orientation}"></div>`);
+        let dom = this.parentElement.lastElementChild;
+        let items = this.config.items;
+        for(let i=0; i<items.length; i++)
+            PageBuilder.create(dom,items[i])
+        BaseElement.applyCss(dom, this.config);
+    }
+}
+PageBuilder.addComponent(ItemsBlock.TYPE, ItemsBlock);

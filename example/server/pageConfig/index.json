@@ -93,28 +93,6 @@
             }
           }
         ]
-      },
-      {
-        "type": "checkbox",
-        "inline": true,
-        "items": [
-          {
-            "label": "показатель_1",
-            "id": "chb_11",
-            "checked": "checked",
-            "status": "disabled",
-            "value":"",
-            "role": ""
-          },
-          {
-            "label": "показатель_2",
-            "id": "chb_211",
-            "checked": "",
-            "status": "unabled",
-            "value":"",
-            "role": "switch"
-          }        
-        ]
       }
     ]
   },
@@ -271,106 +249,153 @@
       "size": "2"
     },
     {
-      "type": "checkbox",
-      "inline": "inline",
-      "items": [
+      "type": "block",
+      "orientation": "row",
+      "items":[
         {
-          "label": "текст_1",
-          "id": "chb_1",
-          "checked": "checked",
-          "status": "disabled",
-          "value":""
-        },
-        {
-          "label": "текст_2",
-          "id": "chb_21",
-          "checked": "",
-          "status": "unabled",
-          "value":""
-        }        
-      ]
-    },
-    {
-      "type": "button-group",
-      "items": [
-        {
-          "text": "кнопка_1",
-          "class": "secondary",
-          "icon": "floppy",
-          "action": {
-            "params": [],
-            "func": []
-          }
-        },
-        {
-          "text": "кнопка_2",
-          "icon": "arrow-clockwise",
-          "class": "secondary",
-          "action": {
-            "params": [],
-            "func": []
-          }
-        },
-        {
-          "text": "",
-          "class": "secondary",
-          "icon": "x-circle",
-          "action": {
-            "params": [],
-            "func": []
-          }
-        }
-      ]
-    },
-    {
-      "type": "button",
-      "icon": "printer",
-      "text": "Кнопка"
-    },
-    {
-      "type": "menu",
-      "items": [
-        {
-          "title": "Главная",
-          "submenu": [
+          "type": "block",
+          "orientation": "column",
+          "items":[
             {
-              "title": "Уровень-1.1",
-              "link": "/",
-              "submenu": [
+              "type": "checkbox",
+              "inline": "inline",
+              "items": [
                 {
-                  "title": "Уровень-1-1"
+                  "label": "текст_1",
+                  "id": "chb_1",
+                  "checked": "checked",
+                  "status": "disabled",
+                  "value":""
+                },
+                {
+                  "label": "текст_2",
+                  "id": "chb_21",
+                  "checked": "",
+                  "status": "unabled",
+                  "value":""
+                }        
+              ]
+            },
+            {
+              "type": "button-group",
+              "items": [
+                {
+                  "text": "кнопка_1",
+                  "class": "secondary",
+                  "icon": "floppy",
+                  "action": {
+                    "params": [],
+                    "func": []
+                  }
+                },
+                {
+                  "text": "кнопка_2",
+                  "icon": "arrow-clockwise",
+                  "class": "secondary",
+                  "action": {
+                    "params": [],
+                    "func": []
+                  }
+                },
+                {
+                  "text": "",
+                  "class": "secondary",
+                  "icon": "x-circle",
+                  "action": {
+                    "params": [],
+                    "func": []
+                  }
                 }
               ]
             },
             {
-              "title": "Уровень-1.2",
-              "link": "/",
-              "submenu": [
+              "type": "button",
+              "icon": "printer",
+              "text": "Кнопка"
+            },
+            {
+              "type": "button",
+              "icon": "printer",
+              "text": "Кнопка"
+            }            
+          ]
+        },
+        {
+          "type": "block",
+          "orientation": "column",
+          "items":[
+            {
+              "type": "radio-group",
+              "name": "radio-name",
+              "items": [
                 {
-                  "title": "Уровень-1-1"
+                  "id": "r_id_1",
+                  "label": "Радио_1",
+                  "status": "unabled",
+                  "checked": ""
+                },
+                {
+                  "id": "r_id_2",
+                  "label": "Радио_2",
+                  "status": "unabled"
+                }
+              ]
+            },
+            {
+              "type": "checkbox",
+              "inline": "inline",
+              "items": [
+                {
+                  "label": "текст_1",
+                  "id": "chb_1",
+                  "checked": "checked",
+                  "status": "disabled",
+                  "value":""
+                },
+                {
+                  "label": "текст_2",
+                  "id": "chb_21",
+                  "checked": "",
+                  "status": "unabled",
+                  "value":""
+                }        
+              ]
+            },
+            {
+              "type": "button-group",
+              "items": [
+                {
+                  "text": "кнопка_1",
+                  "class": "secondary",
+                  "icon": "floppy",
+                  "action": {
+                    "params": [],
+                    "func": []
+                  }
+                },
+                {
+                  "text": "кнопка_2",
+                  "icon": "arrow-clockwise",
+                  "class": "secondary",
+                  "action": {
+                    "params": [],
+                    "func": []
+                  }
+                },
+                {
+                  "text": "",
+                  "class": "secondary",
+                  "icon": "x-circle",
+                  "action": {
+                    "params": [],
+                    "func": []
+                  }
                 }
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "radio-group",
-      "name": "radio-name",
-      "items": [
-        {
-          "id": "r_id_1",
-          "label": "Радио_1",
-          "status": "unabled",
-          "checked": ""
-        },
-        {
-          "id": "r_id_2",
-          "label": "Радио_2",
-          "status": "unabled"
-        }
-      ]
+        }      
+      ]      
     },
     {
       "type": "tabs",
@@ -380,88 +405,106 @@
           "tab_name": "8(8д)ТЗР",
           "items": [
             {
-              "type": "input",
-              "dataType": "text",
-              "id": "inputId",
-              "label": "введите что-то там...",
-              "disabled": ""
-            },
-            {
-              "type": "input",
-              "dataType": "date",
-              "id": "inputId",
-              "label": "введите что-то там...",
-              "disabled": ""
-            },
-            {
-              "type": "input",
-              "dataType": "number",
-              "id": "inputId",
-              "label": "введите что-то там...",
-              "disabled": "disabled"
-            },
-            {
-              "type": "select",
-              "label": "текст_селекта_1",
-              "labelPosition": "left",
-              "disabled": "disabled",
+              "type":"block",
+              "orientation":"row",
               "items":[
                 {
-                  "name": "значение_1",
-                  "value": "",
-                  "selected": "selected"
-                },
-                                {
-                  "name": "значение_2",
-                  "value": "",
-                  "selected": ""
-                },
-                                {
-                  "name": "значение_3",
-                  "value": "",
-                  "selected": ""
-                }
-              ]
-            },
-            {
-              "type": "select",
-              "label": "текст_селекта_2",
-              "labelPosition": "right",
-              "items":[
-                {
-                  "name": "значение_1",
-                  "value": "",
-                  "selected": "selected"
-                },
-                                {
-                  "name": "значение_2",
-                  "value": "",
-                  "selected": ""
-                },
-                                {
-                  "name": "значение_3",
-                  "value": "",
-                  "selected": ""
-                }
-              ]
-            },            
-            {
-              "type": "radio-group",
-              "name": "radio-name-tab",
-              "inline": "form-check-inline",
-              "items": [
-                {
-                  "id": "r_id_5",
-                  "label": "Радио_в_табе_1",
-                  "status": "unabled",
-                  "checked": "checked"
+                  "type":"block",
+                  "orientation":"column",
+                  "items":[
+                    {
+                      "type": "input",
+                      "dataType": "text",
+                      "id": "inputId",
+                      "label": "введите что-то там...",
+                      "disabled": ""
+                    },
+                    {
+                      "type": "input",
+                      "dataType": "date",
+                      "id": "inputId",
+                      "label": "введите что-то там...",
+                      "disabled": ""
+                    },
+                    {
+                      "type": "select",
+                      "label": "текст_селекта_2",
+                      "labelPosition": "right",
+                      "items":[
+                        {
+                          "name": "значение_1",
+                          "value": "",
+                          "selected": "selected"
+                        },
+                                        {
+                          "name": "значение_2",
+                          "value": "",
+                          "selected": ""
+                        },
+                                        {
+                          "name": "значение_3",
+                          "value": "",
+                          "selected": ""
+                        }
+                      ]
+                    }
+                  ]                  
                 },
                 {
-                  "id": "r_id_6",
-                  "label": "Радио_в_табе_2",
-                  "status": "unabled",
-                  "checked": ""
-                }
+                  "type":"block",
+                  "orientation":"column",
+                  "items":[
+                    {
+                      "type": "input",
+                      "dataType": "number",
+                      "id": "inputId",
+                      "label": "введите что-то там...",
+                      "disabled": "disabled"
+                    },
+                    {
+                      "type": "select",
+                      "label": "текст_селекта_1",
+                      "labelPosition": "left",
+                      "disabled": "disabled",
+                      "items":[
+                        {
+                          "name": "значение_1",
+                          "value": "",
+                          "selected": "selected"
+                        },
+                                        {
+                          "name": "значение_2",
+                          "value": "",
+                          "selected": ""
+                        },
+                                        {
+                          "name": "значение_3",
+                          "value": "",
+                          "selected": ""
+                        }
+                      ]
+                    },            
+                    {
+                      "type": "radio-group",
+                      "name": "radio-name-tab",
+                      "inline": "form-check-inline",
+                      "items": [
+                        {
+                          "id": "r_id_5",
+                          "label": "Радио_в_табе_1",
+                          "status": "unabled",
+                          "checked": "checked"
+                        },
+                        {
+                          "id": "r_id_6",
+                          "label": "Радио_в_табе_2",
+                          "status": "unabled",
+                          "checked": ""
+                        }
+                      ]
+                    }
+                  ]
+                } 
               ]
             }
           ]

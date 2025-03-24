@@ -146,6 +146,17 @@ button[data-type="sidebar"]{
     --offcanvasRightWidth: 400px;
     --offcanvasLeftWidth: 400px;
 }
+.input-group{
+    width: auto;
+}
+.itemsBlock {
+    padding: 10px 8px;
+    gap: 10px;   
+}
+.itemsBlock>.row{
+    max-width: auto;
+}
+
 .btn{
     min-width: fit-content;
 }
@@ -162,13 +173,7 @@ h5 {
     margin-top: 2rem;
     color: steelblue;
 }
-.tab-pane>div,
-.tab-pane>button{
-    margin: 8px 0px
-}
-.tab-content{
-    padding: 10px 25px;
-}
+
 .tabulator .tabulator-header .tabulator-col,
 .tabulator-row .tabulator-cell {
     border-right: 1px solid #ddd;
@@ -201,10 +206,6 @@ body {
 .app-page {
     position: relative;
     overflow: auto;
-    flex: 1; 
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
     height: calc(100vh - var(--headerHeigth));
 }
 
