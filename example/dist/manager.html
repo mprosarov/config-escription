@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/app.css">
+  <title>Управление конфигурациями</title>
+</head>
+<body style="background-color: #f8f8f8;">
+<div class="container pt-4">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title h5">Загрузка кофигурации</div>
+          <form id="uploadFrom" onsubmit="submitForm(event)">
+            <div class="mb-3">
+              <label class="form-label">Выберите файл (только *.json)</label>
+              <input type="file" class="form-control" onchange="filiInputChange(event)" id="fileInput" name="fileJson"
+                accept=".json" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Имя конфигурации</label>
+              <input class="form-control" required name="configName">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Русское наименование</label>
+              <input type="text" class="form-control" required name="configNameRus">
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Отправить</button>
+            <div class="alert alert-danger d-none" role="alert" id="jsonUploadErrorAlert"></div>
+            <div class="alert alert-success d-none" role="alert" id="jsonUploadSuccesAlert">
+              JSON валидный
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="card-title h5">Предварительный просмотр</div>
+          <pre id="preview" style="max-height: 280px;background: #eaebeb;"></pre>
+          <div class="alert alert-danger d-none" role="alert" id="jsonErrorAlert"></div>
+          <div class="alert alert-success d-none" role="alert" id="jsonValidAlert">
+            JSON валидный
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
+
+<script src="js/vendors.js"></script>
+<script src="js/app.js"></script>
+<script>
+let formUpload = document.querySelector('#uploadFrom');
+let currentJsonStr = null;
+let currentJson = null;
+function filiInputChange(event) {
+  if(!event.target.files[0]) return;
+  let file = event.target.files[0];
+  const reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = function() {
+    formUpload.configName.value = file.name.replace('.json','');
+    currentJsonStr = reader.result;
+    try{
+      currentJson = JSON.parse(currentJsonStr);
+      currentJsonStr = JSON.stringify(currentJson);
+      document.querySelector('#preview').innerText = JSON.stringify(currentJson, null, 4);
+      document.getElementById('jsonErrorAlert').classList.add('d-none');
+      document.getElementById('jsonValidAlert').classList.remove('d-none');
+    }catch(err){
+      document.getElementById('jsonValidAlert').classList.add('d-none');
+      document.getElementById('jsonErrorAlert').classList.remove('d-none');
+      document.getElementById('jsonErrorAlert').innerText = 'Ошибка валидации JSON файла: '+err.message;
+    }
+
+  }
+}
+function submitForm(event) {
+  event.preventDefault();
+  let objForm = {
+    scode: formUpload.configName.value,
+    sname: formUpload.configNameRus.value,
+    jconfig: currentJson
+  }
+  fetch(`site.ru/saveuserconfig`, { // Заменитm на свой url
+    method: 'POST',
+    headers:{
+      'Content-Type': 'application/json' // 'text/plain' - если сервер не может прочитать json
+      //'Content-Type': 'text/plain' // 'text/plain' - если сервер не может прочитать json
+    },
+    //body: JSON.stringify(objForm)
+    body: JSON.stringify(currentJson), // если 'text/plain' тогда другие параметры передавать через get параметры
+
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json(); // Или response.text(), в зависимости от сервера
+    }
+    throw new Error('Ответ сервера не успешный');
+  })
+  .then(data => {
+    console.log('Успех:', data);
+    // Здесь можно обработать успешный ответ
+    showUploadSuccess();
+  })
+  .catch((error) => {
+    console.error('Ошибка:', error);
+    // Здесь можно обработать ошибку
+    showUploadError(error.message);
+  });
+}
+function showUploadError(errorTxt) {
+  document.getElementById('jsonUploadErrorAlert').classList.remove('d-none');
+  document.getElementById('jsonUploadSuccesAlert').classList.add('d-none');
+  document.getElementById('jsonUploadErrorAlert').innerText = errorTxt;
+}
+function showUploadSuccess() {
+  document.getElementById('jsonUploadErrorAlert').classList.add('d-none');
+  document.getElementById('jsonUploadSuccesAlert').classList.remove('d-none');
+}
+</script>
