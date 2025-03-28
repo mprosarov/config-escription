@@ -18,7 +18,7 @@ const PageBuilder = (function(){
     async function loadPageConfig(configName,params){
         // очищаем страницу, чтобы построить новую по загруженной конфигурации
         clear();
-        // показываем лоадер
+        // лоадер
         document.body.insertAdjacentHTML("beforeend", `<section class="loader-container">
                                                             <div class="dot"></div>
                                                             <div class="dot"></div>
@@ -29,6 +29,7 @@ const PageBuilder = (function(){
         let loader = document.body.querySelector(".loader-container");
         try {
           let response = await fetch(`${URL}?name=${configName}`);
+          console.log(response)
           let config = await response.json();
           console.log(response);
           // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
