@@ -1,5 +1,7 @@
 const PageBuilder = (function(){
     const URL = "http://localhost:3000/config";
+    //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
+    
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
@@ -15,7 +17,7 @@ const PageBuilder = (function(){
     async function loadPageConfig(configName,params){
         // очищаем страницу, чтобы построить новую по загруженной конфигурации
         clear();
-        // показываем лоадер
+        // лоадер
         document.body.insertAdjacentHTML("beforeend", `<section class="loader-container">
                                                             <div class="dot"></div>
                                                             <div class="dot"></div>
@@ -27,8 +29,11 @@ const PageBuilder = (function(){
         try {
           let response = await fetch(`${URL}?name=${configName}`);
           let config = await response.json();
-          console.log(response);
-          // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
+        //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
+        //   let result = await response.json();
+        //   let config = result.result;
+          
+        // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
           if(response.status !== 200){
             throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
           }
