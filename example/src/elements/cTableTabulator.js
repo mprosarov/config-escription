@@ -42,15 +42,16 @@ class TableTabulator extends BaseElement {
         }
       console.log('QUERY - ',query)
       console.log('PARAMS - ',allParams)
-      await fetch(`${URL}/doquery`,{
+      let response = await fetch(`${TableTabulator.URL}/doquery`,{
         method: "POST",
         headers: { Accept:"text/plain","Content-Type": "text/plain" },
         body: query
       })
-      .then(response => response.text())
-      .then(result => { const json = JSON.parse(result);
-                        config.tdata.data = json.resultset;
-      });
+      let responseText = await response.text();
+      let json = JSON.parse(responseText);
+      config.tdata.data = json.resultset;
+      console.log(config.tdata)
+     
       
       //--должно прийти 
       // {
