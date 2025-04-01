@@ -84,13 +84,14 @@ function filiInputChange(event) {
   }
 }
 function submitForm(event) {
+  const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
   event.preventDefault();
   let objForm = {
     scode: formUpload.configName.value,
     sname: formUpload.configNameRus.value,
     jconfig: currentJson
   }
-  fetch(`site.ru/saveuserconfig`, { // Заменитm на свой url
+  fetch(`${URL}/doSaveInterfaceConfig`, {
     method: 'POST',
     headers:{
       'Content-Type': 'application/json' // 'text/plain' - если сервер не может прочитать json
@@ -102,18 +103,16 @@ function submitForm(event) {
   })
   .then(response => {
     if (response.ok) {
-      return response.json(); // Или response.text(), в зависимости от сервера
+      return response.json(); // Или response.text()
     }
     throw new Error('Ответ сервера не успешный');
   })
   .then(data => {
     console.log('Успех:', data);
-    // Здесь можно обработать успешный ответ
     showUploadSuccess();
   })
   .catch((error) => {
     console.error('Ошибка:', error);
-    // Здесь можно обработать ошибку
     showUploadError(error.message);
   });
 }

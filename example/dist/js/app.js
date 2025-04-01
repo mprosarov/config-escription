@@ -3,6 +3,8 @@
 //=========================================
 const PageBuilder = (function(){
     const URL = "http://localhost:3000/config";
+    //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
+    
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
@@ -29,10 +31,12 @@ const PageBuilder = (function(){
         let loader = document.body.querySelector(".loader-container");
         try {
           let response = await fetch(`${URL}?name=${configName}`);
-          console.log(response)
           let config = await response.json();
-          console.log(response);
-          // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
+        //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
+        //   let result = await response.json();
+        //   let config = result.result;
+          
+        // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
           if(response.status !== 200){
             throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
           }
@@ -401,6 +405,7 @@ class CheckBoxGroup extends BaseElement {
 PageBuilder.addComponent(CheckBoxGroup.TYPE, CheckBoxGroup);
 class TableTabulator extends BaseElement {
     static TYPE = 'table-tabulator';
+    static URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
     constructor(parentElement, config) {
         super(parentElement, config);
         this.create();
@@ -418,19 +423,60 @@ class TableTabulator extends BaseElement {
         this.recursiveSearchColumns(child, target);
       }
     }
-    create(){
-        let contentTable = `<div><h6>${this.config["name"]}</h6>
-                                <div id="${this.config["id"]}"></div>
-                            </div>`;
-        this.parentElement.insertAdjacentHTML("beforeend", contentTable);
+    async create(){
+      //--голый запрос для таблицы (без подставленных параметров) и сами параметры лежат в конфиге таблицы
+      //--допустим,что есть и общие параметры, и личные для чего либо
+      //--создаем 2 массива объектов параметров(PARAMS - общие, params - частные)
+      //--предполагаемая структура параметра: 
+      // param = {
+      //   id: '', 
+      //   type: 'date',
+      //   name: '::pDate',
+      //   value: '12/02/2024'
+      // }
 
-        this.recursiveSearchColumns(this.config["tdata"], "columns");
-        if (this.config["indexCols"]) {
-          this.config["tdata"]["data"].unshift(this.config["indexCols"]);
-          this.config["tdata"]["frozenRows"] = 1;
+      var PARAMS = [];//задаем тоже где-то в общем конфиге
+      let query = this.config.query;
+      //--объединяем все параметры в общую кучу,бежим по их именам,ищем их в запросе,заменяем на значение 
+      //--отправляем запрос выполняться на сервак 
+      //--получаем обратно результат запроса
+      let allParams = [...this.config.params,...PARAMS];
+      if(allParams.length)
+        for(let i=0; i<allParams.length; i++){
+          query = query.replace(allParams[i].name,allParams[i].value)
         }
-        new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-    }
+      console.log('QUERY - ',query)
+      console.log('PARAMS - ',allParams)
+      await fetch(`${URL}/doquery`,{
+        method: "POST",
+        headers: { Accept:"text/plain","Content-Type": "text/plain" },
+        body: query
+      })
+      .then(response => response.text())
+      .then(result => { const json = JSON.parse(result);
+                        config.tdata.data = json.resultset;
+      });
+      
+      //--должно прийти 
+      // {
+      //   message:'Успех',
+      //   metadata: [],
+      //   resultset: []
+      // }
+      console.log(config)
+      
+      let contentTable = `<div><h6>${this.config["name"]}</h6>
+                              <div id="${this.config["id"]}"></div>
+                          </div>`;
+      this.parentElement.insertAdjacentHTML("beforeend", contentTable);
+
+      this.recursiveSearchColumns(this.config["tdata"], "columns");
+      if (this.config["indexCols"]) {
+        this.config["tdata"]["data"].unshift(this.config["indexCols"]);
+        this.config["tdata"]["frozenRows"] = 1;
+      }
+      new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      }
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
 /*

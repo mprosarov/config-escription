@@ -18,43 +18,48 @@ class TableTabulator extends BaseElement {
         this.recursiveSearchColumns(child, target);
       }
     }
-    create(){
-      var dataTable = async function loadDataTable(config,params){
-        //--голый запрос для таблицы (без подставленных параметров) и сами параметры лежат в конфиге таблицы
-        //--допустим,что есть и общие параметры, и личные для чего либо
-        //--создаем 2 массива объектов параметров(PARAMS - общие, params - частные)
-        //--предполагаемая структура параметра: 
-        // param = {
-        //   id: '', 
-        //   type: 'date',
-        //   name: '::pDate',
-        //   value: '12/02/2024'
-        // }
-        var PARAMS = [];//задаем тоже где-то в общем конфиге
-        let query = config.query;
-        //--объединяем все параметры в общую кучу,бежим по их именам,ищем их в запросе,заменяем на значение 
-        //--отправляем запрос выполняться на сервак(если я правильно понимаю) 
-        //--получаем обратно результат запроса
-        let allParams = [...config.params,...PARAMS];
+    async create(){
+      //--голый запрос для таблицы (без подставленных параметров) и сами параметры лежат в конфиге таблицы
+      //--допустим,что есть и общие параметры, и личные для чего либо
+      //--создаем 2 массива объектов параметров(PARAMS - общие, params - частные)
+      //--предполагаемая структура параметра: 
+      // param = {
+      //   id: '', 
+      //   type: 'date',
+      //   name: '::pDate',
+      //   value: '12/02/2024'
+      // }
+
+      var PARAMS = [];//задаем тоже где-то в общем конфиге
+      let query = this.config.query;
+      //--объединяем все параметры в общую кучу,бежим по их именам,ищем их в запросе,заменяем на значение 
+      //--отправляем запрос выполняться на сервак 
+      //--получаем обратно результат запроса
+      let allParams = [...this.config.params,...PARAMS];
+      if(allParams.length)
         for(let i=0; i<allParams.length; i++){
           query = query.replace(allParams[i].name,allParams[i].value)
         }
-        var response = await fetch(`${URL}/doquery`,{
-          method: "POST",
-          body: query
-        });
-        let result = await response.json();
-        result = JSON.parse(result)
-        
-        //--должно прийти 
-        // {
-        //   message:'Успех',
-        //   metadata: [],
-        //   resultset: []
-        // }
-        return result.resultset
-      }
-      config.tdata.data = dataTable;
+      console.log('QUERY - ',query)
+      console.log('PARAMS - ',allParams)
+      await fetch(`${URL}/doquery`,{
+        method: "POST",
+        headers: { Accept:"text/plain","Content-Type": "text/plain" },
+        body: query
+      })
+      .then(response => response.text())
+      .then(result => { const json = JSON.parse(result);
+                        config.tdata.data = json.resultset;
+      });
+      
+      //--должно прийти 
+      // {
+      //   message:'Успех',
+      //   metadata: [],
+      //   resultset: []
+      // }
+      console.log(config)
+      
       let contentTable = `<div><h6>${this.config["name"]}</h6>
                               <div id="${this.config["id"]}"></div>
                           </div>`;
