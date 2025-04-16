@@ -31,35 +31,31 @@ class TableTabulator extends BaseElement {
       // }
 
       var PARAMS = [];//задаем тоже где-то в общем конфиге
-      let query = this.config.query;
-      //--объединяем все параметры в общую кучу,бежим по их именам,ищем их в запросе,заменяем на значение 
-      //--отправляем запрос выполняться на сервак 
-      //--получаем обратно результат запроса
-      let allParams = [...this.config.params,...PARAMS];
-      if(allParams.length)
-        for(let i=0; i<allParams.length; i++){
-          query = query.replace(allParams[i].name,allParams[i].value)
-        }
-      console.log('QUERY - ',query)
-      console.log('PARAMS - ',allParams)
-      let response = await fetch(`${TableTabulator.URL}/doquery`,{
-        method: "POST",
-        headers: { Accept:"text/plain","Content-Type": "text/plain" },
-        body: query
-      })
-      let responseText = await response.text();
-      let json = JSON.parse(responseText);
-      config.tdata.data = json.resultset;
-      console.log(config.tdata)
-     
-      
+      if(this.config.query){
+        let query = this.config.query;
+        let allParams = [...this.config.params,...PARAMS];
+        if(allParams.length)
+          for(let i=0; i<allParams.length; i++){
+            query = query.replace(allParams[i].name,allParams[i].value)
+          }
+        console.log('QUERY - ',query)
+        console.log('PARAMS - ',allParams)
+          var response = await fetch(`${TableTabulator.URL}/doquery`,{
+            method: "POST",
+            headers: { Accept:"text/plain","Content-Type": "text/plain" },
+            body: query
+          })
+        let responseText = await response.text();
+        let json = JSON.parse(responseText);
+        this.config.tdata.data = json.resultset;
+        console.log(this.config.tdata)
+      }    
       //--должно прийти 
       // {
       //   message:'Успех',
       //   metadata: [],
       //   resultset: []
       // }
-      console.log(config)
       
       let contentTable = `<div><h6>${this.config["name"]}</h6>
                               <div id="${this.config["id"]}"></div>
@@ -72,6 +68,24 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      if(!this.config["action"]){
+        return
       }
+      let action = this.config["action"];
+      var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
+      for(let i=0; i<action.length; i++){
+
+        switch(action[i].name){
+          case "redirect":
+            table.on(action[i].click, function(e, row){
+              //e — объект события щелчка
+              //row — компонент строки
+              PageBuilder.loadPageConfig(row.getData()["1"],row.getData());
+            });
+            break
+        }
+      }
+      }
+      
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);

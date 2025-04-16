@@ -15,6 +15,7 @@ const PageBuilder = (function(){
     }
     // Загрузить json конфигурацию страницы с сервера по имени файла
     async function loadPageConfig(configName,params){
+      console.log(params)
         // очищаем страницу, чтобы построить новую по загруженной конфигурации
         clear();
         // лоадер
