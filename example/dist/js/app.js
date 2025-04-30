@@ -18,7 +18,6 @@ const PageBuilder = (function(){
     }
     // Загрузить json конфигурацию страницы с сервера по имени файла
     async function loadPageConfig(configName,params){
-      console.log(params)
         // очищаем страницу, чтобы построить новую по загруженной конфигурации
         clear();
         // лоадер
@@ -223,13 +222,34 @@ class Menu {
     if (!item.submenu || item.submenu.length == 0){
       //TODO: проверять какое действие нужно делать если нет подменю
       // если есть свойство и  action равно redirect, то загружаем страницу по имени из свойства link
-      if(!item['action'] || item['action'] == 'redirect'){
+      //if(!item['action'] || item['action'] == 'redirect'){
+      if(!item['action']||item['action']==''){
         a_element.onclick = () => {
           event.preventDefault();
           PageBuilder.loadPageConfig(item.link);
         };
       }
-
+      
+      if(item['action'] == 'redirect'){
+        a_element.onclick = () => {
+          event.preventDefault();
+          if(item['action']['link']){
+            let url = window.location.href;
+            console.log(url)
+            let searchParams = new URLSearchParams(url);
+            let urlConfigName = searchParams.get("config");
+            if(urlConfigName === null){
+              searchParams.append("config",item['link'])
+           //  window.open(url+''+ searchParams.toString(), '_blank').focus();
+           //  PageBuilder.loadPageConfig(item.link);
+           
+            console.log(url+'?'+ encodeURIComponent(searchParams.toString()))
+            //console.log(urlConfigName)
+            } ;
+          }
+        } 
+      }
+//window.open(url, '_blank').focus();
       return li_element;
     }
     // У пункта есть подменю - добавляем необходимые классы
@@ -474,24 +494,26 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-      if(!this.config["action"]){
+      
+      if(!this.config["action"]){//пока непонятно везде будет или нет
         return
       }
       let action = this.config["action"];
       var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
       for(let i=0; i<action.length; i++){
-
         switch(action[i].name){
           case "redirect":
             table.on(action[i].click, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
+              //например,берем значение из первого поля
+              
               PageBuilder.loadPageConfig(row.getData()["1"],row.getData());
             });
             break
         }
       }
-      }
+    }//end create
       
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);

@@ -50,13 +50,34 @@ class Menu {
     if (!item.submenu || item.submenu.length == 0){
       //TODO: проверять какое действие нужно делать если нет подменю
       // если есть свойство и  action равно redirect, то загружаем страницу по имени из свойства link
-      if(!item['action'] || item['action'] == 'redirect'){
+      //if(!item['action'] || item['action'] == 'redirect'){
+      if(!item['action']||item['action']==''){
         a_element.onclick = () => {
           event.preventDefault();
           PageBuilder.loadPageConfig(item.link);
         };
       }
-
+      
+      if(item['action'] == 'redirect'){
+        a_element.onclick = () => {
+          event.preventDefault();
+          if(item['action']['link']){
+            let url = window.location.href;
+            console.log(url)
+            let searchParams = new URLSearchParams(url);
+            let urlConfigName = searchParams.get("config");
+            if(urlConfigName === null){
+              searchParams.append("config",item['link'])
+           //  window.open(url+''+ searchParams.toString(), '_blank').focus();
+           //  PageBuilder.loadPageConfig(item.link);
+           
+            console.log(url+'?'+ encodeURIComponent(searchParams.toString()))
+            //console.log(urlConfigName)
+            } ;
+          }
+        } 
+      }
+//window.open(url, '_blank').focus();
       return li_element;
     }
     // У пункта есть подменю - добавляем необходимые классы

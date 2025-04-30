@@ -68,24 +68,26 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-      if(!this.config["action"]){
+      
+      if(!this.config["action"]){//пока непонятно везде будет или нет
         return
       }
       let action = this.config["action"];
       var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
       for(let i=0; i<action.length; i++){
-
         switch(action[i].name){
           case "redirect":
             table.on(action[i].click, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
+              //например,берем значение из первого поля
+              
               PageBuilder.loadPageConfig(row.getData()["1"],row.getData());
             });
             break
         }
       }
-      }
+    }//end create
       
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
