@@ -20,23 +20,34 @@
                   {
                     "title": "ОЭФ",
                     "action": "redirect",
-                    "link": "main_oef"
+                    "config": "main_oef",
+                    "newtab": true
+                    
                   },
+                  {
+                    "title": "Тест",
+                    "action": "redirect",
+                    "url":""
+                    
+                  },                  
                   {
                     "title": "ОЭФ_переадресация",
                     "submenu": [
                       {
-                        "link": "oef",
+                        "config": "oef",
                         "title": "ОЭФ",
-                        "action": "redirect"
+                        "action": "redirect",
+                        "newtab": true
+                
                       },
                       {
-                        "link": "check_list",
+                        "config": "check_list",
                         "title": "Чек-лист",
-                        "action": "redirect"
+                        "action": "redirect",
+                        "newtab": false
                       },
                       {
-                        "link": "calculation",
+                        "config": "calculation",
                         "title": "Калькуляция",
                         "action": "redirect"
                       }
@@ -417,8 +428,6 @@
                       "click": "rowDblClick",
                       "url":"",
                       "cols": []
-
-                      
                     }
                   ],
                   "name": "Расчет-обоснование норматива транспортно-заготовительных затрат",
