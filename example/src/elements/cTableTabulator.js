@@ -72,17 +72,43 @@ class TableTabulator extends BaseElement {
       if(!this.config["action"]){//пока непонятно везде будет или нет
         return
       }
-      let action = this.config["action"];
+      var action = this.config["action"];
       var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
       for(let i=0; i<action.length; i++){
         switch(action[i].name){
           case "redirect":
-            table.on(action[i].click, function(e, row){
+            table.on(action[i].event, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
-              //например,берем значение из первого поля
+              //самая первая ячейка строки передает значение config
+              var params = {}; //передаваемые параметры
+              if(action[i]["colparams"]){
+                let cols = action[i]["colparams"];
+                for(let i=0; i<cols.length; i++){
+                  params[cols[i]] = row.getData()[cols[i]]
+                }
+              }
+              if (action[i]["url"]) {
+                window.open(action[i]["url"], "_blank").focus();
+              } else if (action[i]["url"] == "" && !action[i]['config']) {
+                throw new Error(`не указан ни один параметр для перехода (url,config)`);
+              }
+              if (!action[i]["newtab"]) PageBuilder.loadPageConfig(params[cols[i]],row.getData());
+              else {
+                  let redirectUrl = new URL(window.location.href);
+                  let searchParams = new URLSearchParams(redirectUrl.search);
+                  
+                  searchParams.set("config", row.getData()["1"]);
+                  for(let key in params){
+                    searchParams.set(key, params[key]);
+                  }
+                  redirectUrl.search = searchParams.toString();
+                  console.log(redirectUrl)
+                  //еще надо передать параметры
+                  window.open(redirectUrl, "_blank").focus();
+              } 
+                    
               
-              PageBuilder.loadPageConfig(row.getData()["1"],row.getData());
             });
             break
         }

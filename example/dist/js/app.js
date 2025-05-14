@@ -222,36 +222,29 @@ class Menu {
     if (!item.submenu || item.submenu.length == 0){
       //TODO: проверять какое действие нужно делать если нет подменю
       // если есть свойство и  action равно redirect, то загружаем страницу по имени из свойства config
-      //if(!item['action'] || item['action'] == 'redirect'){
       if(!item['action']||item['action']==''){
         a_element.onclick = () => {
           event.preventDefault();
           PageBuilder.loadPageConfig(item.config);
         };
       }
-      var url = window.location.href;
-
+      
       if(item['action'] == 'redirect'){
         a_element.onclick = () => {
           event.preventDefault();
-
-          if(item['url']){
-            if(item['url']==""){
-              throw new Error(`не указан url`);
-            }else window.open(item['url'], '_blank').focus();
-            return
+          if (item["url"]) {
+            window.open(item["url"], "_blank").focus();
+          } else if (item["url"] == "" && !item['config']) {
+            throw new Error(`не указан ни один параметр для перехода (url,config)`);
           }
-          let searchParams = new URLSearchParams(url);
-          let urlConfigName = searchParams.get("config");
-          url = url+'?config='+ encodeURIComponent(item['config'])
-          if(!item['newtab']||item['newtab'] == false)
-            PageBuilder.loadPageConfig(item.config);
-          else{
-            if(urlConfigName === null){
-              searchParams.append("config",item['config'])
-              window.open(url, '_blank').focus();
-            };
-          }    
+          if (!item["newtab"]) PageBuilder.loadPageConfig(item.config);
+          else {
+              let redirectUrl = new URL(window.location.href);
+              let searchParams = new URLSearchParams(redirectUrl.search);
+              searchParams.set("config", item["config"]);
+              redirectUrl.search = searchParams.toString();
+              window.open(redirectUrl, "_blank").focus();
+          } 
         } 
       }
       return li_element;
@@ -502,17 +495,43 @@ class TableTabulator extends BaseElement {
       if(!this.config["action"]){//пока непонятно везде будет или нет
         return
       }
-      let action = this.config["action"];
+      var action = this.config["action"];
       var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
       for(let i=0; i<action.length; i++){
         switch(action[i].name){
           case "redirect":
-            table.on(action[i].click, function(e, row){
+            table.on(action[i].event, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
-              //например,берем значение из первого поля
+              //самая первая ячейка строки передает значение config
+              var params = {}; //передаваемые параметры
+              if(action[i]["colparams"]){
+                let cols = action[i]["colparams"];
+                for(let i=0; i<cols.length; i++){
+                  params[cols[i]] = row.getData()[cols[i]]
+                }
+              }
+              if (action[i]["url"]) {
+                window.open(action[i]["url"], "_blank").focus();
+              } else if (action[i]["url"] == "" && !action[i]['config']) {
+                throw new Error(`не указан ни один параметр для перехода (url,config)`);
+              }
+              if (!action[i]["newtab"]) PageBuilder.loadPageConfig(params[cols[i]],row.getData());
+              else {
+                  let redirectUrl = new URL(window.location.href);
+                  let searchParams = new URLSearchParams(redirectUrl.search);
+                  
+                  searchParams.set("config", row.getData()["1"]);
+                  for(let key in params){
+                    searchParams.set(key, params[key]);
+                  }
+                  redirectUrl.search = searchParams.toString();
+                  console.log(redirectUrl)
+                  //еще надо передать параметры
+                  window.open(redirectUrl, "_blank").focus();
+              } 
+                    
               
-              PageBuilder.loadPageConfig(row.getData()["1"],row.getData());
             });
             break
         }

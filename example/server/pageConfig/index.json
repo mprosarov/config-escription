@@ -27,7 +27,7 @@
                   {
                     "title": "Тест",
                     "action": "redirect",
-                    "url":""
+                    "url":"https://www.wildberries.ru/"
                     
                   },                  
                   {
@@ -425,9 +425,9 @@
                   "action":[
                     {
                       "name": "redirect",
-                      "click": "rowDblClick",
-                      "url":"",
-                      "cols": []
+                      "event": "rowDblClick",
+                      "newtab": true,
+                      "colparams": ["2","3"]
                     }
                   ],
                   "name": "Расчет-обоснование норматива транспортно-заготовительных затрат",

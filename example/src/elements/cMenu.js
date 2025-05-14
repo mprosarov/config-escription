@@ -50,36 +50,29 @@ class Menu {
     if (!item.submenu || item.submenu.length == 0){
       //TODO: проверять какое действие нужно делать если нет подменю
       // если есть свойство и  action равно redirect, то загружаем страницу по имени из свойства config
-      //if(!item['action'] || item['action'] == 'redirect'){
       if(!item['action']||item['action']==''){
         a_element.onclick = () => {
           event.preventDefault();
           PageBuilder.loadPageConfig(item.config);
         };
       }
-      var url = window.location.href;
-
+      
       if(item['action'] == 'redirect'){
         a_element.onclick = () => {
           event.preventDefault();
-
-          if(item['url']){
-            if(item['url']==""){
-              throw new Error(`не указан url`);
-            }else window.open(item['url'], '_blank').focus();
-            return
+          if (item["url"]) {
+            window.open(item["url"], "_blank").focus();
+          } else if (item["url"] == "" && !item['config']) {
+            throw new Error(`не указан ни один параметр для перехода (url,config)`);
           }
-          let searchParams = new URLSearchParams(url);
-          let urlConfigName = searchParams.get("config");
-          url = url+'?config='+ encodeURIComponent(item['config'])
-          if(!item['newtab']||item['newtab'] == false)
-            PageBuilder.loadPageConfig(item.config);
-          else{
-            if(urlConfigName === null){
-              searchParams.append("config",item['config'])
-              window.open(url, '_blank').focus();
-            };
-          }    
+          if (!item["newtab"]) PageBuilder.loadPageConfig(item.config);
+          else {
+              let redirectUrl = new URL(window.location.href);
+              let searchParams = new URLSearchParams(redirectUrl.search);
+              searchParams.set("config", item["config"]);
+              redirectUrl.search = searchParams.toString();
+              window.open(redirectUrl, "_blank").focus();
+          } 
         } 
       }
       return li_element;
