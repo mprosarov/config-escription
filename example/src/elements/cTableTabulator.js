@@ -32,8 +32,10 @@ class TableTabulator extends BaseElement {
 
       var PARAMS = [];//задаем тоже где-то в общем конфиге
       if(this.config.query){
+        //-----вопрос приема параметров(откуда)------
         let query = this.config.query;
         let allParams = [...this.config.params,...PARAMS];
+        //------------------------------------
         if(allParams.length)
           for(let i=0; i<allParams.length; i++){
             query = query.replace(allParams[i].name,allParams[i].value)
@@ -68,52 +70,59 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
+      var action = this.config["action"];
       
-      if(!this.config["action"]){//пока непонятно везде будет или нет
+      if(!action){//пока непонятно везде будет или нет
         return
       }
-      var action = this.config["action"];
-      var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
       for(let i=0; i<action.length; i++){
         switch(action[i].name){
+          //переадресация
           case "redirect":
             table.on(action[i].event, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
-              //самая первая ячейка строки передает значение config
               var params = {}; //передаваемые параметры
               if(action[i]["colparams"]){
-                let cols = action[i]["colparams"];
+                var cols = action[i]["colparams"];
                 for(let i=0; i<cols.length; i++){
                   params[cols[i]] = row.getData()[cols[i]]
                 }
               }
+              //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
+              //если он пустой и его нет, то валится ошибка в консоль
               if (action[i]["url"]) {
                 window.open(action[i]["url"], "_blank").focus();
               } else if (action[i]["url"] == "" && !action[i]['config']) {
                 throw new Error(`не указан ни один параметр для перехода (url,config)`);
               }
-              if (!action[i]["newtab"]) PageBuilder.loadPageConfig(params[cols[i]],row.getData());
-              else {
-                  let redirectUrl = new URL(window.location.href);
-                  let searchParams = new URLSearchParams(redirectUrl.search);
-                  
-                  searchParams.set("config", row.getData()["1"]);
-                  for(let key in params){
-                    searchParams.set(key, params[key]);
-                  }
-                  redirectUrl.search = searchParams.toString();
-                  console.log(redirectUrl)
-                  //еще надо передать параметры
-                  window.open(redirectUrl, "_blank").focus();
-              } 
-                    
               
+              //если в объекте action указан config,то переадресуемся по нему
+              //если нет, то по полю idconfig таблицы 
+              let config;
+              if(action[i]["config"]){
+                config = action[i]["config"]
+              } 
+              else{
+                config = row.getData()["idconfig"]
+              } 
+              if (!action[i]["newtab"]) 
+                PageBuilder.loadPageConfig(config,params);
+              else {
+                let redirectUrl = new URL(window.location.href);
+                let searchParams = new URLSearchParams(redirectUrl.search);
+                searchParams.set("config", config);
+                for(let key in params){
+                  searchParams.set(key, params[key]);
+                }
+                redirectUrl.search = searchParams.toString();
+                window.open(redirectUrl, "_blank").focus();
+              } 
             });
             break
         }
       }
     }//end create
-      
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
