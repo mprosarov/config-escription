@@ -1,6 +1,7 @@
 class TableTabulator extends BaseElement {
     static TYPE = 'table-tabulator';
     static URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
+    static PARAMS = [];//задаем тоже где-то в общем конфиге
     constructor(parentElement, config) {
         super(parentElement, config);
         this.create();
@@ -30,12 +31,16 @@ class TableTabulator extends BaseElement {
       //   value: '12/02/2024'
       // }
 
-      var PARAMS = [];//задаем тоже где-то в общем конфиге
-      if(this.config.query){
-        //-----вопрос приема параметров(откуда)------
-        let query = this.config.query;
-        let allParams = [...this.config.params,...PARAMS];
+      //-----получаем параметры при переадресации-------ПОКА ТУТ!!! надо переносить в pageBuilder
+      let redirectUrlParams = new URL(window.location.href);
+      let urlParams = new URLSearchParams(redirectUrlParams.search);
+      const getParams = Object.fromEntries(urlParams.entries());
+      //console.log(getParams)
+      
+      if(this.config.query && this.config.query !== "select 1"){
+        let allParams = [...this.config.params,...TableTabulator.PARAMS];
         //------------------------------------
+        let query = this.config.query;
         if(allParams.length)
           for(let i=0; i<allParams.length; i++){
             query = query.replace(allParams[i].name,allParams[i].value)
@@ -59,7 +64,7 @@ class TableTabulator extends BaseElement {
       //   resultset: []
       // }
       
-      let contentTable = `<div><h6>${this.config["name"]}</h6>
+      let contentTable = `<div><h6>${this.config['name']?this.config['name']:''}</h6>
                               <div id="${this.config["id"]}"></div>
                           </div>`;
       this.parentElement.insertAdjacentHTML("beforeend", contentTable);
@@ -70,7 +75,8 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-      var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
+      var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
+      
       var action = this.config["action"];
       
       if(!action){//пока непонятно везде будет или нет
@@ -83,12 +89,18 @@ class TableTabulator extends BaseElement {
             table.on(action[i].event, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
-              var params = {}; //передаваемые параметры
+              var params = TableTabulator.PARAMS; //передаваемые параметры
               if(action[i]["colparams"]){
                 var cols = action[i]["colparams"];
-                for(let i=0; i<cols.length; i++){
-                  params[cols[i]] = row.getData()[cols[i]]
+                for(let j=0; j<cols.length; j++){
+                  params.push({
+                    id: cols[j],
+                    name: cols[j],
+                    value: row.getData()[cols[j]]
+                  })
+                  //params[cols[j]] = row.getData()[cols[j]]
                 }
+                console.log(params)
               }
               //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
               //если он пустой и его нет, то валится ошибка в консоль
@@ -113,8 +125,9 @@ class TableTabulator extends BaseElement {
                 let redirectUrl = new URL(window.location.href);
                 let searchParams = new URLSearchParams(redirectUrl.search);
                 searchParams.set("config", config);
-                for(let key in params){
-                  searchParams.set(key, params[key]);
+                for(let j=0; j<params.length; j++){
+                  //пока неизвестно name или id
+                  searchParams.set(params[j]['name'], params[j]['value']);
                 }
                 redirectUrl.search = searchParams.toString();
                 window.open(redirectUrl, "_blank").focus();

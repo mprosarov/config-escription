@@ -19,3 +19,4 @@
 //= elements/cSelect.js
 //= elements/cInputField.js
 //= elements/cItemsBlock.js
+//= elements/cDataSources.js

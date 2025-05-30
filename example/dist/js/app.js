@@ -49,10 +49,10 @@ const PageBuilder = (function(){
         }
     }
     function create(parentElement,config) {
-        
         if(!components[config.type]){
             throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
-        }
+       
+          }
         return new components[config.type](parentElement,config);
     }
     // Создаем навигационную панель
@@ -61,6 +61,12 @@ const PageBuilder = (function(){
     }
     // создать страницу по конфигурации
     function createPage(config){
+        if (config["dataSources"]){
+          config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
+        }
+        // if (config["pageParams"]){
+        //   config["pageParams"].forEach(item=>{PageBuilder.create('null',item)})
+        // }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
         document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
         domPage = document.body.lastElementChild;
@@ -424,6 +430,7 @@ PageBuilder.addComponent(CheckBoxGroup.TYPE, CheckBoxGroup);
 class TableTabulator extends BaseElement {
     static TYPE = 'table-tabulator';
     static URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
+    static PARAMS = [];//задаем тоже где-то в общем конфиге
     constructor(parentElement, config) {
         super(parentElement, config);
         this.create();
@@ -453,12 +460,16 @@ class TableTabulator extends BaseElement {
       //   value: '12/02/2024'
       // }
 
-      var PARAMS = [];//задаем тоже где-то в общем конфиге
-      if(this.config.query){
-        //-----вопрос приема параметров------
-        let query = this.config.query;
-        let allParams = [...this.config.params,...PARAMS];
+      //-----получаем параметры при переадресации-------ПОКА ТУТ!!! надо переносить в pageBuilder
+      let redirectUrlParams = new URL(window.location.href);
+      let urlParams = new URLSearchParams(redirectUrlParams.search);
+      const getParams = Object.fromEntries(urlParams.entries());
+      //console.log(getParams)
+      
+      if(this.config.query && this.config.query !== "select 1"){
+        let allParams = [...this.config.params,...TableTabulator.PARAMS];
         //------------------------------------
+        let query = this.config.query;
         if(allParams.length)
           for(let i=0; i<allParams.length; i++){
             query = query.replace(allParams[i].name,allParams[i].value)
@@ -482,7 +493,7 @@ class TableTabulator extends BaseElement {
       //   resultset: []
       // }
       
-      let contentTable = `<div><h6>${this.config["name"]}</h6>
+      let contentTable = `<div><h6>${this.config['name']?this.config['name']:''}</h6>
                               <div id="${this.config["id"]}"></div>
                           </div>`;
       this.parentElement.insertAdjacentHTML("beforeend", contentTable);
@@ -493,7 +504,8 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-      var table = Tabulator.findTable(`#${this.config["id"]}`)[0]
+      var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
+      
       var action = this.config["action"];
       
       if(!action){//пока непонятно везде будет или нет
@@ -506,12 +518,18 @@ class TableTabulator extends BaseElement {
             table.on(action[i].event, function(e, row){
               //e — объект события щелчка
               //row — компонент строки
-              var params = {}; //передаваемые параметры
+              var params = TableTabulator.PARAMS; //передаваемые параметры
               if(action[i]["colparams"]){
                 var cols = action[i]["colparams"];
-                for(let i=0; i<cols.length; i++){
-                  params[cols[i]] = row.getData()[cols[i]]
+                for(let j=0; j<cols.length; j++){
+                  params.push({
+                    id: cols[j],
+                    name: cols[j],
+                    value: row.getData()[cols[j]]
+                  })
+                  //params[cols[j]] = row.getData()[cols[j]]
                 }
+                console.log(params)
               }
               //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
               //если он пустой и его нет, то валится ошибка в консоль
@@ -536,8 +554,9 @@ class TableTabulator extends BaseElement {
                 let redirectUrl = new URL(window.location.href);
                 let searchParams = new URLSearchParams(redirectUrl.search);
                 searchParams.set("config", config);
-                for(let key in params){
-                  searchParams.set(key, params[key]);
+                for(let j=0; j<params.length; j++){
+                  //пока неизвестно name или id
+                  searchParams.set(params[j]['name'], params[j]['value']);
                 }
                 redirectUrl.search = searchParams.toString();
                 window.open(redirectUrl, "_blank").focus();
@@ -740,3 +759,41 @@ class ItemsBlock extends BaseElement {
     }
 }
 PageBuilder.addComponent(ItemsBlock.TYPE, ItemsBlock);
+/*
+ 1. Создать класс который наследуется от класса BaseElement
+ 2. Создать статическое свойство компонента TYPE, которое соответствует типу(поле typr) компонента в конфигурации.
+ 3. Переопределить конструктор и передать в конструктор родительского класса параметры элемента.
+ 4. Переопределить метод создания компонента(create), в котором будет создан элемент и добавлен в родительский элемент.
+*/
+
+class DataSources {
+    static TYPE = "dataSource";
+    params = [];
+    constructor (parentElement, config) {
+        this.parentElement = parentElement;
+        this.config = config;
+        this.create();
+        this.execute();
+    }
+    create() {
+        let arrQueryParams = Array.from(new Set(this.config.query.match(/\{.+?\}/g).map(function(x){
+            return x.slice(1,-1)
+            }))
+        )
+        for(let i=0; i<arrQueryParams.length; i++){
+            let objParam = {
+                param: arrQueryParams[i],
+                value:'1'
+            };
+            this.params.push(objParam)
+        }
+    }
+    execute() {
+        let query = this.config.query;
+        for(let i=0; i<this.params.length; i++){
+            query = query.replaceAll(`{${this.params[i].param}}`,this.params[i].value)
+        }
+        console.log(query)
+    }
+}
+PageBuilder.addComponent(DataSources.TYPE, DataSources);

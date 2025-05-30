@@ -1,4 +1,30 @@
 {
+
+  "dataSources": [
+    {
+      "type": "dataSource",
+      "id": "example-table-theme",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    }
+  ],
+  "pageParams": [
+    {
+      "type": "param",
+      "name": "pTest",
+      "init":{
+      "valueType": "raw",
+      "value": "ololol"
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTest2",
+      "init":{
+      "valueType": "number",
+      "value": 111111
+      }
+    }    
+  ],
   "navbar": {
     "titlePosition": "right",
     "menuPosition": "top",
@@ -29,7 +55,13 @@
                     "action": "redirect",
                     "url":"https://www.wildberries.ru/"
                     
-                  },                  
+                  },
+                  {
+                    "title": "Юристы",
+                    "action": "redirect",
+                    "config": "lawyers",
+                    "newtab": true
+                  },                                    
                   {
                     "title": "ОЭФ_переадресация",
                     "submenu": [
@@ -667,6 +699,6 @@
         }
       ]
     }
-  ],
-  "params": []
+  ]
+  
 }

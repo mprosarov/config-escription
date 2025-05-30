@@ -1,0 +1,536 @@
+{
+
+    "navbar": {
+        "titlePosition": "right",
+        "menuPosition": "top",
+        "items": [
+
+            {
+                "type": "button-group",
+                "items": [
+                    {
+                        "class": "secondary",
+                        "icon": "floppy",
+                        "action": {
+                            "params": [],
+                            "func": []
+                        }
+                    },
+                    {
+                        "class": "secondary",
+                        "icon": "x-square",
+                        "action": {
+                            "params": [],
+                            "func": []
+                        }
+                    },
+                    {
+                        "class": "secondary",
+                        "icon": "arrow-clockwise",
+                        "action": {
+                            "params": [],
+                            "func": []
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "button-group",
+                "items": [
+                    {
+                        "class": "secondary",
+                        "icon": "person-fill-add",
+                        "action": {
+                            "params": [],
+                            "func": []
+                        },
+                        "disabled": ""
+                    },
+                    {
+                        "class": "secondary",
+                        "icon": "person-fill-check",
+                        "action": {
+                            "params": [],
+                            "func": []
+                        },
+                        "disabled": "true"
+                    },
+                    {
+                        "class": "secondary",
+                        "icon": "person-fill-x",
+                        "action": {
+                            "params": [],
+                            "func": []
+                        },
+                        "disabled": "true"
+                    }
+                ]
+            },
+
+            {
+                "type": "header",
+                "text": "ПИР",
+                "size": "5"
+            }
+        ]
+    },
+    "page": [
+        {
+            "type": "block",
+            "orientation": "row",
+            "items": [
+                {
+                    "type": "input",
+                    "dataType": "date",
+                    "id": "pDate0",
+                    "label": "c",
+                    "disabled": ""
+                },
+                {
+                    "type": "input",
+                    "dataType": "date",
+                    "id": "pDate",
+                    "label": "по",
+                    "disabled": ""
+                }
+            ]
+        },
+        {
+            "type": "tabs",
+            "items": [
+                {
+                    "type": "tab",
+                    "tab_name": "Претензии РФЯЦ-ВНИИЭФ",
+                    "items": [
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "button-group",
+                                    "items": [
+                                        {
+                                            "class": "success",
+                                            "icon": "plus-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "danger",
+                                            "icon": "dash-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "secondary",
+                                            "icon": "pencil-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "button",
+                                    "icon": "funnel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                },
+
+                                {
+                                    "type": "button",
+                                    "icon": "file-earmark-excel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                }                                
+                    
+                            ]
+                        },        
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "table-tabulator",
+                                    "id": "table-tabulator_id_1",
+                                    "query":"select 1",
+                                    "params": [],
+                                    "action": [],
+                                    "tdata": {
+                                        "name": "",
+                                        "data": [{},{},{},{},{}],
+                                        "layout": "fitColumns",
+                                        "resizableRows": true,
+                                        "columnHeaderVertAlign": "middle",
+                                        "renderGorizontal": "virtual",
+                                        "columns":[
+                                            {"width":150,"title":"Наименование поля","field":"1"},
+                                            {"width":150,"title":"Номер заявки претензии в ЕОСДО","field":"2"},
+                                            {"width":150,"title":"дата поступления заявки","field":"3"},
+                                            {"width":150,"title":"Наличие договора","field":"4"},
+                                            {"width":150,"title":"Ответственное подразделение","field":"5"},
+                                            {"width":150,"title":"Контрагент","field":"6"},
+                                            {"width":150,"title":"Договор (госконтракт)","field":"7"},
+                                            {"width":150,"title":"Дата договора","field":"8"},
+                                            {"width":150,"title":"Предмет претензии","field":"9"},
+                                            {"width":150,"title":"№ претензии 195-2036","field":"10"},
+                                            {"width":150,"title":"Дата претензии","field":"11"},
+                                            {"width":150,"title":"Сумма требований Основной долг (руб.)","field":"12"},
+                                            {"width":150,"title":"Сумма требований Ответственность (руб.)","field":"13"},
+                                            {"width":150,"title":"Срок для удовлетворения претензии, дней","field":"14"},
+                                            {"width":150,"title":"Удовлетворено Основной долг (руб.)","field":"15"},
+                                            {"width":150,"title":"Удовлетворено Основной долг/ Дата","field":"16"},
+                                            {"width":150,"title":"Удовлетворено Ответственность (руб.)","field":"17"},
+                                            {"width":150,"title":"Удовлетворено Ответственность/ Дата","field":"18"},
+                                            {"width":150,"title":"Отказ/признание, дата ответа","field":"19"},
+                                            {"width":150,"title":"Ответственный юрист (ФИО, должность, тел.)","field":"20"},
+                                            {"width":150,"title":"Примечание","field":"21"},
+                                            {"width":150,"title":"Исковая работа, дата","field":"22"}
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "tab",
+                    "tab_name": "Заявки на иски РФЯЦ-ВНИИЭФ",
+                    "items": [  
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "button-group",
+                                    "items": [
+                                        {
+                                            "class": "success",
+                                            "icon": "plus-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "danger",
+                                            "icon": "dash-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "secondary",
+                                            "icon": "pencil-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "button",
+                                    "icon": "funnel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                },
+
+                                {
+                                    "type": "button",
+                                    "icon": "file-earmark-excel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                }                                
+                    
+                            ]
+                        },                           
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "table-tabulator",
+                                    "id": "table-tabulator_id_2",
+                                    "query":"select 1",
+                                    "params": [],
+                                    "action": [],
+                                    "tdata": {
+                                        "name": "",
+                                        "data": [{},{},{},{},{}],
+                                        "layout": "fitColumns",
+                                        "resizableRows": true,
+                                        "columnHeaderVertAlign": "middle",
+                                        "renderGorizontal": "virtual",
+                                        "columns":[
+                                            {"width":150,"title":"Наименование поля","field":"1"},
+                                            {"width":150,"title":"Номер заявки претензии в ЕОСДО","field":"2"},
+                                            {"width":150,"title":"дата поступления заявки","field":"3"},
+                                            {"width":150,"title":"Наличие договора","field":"4"},
+                                            {"width":150,"title":"Ответственное подразделение","field":"5"},
+                                            {"width":150,"title":"Контрагент","field":"6"},
+                                            {"width":150,"title":"Договор (госконтракт)","field":"7"},
+                                            {"width":150,"title":"Дата договора","field":"8"},
+                                            {"width":150,"title":"Предмет претензии","field":"9"},
+                                            {"width":150,"title":"№ претензии 195-2036","field":"10"},
+                                            {"width":150,"title":"Дата иска, заключения","field":"11"},
+                                            {"width":150,"title":"Принято к производству","field":"12"},
+                                            {"width":150,"title":"Сумма требований Основной долг (руб.)","field":"13"},
+                                            {"width":150,"title":"Сумма требований Ответственность (руб.)","field":"14"},
+                                            {"width":150,"title":"Удовлетворено Основной долг (руб.)","field":"15"},
+                                            {"width":150,"title":"Удовлетворено Основной долг/ Дата","field":"16"},
+                                            {"width":150,"title":"Удовлетворено Ответственность (руб.)","field":"17"},
+                                            {"width":150,"title":"Удовлетворено Ответственность/ Дата","field":"18"},
+                                            {"width":150,"title":"Исполнительный лист/ Дата получения","field":"19"},
+                                            {"width":150,"title":"Исполнительный лист/ Дата направления приставам","field":"20"},
+                                            {"width":150,"title":"Оплачено, сумма","field":"21"},
+                                            {"width":150,"title":"Оплачено, дата","field":"22"},
+                                            {"width":150,"title":"Примечание","field":"23"},
+                                            {"width":150,"title":"Ответственный юрист (ФИО, должность, тел.)","field":"24"},
+                                            {"width":150,"title":"Претензионная работа, дата","field":"25"}
+                                            
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "tab",
+                    "tab_name": "Претензии к РФЯЦ-ВНИИЭФ",
+                    "items": [
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "button-group",
+                                    "items": [
+                                        {
+                                            "class": "success",
+                                            "icon": "plus-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "danger",
+                                            "icon": "dash-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "secondary",
+                                            "icon": "pencil-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "button",
+                                    "icon": "funnel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                },
+
+                                {
+                                    "type": "button",
+                                    "icon": "file-earmark-excel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                }                                
+                    
+                            ]
+                        },                                                     
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "table-tabulator",
+                                    "id": "table-tabulator_id_3",
+                                    "query":"select 1",
+                                    "params": [],
+                                    "action": [],
+                                    "tdata": {
+                                        "name": "",
+                                        "data": [{},{},{},{},{}],
+                                        "layout": "fitColumns",
+                                        "resizableRows": true,
+                                        "columnHeaderVertAlign": "middle",
+                                        "renderGorizontal": "virtual",
+                                        "columns":[
+                                            {"width":150,"title":"Наименование поля","field":"1"},
+                                            {"width":150,"title":"Номер заявки претензии в ЕОСДО","field":"2"},
+                                            {"width":150,"title":"дата поступления заявки","field":"3"},
+                                            {"width":150,"title":"Наличие договора","field":"4"},
+                                            {"width":150,"title":"Ответственное подразделение","field":"5"},
+                                            {"width":150,"title":"Дата претензии","field":"6"},
+                                            {"width":150,"title":"Номен претензии","field":"7"},
+                                            {"width":150,"title":"Контрагент","field":"8"},
+                                            {"width":150,"title":"Договор (госконтракт)","field":"9"},
+                                            {"width":150,"title":"Дата договора","field":"10"},
+                                            {"width":150,"title":"Предмет претензии","field":"11"},
+                                            {"width":150,"title":"Сумма требований Основной долг (руб.)","field":"12"},
+                                            {"width":150,"title":"Сумма требований Ответственность (руб.)","field":"13"},
+                                            {"width":150,"title":"Срок для удовлетворения претензии, дней","field":"14"},
+                                            {"width":150,"title":"№ претензии 195-2036","field":"15"},
+                                            {"width":150,"title":"Дата запроса","field":"16"},
+                                            {"width":150,"title":"Позиция подразделения","field":"17"},
+                                            {"width":150,"title":"Позиция ПУ","field":"18"},
+                                            {"width":150,"title":"Удовлетворено Основной долг (руб.)","field":"19"},
+                                            {"width":150,"title":"Удовлетворено Основной долг/ Дата","field":"20"},
+                                            {"width":150,"title":"Удовлетворено Ответственность (руб.)","field":"21"},
+                                            {"width":150,"title":"Удовлетворено Ответственность/ Дата","field":"22"},
+                                            {"width":150,"title":"Ответ контрагенту","field":"23"},
+                                            {"width":150,"title":"Ответственный юрист (ФИО, должность, тел.)","field":"24"},
+                                            {"width":150,"title":"Исковая работа, дата","field":"25"},
+                                            {"width":150,"title":"Примечание","field":"26"},
+                                            {"width":150,"title":"Причины возникновения требований","field":"27"}
+                                            
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "tab",
+                    "tab_name": "Иски к РФЯЦ-ВНИИЭФ",
+                    "items": [
+                        {
+                            "type": "block",
+                            "orientation": "row",
+                            "items": [
+                                {
+                                    "type": "button-group",
+                                    "items": [
+                                        {
+                                            "class": "success",
+                                            "icon": "plus-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "danger",
+                                            "icon": "dash-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        },
+                                        {
+                                            "class": "secondary",
+                                            "icon": "pencil-square",
+                                            "action": {
+                                                "params": [],
+                                                "func": []
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "button",
+                                    "icon": "funnel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                },
+
+                                {
+                                    "type": "button",
+                                    "icon": "file-earmark-excel",
+                                    "action": {
+                                        "params": [],
+                                        "func": []
+                                    }
+                                }                                
+                            ]
+                        },                             
+                        {
+                            "type": "table-tabulator",
+                            "id": "table-tabulator_id_4",
+                            "action": [],
+                            "query":"select 1",
+                            "params": [],
+                            "tdata": {
+                                "name": "",
+                                "data": [{},{},{},{},{}],
+                                "layout": "fitColumns",
+                                "resizableRows": true,
+                                "columnHeaderVertAlign": "middle",
+                                "renderGorizontal": "virtual",
+                                "columns":[
+                                    {"width":150,"title":"Наименование поля","field":"1"},
+                                    {"width":150,"title":"Номер заявки претензии в ЕОСДО","field":"2"},
+                                    {"width":150,"title":"дата поступления заявки","field":"3"},
+                                    {"width":150,"title":"Наличие договора","field":"4"},
+                                    {"width":150,"title":"Дата иска","field":"5"},
+                                    {"width":150,"title":"Номер иска","field":"6"},
+                                    {"width":150,"title":"Контрагент","field":"7"},
+                                    {"width":150,"title":"Договор (госконтракт)","field":"8"},
+                                    {"width":150,"title":"Дата договора","field":"9"},
+                                    {"width":150,"title":"Предмет","field":"10"},
+                                    {"width":150,"title":"Сумма требований Основной долг (руб.)","field":"11"},
+                                    {"width":150,"title":"Сумма требований Ответственность (руб.)","field":"12"},
+                                    {"width":150,"title":"Ответственное подразделение","field":"13"},
+                                    {"width":150,"title":"№ претензии 195-2036","field":"14"},
+                                    {"width":150,"title":"Дата запроса","field":"15"},
+                                    {"width":150,"title":"Позиция подразделения","field":"16"},
+                                    {"width":150,"title":"Позиция ПУ","field":"17"},
+                                    {"width":150,"title":"Удовлетворено Основной долг (руб.)","field":"18"},
+                                    {"width":150,"title":"Удовлетворено Основной долг/ Дата","field":"19"},
+                                    {"width":150,"title":"Удовлетворено Ответственность (руб.)","field":"20"},
+                                    {"width":150,"title":"Удовлетворено Ответственность/ Дата","field":"21"},
+                                    {"width":150,"title":"Отказано, прекращено","field":"22"},
+                                    {"width":150,"title":"Ответственный юрист (ФИО, должность, тел.)","field":"23"},
+                                    {"width":150,"title":"Примечание","field":"24"},
+                                    {"width":150,"title":"Причины возникновения требований","field":"25"},
+                                    {"width":150,"title":"Дата претензии","field":"26"},
+                                    {"width":150,"title":"Претензионная работа, дата","field":"27"}
+                                    
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "tab",
+                    "tab_name": "Статистика",
+                            "items": [
+
+                            ]
+                }
+            ]
+        }
+    ]
+}

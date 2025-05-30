@@ -46,10 +46,10 @@ const PageBuilder = (function(){
         }
     }
     function create(parentElement,config) {
-        
         if(!components[config.type]){
             throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
-        }
+       
+          }
         return new components[config.type](parentElement,config);
     }
     // Создаем навигационную панель
@@ -58,6 +58,12 @@ const PageBuilder = (function(){
     }
     // создать страницу по конфигурации
     function createPage(config){
+        if (config["dataSources"]){
+          config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
+        }
+        // if (config["pageParams"]){
+        //   config["pageParams"].forEach(item=>{PageBuilder.create('null',item)})
+        // }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
         document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
         domPage = document.body.lastElementChild;
