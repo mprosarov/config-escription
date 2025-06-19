@@ -13,7 +13,7 @@ class ButtonGroup extends BaseElement {
                 icon = `<i class="bi bi-${this.config.items[i].icon}${(this.config.items[i].text)?' me-2':''}"></i>`;
             if(this.config.items[i].text)
                 text = this.config.items[i].text;
-            content += `<button class="btn btn-outline-${this.config.items[i].class} btn-sm" type="button">${icon}${text}</button>`;
+            content += `<button class="btn btn-outline-${this.config.items[i].class} btn-sm" type="button" ${this.config.items[i].status}>${icon}${text}</button>`;
         } 
         let result = `<div class="input-group">${content}</div>`;
         this.parentElement.insertAdjacentHTML("beforeend", result);

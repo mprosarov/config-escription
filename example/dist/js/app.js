@@ -2,7 +2,11 @@
 //           pageBuilder.js
 //=========================================
 const PageBuilder = (function(){
-    const URL = "http://localhost:3000/config";
+//   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
+// getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
+    
+
+const URL = "http://localhost:3000/config";
     //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
     
     let navbar = null;
@@ -61,6 +65,13 @@ const PageBuilder = (function(){
     }
     // создать страницу по конфигурации
     function createPage(config){
+        // if(config["pageParams"]){
+        //   config.pageParams.forEach(item => {
+        //     let param = PageBuilder.create(null,item);
+        //     pageParams.push(param);
+        //   });
+        // }
+
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
         }
@@ -340,7 +351,7 @@ class Button extends BaseElement {
         if(this.config.text){
             text = this.config.text;
         }
-        this.parentElement.insertAdjacentHTML("beforeend", `<button style="width: fit-content;" class="btn btn-outline-secondary btn-sm">${icon}${text}</button>`);
+        this.parentElement.insertAdjacentHTML("beforeend", `<button style="width: fit-content;" class="btn btn-outline-secondary btn-sm" ${this.config.status}>${icon}${text}</button>`);
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);
     }
@@ -361,7 +372,7 @@ class ButtonGroup extends BaseElement {
                 icon = `<i class="bi bi-${this.config.items[i].icon}${(this.config.items[i].text)?' me-2':''}"></i>`;
             if(this.config.items[i].text)
                 text = this.config.items[i].text;
-            content += `<button class="btn btn-outline-${this.config.items[i].class} btn-sm" type="button">${icon}${text}</button>`;
+            content += `<button class="btn btn-outline-${this.config.items[i].class} btn-sm" type="button" ${this.config.items[i].status}>${icon}${text}</button>`;
         } 
         let result = `<div class="input-group">${content}</div>`;
         this.parentElement.insertAdjacentHTML("beforeend", result);
@@ -735,13 +746,14 @@ class InputField extends BaseElement {
     }
     create() {
         this.parentElement.insertAdjacentHTML("beforeend", `<div class="input-group input-group-sm mb-3">
-  <span class="input-group-text" id="${this.config.id}">${this.config.label}</span>
+            ${this.config.label ? `<span class="input-group-text" id="${this.config.id}">${this.config.label}</span> `: ""}
+  
   <input type="${this.config.dataType}" class="form-control" aria-label="" aria-describedby="${this.config.id}" ${this.config.disabled} >
 </div>`);
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);
     }
-}
+} 
 PageBuilder.addComponent(InputField.TYPE, InputField);
 class ItemsBlock extends BaseElement {
     static TYPE = 'block';

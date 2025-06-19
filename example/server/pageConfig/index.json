@@ -12,16 +12,16 @@
       "type": "param",
       "name": "pTest",
       "init":{
-      "valueType": "raw",
-      "value": "ololol"
+        "valueType": "raw",
+        "value": "ololol"
       }
     },
     {
       "type": "param",
       "name": "pTest2",
       "init":{
-      "valueType": "number",
-      "value": 111111
+        "valueType": "number",
+        "value": 111111
       }
     }    
   ],
@@ -136,7 +136,27 @@
             }
           }
         ]
-      }
+      },
+        {
+          "type": "checkbox",
+          "inline": "inline",
+          "items": [
+            {
+              "label": "текст_1",
+              "id": "chb_1",
+              "checked": "checked",
+              "status": "disabled",
+              "value": ""
+            },
+            {
+              "label": "текст_2",
+              "id": "chb_21",
+              "checked": "",
+              "status": "unabled",
+              "value": ""
+            }
+          ]
+        }
     ]
   },
   "sidebars": [
@@ -329,7 +349,8 @@
                   "action": {
                     "params": [],
                     "func": []
-                  }
+                  },
+                  "status": "disabled"
                 },
                 {
                   "text": "кнопка_2",
@@ -338,7 +359,8 @@
                   "action": {
                     "params": [],
                     "func": []
-                  }
+                  },
+                  "status": "unabled"
                 },
                 {
                   "text": "",
@@ -347,7 +369,8 @@
                   "action": {
                     "params": [],
                     "func": []
-                  }
+                  },
+                  "status": "unabled"
                 }
               ]
             },
@@ -359,7 +382,8 @@
             {
               "type": "button",
               "icon": "printer",
-              "text": "Кнопка"
+              "text": "Кнопка",
+              "status":"disabled"
             }
           ]
         },
@@ -639,16 +663,16 @@
                   "items": [
                     {
                       "type": "input",
-                      "dataType": "number",
+                      "dataType": "search",
                       "id": "inputId",
-                      "label": "введите что-то там...",
-                      "disabled": "disabled"
+                      "label": "TEST",
+                      "disabled": ""
                     },
                     {
                       "type": "select",
                       "label": "текст_селекта_1",
                       "labelPosition": "left",
-                      "disabled": "disabled",
+                      "disabled": "",
                       "items": [
                         {
                           "name": "значение_1",

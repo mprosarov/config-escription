@@ -1,5 +1,9 @@
 const PageBuilder = (function(){
-    const URL = "http://localhost:3000/config";
+//   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
+// getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
+    
+
+const URL = "http://localhost:3000/config";
     //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
     
     let navbar = null;
@@ -58,6 +62,13 @@ const PageBuilder = (function(){
     }
     // создать страницу по конфигурации
     function createPage(config){
+        // if(config["pageParams"]){
+        //   config.pageParams.forEach(item => {
+        //     let param = PageBuilder.create(null,item);
+        //     pageParams.push(param);
+        //   });
+        // }
+
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
         }
