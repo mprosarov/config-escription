@@ -723,10 +723,10 @@ class Select extends BaseElement {
       let content = "";
       for (let i = 0; i < this.config.items.length; i++) {
         let item = this.config.items[i];
-        content += `<option value=${item.value} ${item.selected}>${item.name}</option>`;
+        content += `<option value=${item.value} ${item.selected?"selected":""}>${item.name}</option>`;
       }
       this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group input-group-sm mb-3">
-        <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.disabled}>${content}</select>` );
+        <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status:'unabled' }>${content}</select>` );
       let position = "";  
       if(this.config.labelPosition == 'left') position = "afterbegin"
       else position = "beforeend"
@@ -748,7 +748,7 @@ class InputField extends BaseElement {
         this.parentElement.insertAdjacentHTML("beforeend", `<div class="input-group input-group-sm mb-3">
             ${this.config.label ? `<span class="input-group-text" id="${this.config.id}">${this.config.label}</span> `: ""}
   
-  <input type="${this.config.dataType}" class="form-control" aria-label="" aria-describedby="${this.config.id}" ${this.config.disabled} >
+  <input type="${this.config.dataType}" class="form-control" aria-label="" aria-describedby="${this.config.id}" ${this.config.status ? this.config.status:'unabled' } >
 </div>`);
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);

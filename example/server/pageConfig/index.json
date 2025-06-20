@@ -410,7 +410,7 @@
             },
             {
               "type": "checkbox",
-              "inline": "inline",
+              "inline": true,
               "items": [
                 {
                   "label": "текст_1",
@@ -539,7 +539,6 @@
                         "10":3
                       }
                     ],
-
                     "layout": "fitColumns",
                     "resizableRows": true,
                     "columnHeaderVertAlign": "middle",
@@ -624,14 +623,14 @@
                       "dataType": "text",
                       "id": "inputId",
                       "label": "введите что-то там...",
-                      "disabled": ""
+                      "status": ""
                     },
                     {
                       "type": "input",
                       "dataType": "date",
                       "id": "inputId",
                       "label": "введите что-то там...",
-                      "disabled": ""
+                      "status": ""
                     },
                     {
                       "type": "select",
@@ -666,13 +665,13 @@
                       "dataType": "search",
                       "id": "inputId",
                       "label": "TEST",
-                      "disabled": ""
+                      "status": ""
                     },
                     {
                       "type": "select",
                       "label": "текст_селекта_1",
                       "labelPosition": "left",
-                      "disabled": "",
+                      "status": "",
                       "items": [
                         {
                           "name": "значение_1",

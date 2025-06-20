@@ -268,8 +268,43 @@ sidebars: [
       }    
     ```
 - __TABS__
-    
+    #### Общий вид элемента:
+     ```
+        {
+            type: "tabs",
+            items: array
+        }
+    ``` 
+    - `items`(array). Массив подэлементов с типом `tab`
+    #### Общий вид подэлемента:
+    ```
+        {
+            type: "tab",
+            tab_name: string,
+            items: [...]
+        }
+    ```
+    - `tab_name`(string). Название вкладки
+    - `items`(array). Массив подэлементов любого типа
 
+    ```
+    Пример:
+        {
+            "type": "tabs",
+            "items": [
+                {
+                    type: "tab",
+                    tab_name: "НазваниеТаба_1",
+                    items: [...]
+                },
+                {
+                    type: "tab",
+                    tab_name: "НазваниеТаба_2",
+                    items: [...]
+                }
+            ]   
+        }
+    ``` 
 - __BUTTON__
     
     // TODO: Разобрать ACTION
@@ -324,7 +359,7 @@ sidebars: [
     ```     
     - `icon`(string). Необязательное. Имя иконки bootstrap
     - `text`(string). Необязательное. Текст внутри кнопки
-    - `class`(string). Класс bootstrap для цветового оформления
+    - `class`(string). CSS класс для стилизации элемента (опционально)
         - `primary`
         - `secondary`
         - `success `
@@ -360,7 +395,120 @@ sidebars: [
         }
     ``` 
 - __RADIO-GROUP__
+
+    #### Общий вид элемента:
+    ```
+        {
+            type: "radio-group",
+            name: "radio-name-tab", // возможно, пригодится
+            inline: boolean,
+            items: []
+        }
+    ```  
+    - `name`(string) - имя родительского таба
+    - `inline`(boolean). Необязательное. Отображение элементов.
+        - `true` - отображение жлементов по горизонтали
+        - `false`(По умолчанию, если свойство отсутствует) - отображение элементов по вертикали
+    - `items`(array) - массив попэлементов
+    #### Общий вид подэлемента:
+    ```
+        {
+            id: string,
+            label: string,
+            status: string,
+            checked: boolean
+        }
+    ```
+    - `id`(string). Уникальный идентификатом элемента
+    - `label`(string). Лэйбл для эелемента
+    - `checked`(boolean). Состояние элемента
+        - `true` - элемент выбран
+        - `false`(по умолчанию, если свойство отсутствует) - элемент не выбран
+    - `status`(string). Активность кнопки
+        - `disabled` - кнопка не активна
+        - `unabled` - кнопка активна
+    ```
+    Пример
+        {
+            type: "radio-group",
+            name: "radio-name-tab", 
+            inline": "form-check-inline",
+            items: [
+            {
+                id: "IDradio_1",
+                label: "Радио_1",
+                status: "unabled",
+                checked: "checked"
+            },
+            {
+                id: "IDradio_1",
+                label: "Радио_2",
+                status: "unabled",
+                checked: ""
+            }
+            ]
+        }
+    ```
 - __CHECKBOX__
+    
+    // TODO: Разобрать ACTION
+    #### Общий вид элемента:
+    ```
+        {
+            type: "checkbox",
+            inline: boolean,
+            items": array
+        }
+    ```    
+    - `inline`(boolean). Необязательное. Отображение элементов.
+        - `true` - отображение жлементов по горизонтали
+        - `false`(По умолчанию, если свойство отсутствует) - отображение элементов по вертикали 
+    
+    #### Общий вид подэлемента:
+     ```
+        {
+            id: string,
+            label: string,
+            checked: boolean
+            status: "disabled",
+            value: string,
+            action: string
+        }
+    ``` 
+    - `id`(string). Уникальный идентификатом элемента
+    - `label`(string). Лэйбл для эелемента
+    - `checked`(boolean). Состояние элемента
+        - `true` - элемент выбран
+        - `false`(по умолчанию, если свойство отсутствует) - элемент не выбран
+    - `status`(string). Активность кнопки
+        - `disabled` - кнопка не активна
+        - `unabled` - кнопка активна
+    - `value`(string). Значение элемента при взаимодействии с ним
+    - `action`(string). Действие, выполняемое при взаимодействии с элементом
+
+    ```
+    Пример
+        {
+            type: "checkbox",
+            inline: "inline",
+            items: [
+                {
+                    label: "текст_1",
+                    id: "chb_1",
+                    checked: "checked",
+                    status: "disabled",
+                    value: string
+                },
+                {
+                    label: "текст_2",
+                    id: "chb_2",
+                    checked: "",
+                    status: "unabled",
+                    value: 2
+                }
+            ]
+        }
+    ``` 
 - __INPUT__
     
     // TODO: Разобрать ACTION
@@ -371,19 +519,23 @@ sidebars: [
             dataType: string,
             id: string,
             label: string,
-            disabled: "disabled",
+            status: string,
             action: string
         }
     ``` 
     - `dataType`(string). Тип поля ввода.
-        - `text`
-        - `date`
-        - `number`
-        - `file`
-        - `search`
+        - `text` - текстовое поле
+        - `date` - поле для выбора/ввода даты
+        - `number` - числовое поле
+        - `file` - поле с загрузкой файла
+        - `search` - строка поиска
+        
+        ..добавить еще типы 
     - `id`(string). Уникальный идентификатор элемента
     - `label`(string). Необязательное. Лэйбл к полю ввода
-    - `disabled`(string). Необязательное. 
+    - `status`(string). Необязательное. Активность поля
+        - `disabled` - поле не активно
+        - `unabled`(По умолчанию, если свойство отсутствует) - поле активно
     - `action`(string). Действие, выполняемое при взаимодействии с элементом
 
     //TODO: сделать везде одинаковый статус активности элементов  
@@ -394,12 +546,119 @@ sidebars: [
             dataType: "number",
             id: "inputId",
             label: "введите что-то там...",
-            disabled: "disabled"
+            status: false
         }
-    ```     
-
+    ```  
 - __SELECT__
+
+    // TODO: Разобрать ACTION
+    #### Общий вид элемента:
+     ```
+        {
+            type: "select",
+            label: string,
+            labelPosition: string,
+            status: string,
+            items: array
+        }
+     ```
+     - `label`(string). Необязательное. Лэйбл к полю ввода
+     - `labelPosition`(string)
+        - `right` - Лэйбл справа от выпадающего списка
+        - `left` - Лэйбл слева от выпадающего списка
+    - `status`(string). Необязательное. Активность поля
+        - `disabled` - поле не активно
+        - `unabled`(По умолчанию, если свойство отсутствует) - поле активно
+     - `items`(array) - Массив значений подпунктов выпадающего списка
+
+    #### Общий вид подэлемента:
+     ```
+        {
+            "name": string,
+            "value": string,
+            "selected": boolean
+        }
+     ```     
+     - `name`(string) - Название подпункта выпадающего списка
+     - `value`(string) - Значение подпункта выпадающего списка
+     - `selected`(boolean)- Состояние активности подпункта 
+        - `true` - Элемент выбран
+        - `false`(По умолчанию, если свойство отсутствует)
+    ```
+    Пример:
+        {
+            type: "select",
+            label: "текст_селекта",
+            labelPosition: "right",
+            items: [
+                {
+                    name: "значение_1",
+                    value: "",
+                    selected: "selected"
+                },
+                {
+                    name: "значение_2",
+                    value: "",
+                    selected: ""
+                },
+                {
+                    name: "значение_3",
+                    value: "",
+                    selected: ""
+                }
+            ]
+        }
+    ```
 - __TABLE-TABULATOR__
+    
+     ```
+        {
+            type: "table-tabulator",
+            id: string,
+            action: array,
+            name: string,
+            indexCols: object,
+            tdata: object
+        }
+     ```
+    - `id`(string). Уникальный идентификатор таблицы
+    - `action`(array). Массив объектов, описывающих действия, выполняемые при взаимодействии с элементами таблицы
+    - `name`(string). Необязательное. Название таблицы
+    - `indexCols`(object). Необязательное. Нумерование столбцов таблицы
+        ```
+        {
+            "field_1": 1,
+            "field_2": 2,
+            "field_3": 2.1,
+            "field_4": 2.2,
+            "field_5": 3
+        }
+        ```
+    - `tdata`(object). Объект класса Tabulator
+
+    ```
+    Пример
+        {
+            id : "table-tabulator_id_10form",
+            type: "table-tabulator",
+            name : "Форма 10",
+            tdata : {
+                data [{},{},{}],
+                layout: "fitColumns",
+                resizableRows: true,
+                columnHeaderVertAlign: "middle",
+                columns:[
+                    {title:"Поле_1", field:"field_1"},
+                    {title:"Поле_2", field:"field_2"},
+                    {title:"Поле_3", field:"field_3"},
+                    {title:"Поле_4", field:"field_4"},
+                    {title:"Поле_5", field:"field_5"}
+                ],
+                "renderGorizontal": "virtual"
+            }
+        }   
+
+    ```
 
 ## (ACTION) Действия над элементами интерфейса 
 - `redirect` - переадресация

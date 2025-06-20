@@ -8,10 +8,10 @@ class Select extends BaseElement {
       let content = "";
       for (let i = 0; i < this.config.items.length; i++) {
         let item = this.config.items[i];
-        content += `<option value=${item.value} ${item.selected}>${item.name}</option>`;
+        content += `<option value=${item.value} ${item.selected?"selected":""}>${item.name}</option>`;
       }
       this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group input-group-sm mb-3">
-        <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.disabled}>${content}</select>` );
+        <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status:'unabled' }>${content}</select>` );
       let position = "";  
       if(this.config.labelPosition == 'left') position = "afterbegin"
       else position = "beforeend"
@@ -22,5 +22,4 @@ class Select extends BaseElement {
       BaseElement.applyCss(dom, this.config);
   }
 }
-PageBuilder.addComponent(Select.TYPE, Select); 
-
+PageBuilder.addComponent(Select.TYPE, Select);
