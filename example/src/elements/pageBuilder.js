@@ -9,7 +9,43 @@ const URL = "http://localhost:3000/config";
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
-    let components = {}
+    let components = {};
+    var pageParams = []
+    
+    window.addEventListener('change',(e)=>{
+      //console.log(e.target)
+      updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
+    })
+    //Получаем объект параметра
+    function getParam(name){
+      for(let i=0; i<pageParams.length; i++){
+        if(pageParams[i].getName() == name) return pageParams[i];      
+      }
+    }
+    //Получаем значение параметра
+    function getParamValue(name){
+      for(let i=0; i<pageParams.length; i++){
+        //????Какое значение использовать? value или pageParams.paramValue???
+        if(pageParams[i].getName() == name) return pageParams[i]['config']['init']['value'];      
+      }
+    }
+
+    function updateParam(el,name,type){
+       console.log(name, ' ', type)
+      var p = getParam(name);
+      var value;
+      switch (type){
+        case 'checkbox': 
+          el.checked ? value = 1 : value = 0;  
+          break
+        case 'select':
+          value = el.value
+          break
+      }
+      p.setParamValue(value)
+      console.log(pageParams)
+    } 
+
     //Добавление компонента в общий список
     function addComponent(type,component) {
         if (components[type]) {
@@ -62,19 +98,16 @@ const URL = "http://localhost:3000/config";
     }
     // создать страницу по конфигурации
     function createPage(config){
-        // if(config["pageParams"]){
-        //   config.pageParams.forEach(item => {
-        //     let param = PageBuilder.create(null,item);
-        //     pageParams.push(param);
-        //   });
-        // }
-
+        if(config["pageParams"]){
+          config.pageParams.forEach(item => {
+            var param = new PageParam(`null`,item)
+            pageParams.push(param);
+          });
+        //  console.log(pageParams)
+        }
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
         }
-        // if (config["pageParams"]){
-        //   config["pageParams"].forEach(item=>{PageBuilder.create('null',item)})
-        // }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
         document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
         domPage = document.body.lastElementChild;
@@ -93,6 +126,9 @@ const URL = "http://localhost:3000/config";
    }
     return {
       addComponent,
+      updateParam,
+      getParam,
+      getParamValue,
       create,
       createPage,
       createMainNavBar,

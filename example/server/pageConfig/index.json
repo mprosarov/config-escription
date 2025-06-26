@@ -5,7 +5,12 @@
       "type": "dataSource",
       "id": "example-table-theme",
       "query": "select {pTest} {pTest2} {pTest} {pTest2}"
-    }
+    },
+    {
+      "type": "dataSource",
+      "id": "example-table-theme",
+      "query": "select  {pTest3} {pTest} {pTestSelect_2}"
+    }    
   ],
   "pageParams": [
     {
@@ -21,9 +26,33 @@
       "name": "pTest2",
       "init":{
         "valueType": "number",
-        "value": 111111
+        "value": 22222
       }
-    }    
+    },
+    {
+      "type": "param",
+      "name": "pTestSelect_1",
+      "init":{
+        "valueType": "number",
+        "value": ""
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTest3",
+      "init":{
+        "valueType": "number",
+        "value": 333333
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTestSelect_2",
+      "init":{
+        "valueType": "raw",
+        "value": ""
+      }
+    }        
   ],
   "navbar": {
     "titlePosition": "right",
@@ -324,15 +353,26 @@
               "inline": "inline",
               "items": [
                 {
-                  "label": "текст_1",
-                  "id": "chb_1",
+                  "id": "id_1",
+                  "label": "параметр_1",
+                  "paramName": "pTest",
                   "checked": "checked",
-                  "status": "disabled",
+                  "status": "unabled",
+                  "value": "",
+                  "role":"switch"
+                },
+                {
+                  "id": "id_2",
+                  "label": "параметр_2",
+                  "paramName": "pTest2",
+                  "checked": "",
+                  "status": "unabled",
                   "value": ""
                 },
                 {
-                  "label": "текст_2",
-                  "id": "chb_21",
+                  "id": "id_3",
+                  "label": "параметр_3",
+                  "paramName": "pTest3",
                   "checked": "",
                   "status": "unabled",
                   "value": ""
@@ -394,17 +434,20 @@
             {
               "type": "radio-group",
               "name": "radio-name",
+              
               "items": [
                 {
                   "id": "r_id_1",
                   "label": "Радио_1",
                   "status": "unabled",
+                  "paramName": "pTestRadio_1",
                   "checked": ""
                 },
                 {
                   "id": "r_id_2",
                   "label": "Радио_2",
-                  "status": "unabled"
+                  "status": "unabled",
+                  "paramName": "pTestRadio_2"
                 }
               ]
             },
@@ -418,6 +461,7 @@
                   "checked": "checked",
                   "status": "disabled",
                   "value": ""
+
                 },
                 {
                   "label": "текст_2",
@@ -636,20 +680,21 @@
                       "type": "select",
                       "label": "текст_селекта_2",
                       "labelPosition": "right",
+                      "paramName":"pTestSelect_2",
                       "items": [
                         {
-                          "name": "значение_1",
-                          "value": "",
+                          "name": "имя_1",
+                          "value": "значение_1",
                           "selected": "selected"
                         },
                         {
-                          "name": "значение_2",
-                          "value": "",
+                          "name": "имя_2",
+                          "value": "значение_2",
                           "selected": ""
                         },
                         {
-                          "name": "значение_3",
-                          "value": "",
+                          "name": "имя_3",
+                          "value": "значение_3",
                           "selected": ""
                         }
                       ]
@@ -669,6 +714,7 @@
                     },
                     {
                       "type": "select",
+                      "paramName": "pTestSelect_1",
                       "label": "текст_селекта_1",
                       "labelPosition": "left",
                       "status": "",

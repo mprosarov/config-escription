@@ -1,10 +1,3 @@
-/*
- 1. Создать класс который наследуется от класса BaseElement
- 2. Создать статическое свойство компонента TYPE, которое соответствует типу(поле typr) компонента в конфигурации.
- 3. Переопределить конструктор и передать в конструктор родительского класса параметры элемента.
- 4. Переопределить метод создания компонента(create), в котором будет создан элемент и добавлен в родительский элемент.
-*/
-
 class DataSources {
     static TYPE = "dataSource";
     params = [];
@@ -19,20 +12,29 @@ class DataSources {
             return x.slice(1,-1)
             }))
         )
+        
         for(let i=0; i<arrQueryParams.length; i++){
             let objParam = {
                 param: arrQueryParams[i],
-                value:'1'
+                value:''
             };
-            this.params.push(objParam)
+         
+            this.params.push(objParam);
+            // Подписываемся на изменение параметра
+            var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
+            if(!p) console.error('Нет параметра');
+            p.addSubscribe(this)
         }
     }
     execute() {
+        for(let i=0; i<this.params.length; i++){
+            this.params[i]['value'] = PageBuilder.getParamValue(this.params[i]['param'])
+        }
         let query = this.config.query;
         for(let i=0; i<this.params.length; i++){
             query = query.replaceAll(`{${this.params[i].param}}`,this.params[i].value)
         }
-        console.log(query)
+     //   console.log(query)
     }
 }
 PageBuilder.addComponent(DataSources.TYPE, DataSources);

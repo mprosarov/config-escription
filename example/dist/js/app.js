@@ -12,7 +12,43 @@ const URL = "http://localhost:3000/config";
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
-    let components = {}
+    let components = {};
+    var pageParams = []
+    
+    window.addEventListener('change',(e)=>{
+      //console.log(e.target)
+      updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
+    })
+    //Получаем объект параметра
+    function getParam(name){
+      for(let i=0; i<pageParams.length; i++){
+        if(pageParams[i].getName() == name) return pageParams[i];      
+      }
+    }
+    //Получаем значение параметра
+    function getParamValue(name){
+      for(let i=0; i<pageParams.length; i++){
+        //????Какое значение использовать? value или pageParams.paramValue???
+        if(pageParams[i].getName() == name) return pageParams[i]['config']['init']['value'];      
+      }
+    }
+
+    function updateParam(el,name,type){
+       console.log(name, ' ', type)
+      var p = getParam(name);
+      var value;
+      switch (type){
+        case 'checkbox': 
+          el.checked ? value = 1 : value = 0;  
+          break
+        case 'select':
+          value = el.value
+          break
+      }
+      p.setParamValue(value)
+      console.log(pageParams)
+    } 
+
     //Добавление компонента в общий список
     function addComponent(type,component) {
         if (components[type]) {
@@ -65,19 +101,16 @@ const URL = "http://localhost:3000/config";
     }
     // создать страницу по конфигурации
     function createPage(config){
-        // if(config["pageParams"]){
-        //   config.pageParams.forEach(item => {
-        //     let param = PageBuilder.create(null,item);
-        //     pageParams.push(param);
-        //   });
-        // }
-
+        if(config["pageParams"]){
+          config.pageParams.forEach(item => {
+            var param = new PageParam(`null`,item)
+            pageParams.push(param);
+          });
+        //  console.log(pageParams)
+        }
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
         }
-        // if (config["pageParams"]){
-        //   config["pageParams"].forEach(item=>{PageBuilder.create('null',item)})
-        // }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
         document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
         domPage = document.body.lastElementChild;
@@ -96,6 +129,9 @@ const URL = "http://localhost:3000/config";
    }
     return {
       addComponent,
+      updateParam,
+      getParam,
+      getParamValue,
       create,
       createPage,
       createMainNavBar,
@@ -418,20 +454,22 @@ class CheckBoxGroup extends BaseElement {
         super(parentElement, config);
         this.create();
     }
+ 
     create() {
       this.parentElement.insertAdjacentHTML("beforeend", `<div class="form-group ${this.config.inline ? "flex" : ""}"></div>`);
       let block = this.parentElement.lastElementChild;          
       let content = "";
+      
       for (let i = 0; i < this.config.items.length; i++) {
         let item = this.config.items[i];
         content += `<div class="form-check ${item.role ? "form-switch" : ""} ">
-                          <input class="form-check-input" type='checkbox' role="${item.role}" value="${item.value}" id="${item.id}" ${item.status} ${item.checked ? "checked" : ""} >
+                          <input class="form-check-input"  role="${item.role ? "form-switch" : ""}" data-param='${item.paramName}' type='checkbox' value="${item.checked ? "1" : "0"}" id="${item.id}" ${item.status} ${item.checked ? "checked" : ""}>
                           <label class="form-check-label" for=${item.id}>
                             ${item.label}
                           </label>
                       </div>`;
       }
-  
+
       block.insertAdjacentHTML("beforeend", content);
       BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
       return block;
@@ -726,7 +764,7 @@ class Select extends BaseElement {
         content += `<option value=${item.value} ${item.selected?"selected":""}>${item.name}</option>`;
       }
       this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group input-group-sm mb-3">
-        <select class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status:'unabled' }>${content}</select>` );
+        <select type="${this.config.type}" data-param="${this.config.paramName}"  class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status:'unabled' }>${content}</select>` );
       let position = "";  
       if(this.config.labelPosition == 'left') position = "afterbegin"
       else position = "beforeend"
@@ -771,13 +809,6 @@ class ItemsBlock extends BaseElement {
     }
 }
 PageBuilder.addComponent(ItemsBlock.TYPE, ItemsBlock);
-/*
- 1. Создать класс который наследуется от класса BaseElement
- 2. Создать статическое свойство компонента TYPE, которое соответствует типу(поле typr) компонента в конфигурации.
- 3. Переопределить конструктор и передать в конструктор родительского класса параметры элемента.
- 4. Переопределить метод создания компонента(create), в котором будет создан элемент и добавлен в родительский элемент.
-*/
-
 class DataSources {
     static TYPE = "dataSource";
     params = [];
@@ -795,17 +826,58 @@ class DataSources {
         for(let i=0; i<arrQueryParams.length; i++){
             let objParam = {
                 param: arrQueryParams[i],
-                value:'1'
+                value:''
             };
-            this.params.push(objParam)
+            this.params.push(objParam);
+            // Подписываемся на изменение параметра
+            var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
+            if(!p) console.error('Нет параметра');
+            p.addSubscribe(this)
         }
     }
     execute() {
+        for(let i=0; i<this.params.length; i++){
+            this.params[i]['value'] = PageBuilder.getParamValue(this.params[i]['param'])
+        }
         let query = this.config.query;
         for(let i=0; i<this.params.length; i++){
             query = query.replaceAll(`{${this.params[i].param}}`,this.params[i].value)
         }
-        console.log(query)
+     //   console.log(query)
     }
 }
 PageBuilder.addComponent(DataSources.TYPE, DataSources);
+class PageParam {
+    static TYPE = "param";
+    paramValue; 
+    subscribers = []
+    constructor (parentElement, config) {
+        this.config = config;
+        this.create();
+    }
+    create() {
+        this.paramValue = this.config.init.value
+    }
+    //возвращает имя компонента(свойство name из конфигурации)
+    getName(){
+        return this.config.name;
+    };
+    //возвращает текущее значение параметра    
+    getValue(){
+        return this.config.init.value;
+    };
+    //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента    
+    addSubscribe(obj){
+        this.subscribers.push(obj);
+      //  console.log(this)
+    };
+    //записывает переданное значение в свойство paramValue и вызывает
+    //у всех подписчиков событие обновления параметра.    
+    setParamValue(value){
+        console.log('setParamValue - ',value)
+        this.paramValue = value;
+        this.subscribers.forEach(item => {})
+     //   console.log(this)
+    }
+}
+PageBuilder.addComponent(PageParam.TYPE, PageParam);
