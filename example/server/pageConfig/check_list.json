@@ -1,4 +1,34 @@
-{
+{  
+  "dataSources": [
+        {
+            "type": "dataSource",
+            "id": "example-table-theme",
+            "query": "select {2} {3} {3} {3}"
+        },
+        {
+            "type": "dataSource",
+            "id": "example-table-theme",
+            "query": "select  {2} {2} {3}"
+        }    
+  ],
+  "pageParams": [
+        {
+            "type": "param",
+            "name": "2",
+            "init":{
+                "valueType": "get",
+                "value": ""
+            }
+        },
+        {
+            "type": "param",
+            "name": "3",
+            "init":{
+                "valueType": "get",
+                "value": ""
+                }
+        }
+    ],
     "navbar": {
       "titlePosition": "right",
       "menuPosition": "top",

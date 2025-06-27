@@ -31,12 +31,6 @@ class TableTabulator extends BaseElement {
       //   value: '12/02/2024'
       // }
 
-      //-----получаем параметры при переадресации-------ПОКА ТУТ!!! надо переносить в pageBuilder
-      let redirectUrlParams = new URL(window.location.href);
-      let urlParams = new URLSearchParams(redirectUrlParams.search);
-      const getParams = Object.fromEntries(urlParams.entries());
-      //console.log(getParams)
-      
       if(this.config.query && this.config.query !== "select 1"){
         let allParams = [...this.config.params,...TableTabulator.PARAMS];
         //------------------------------------
