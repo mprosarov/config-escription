@@ -18,8 +18,7 @@ class PageParam {
         if(type == 'get'){
             let redirectUrlParams = new URL(window.location.href);
             let urlParams = new URLSearchParams(redirectUrlParams.search);
-            const getParams = Object.fromEntries(urlParams.entries());
-            this.paramValue = getParams[this.getName()];
+            urlParams.get(this.getName());
             return
         }
         //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.    
