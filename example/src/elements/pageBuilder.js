@@ -13,21 +13,19 @@ const URL = "http://localhost:3000/config";
     var pageParams = []
     
     window.addEventListener('change',(e)=>{
-      //console.log(e.target)
       updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
     })
     //Получаем объект параметра
     function getParam(name){
-      for(let i=0; i<pageParams.length; i++){
-        if(pageParams[i].getName() == name) return pageParams[i];      
-      }
+      let find = pageParams.find(param => param.getName() === name)
+      if(!find) throw new Error('Параметр не удалось получить.Нет такого параметра');
+      return find;      
     }
     //Получаем значение параметра
     function getParamValue(name){
-      for(let i=0; i<pageParams.length; i++){
-        //????Какое значение использовать? value или pageParams.paramValue???
-        if(pageParams[i].getName() == name) return pageParams[i]['config']['init']['value'];      
-      }
+      let find = pageParams.find(param => param.getName() === name)
+      if(!find) throw new Error('Значение не удалось получить.Нет такого параметра');
+      return find.getValue();
     }
 
     function updateParam(el,name,type){

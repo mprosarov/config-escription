@@ -26,6 +26,9 @@ class DataSources {
             p.addSubscribe(this)
         }
     }
+    paramChanged(name,value){
+        this.execute();
+    }
     execute() {
         for(let i=0; i<this.params.length; i++){
             this.params[i]['value'] = PageBuilder.getParamValue(this.params[i]['param'])

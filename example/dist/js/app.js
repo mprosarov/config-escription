@@ -16,21 +16,19 @@ const URL = "http://localhost:3000/config";
     var pageParams = []
     
     window.addEventListener('change',(e)=>{
-      //console.log(e.target)
       updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
     })
     //Получаем объект параметра
     function getParam(name){
-      for(let i=0; i<pageParams.length; i++){
-        if(pageParams[i].getName() == name) return pageParams[i];      
-      }
+      let find = pageParams.find(param => param.getName() === name)
+      if(!find) throw new Error('Параметр не удалось получить.Нет такого параметра');
+      return find;      
     }
     //Получаем значение параметра
     function getParamValue(name){
-      for(let i=0; i<pageParams.length; i++){
-        //????Какое значение использовать? value или pageParams.paramValue???
-        if(pageParams[i].getName() == name) return pageParams[i]['config']['init']['value'];      
-      }
+      let find = pageParams.find(param => param.getName() === name)
+      if(!find) throw new Error('Значение не удалось получить.Нет такого параметра');
+      return find.getValue();
     }
 
     function updateParam(el,name,type){
@@ -509,12 +507,6 @@ class TableTabulator extends BaseElement {
       //   value: '12/02/2024'
       // }
 
-      //-----получаем параметры при переадресации-------ПОКА ТУТ!!! надо переносить в pageBuilder
-      let redirectUrlParams = new URL(window.location.href);
-      let urlParams = new URLSearchParams(redirectUrlParams.search);
-      const getParams = Object.fromEntries(urlParams.entries());
-      //console.log(getParams)
-      
       if(this.config.query && this.config.query !== "select 1"){
         let allParams = [...this.config.params,...TableTabulator.PARAMS];
         //------------------------------------
@@ -858,7 +850,26 @@ class PageParam {
         this.create();
     }
     create() {
-        this.paramValue = this.config.init.value
+        //Инициализация
+        let type = this.config.valueType;
+        //raw - "сырое значение", параметр д.б проинициализирован значением из поля value
+        if(type == 'raw'){
+            this.paramValue = this.config.init.value;
+            return
+        }
+        //get - параметр д.б проинициализирован значением GET-параметра, имя которого указано в поле value
+        if(type == 'get'){
+            let redirectUrlParams = new URL(window.location.href);
+            let urlParams = new URLSearchParams(redirectUrlParams.search);
+            const getParams = Object.fromEntries(urlParams.entries());
+            console.log(getParams)
+            return
+        }
+        //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.    
+        if(type == 'date'){
+
+            return
+        }
     }
     //возвращает имя компонента(свойство name из конфигурации)
     getName(){
@@ -866,12 +877,11 @@ class PageParam {
     };
     //возвращает текущее значение параметра    
     getValue(){
-        return this.config.init.value;
+        return this.paramValue;
     };
     //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента    
     addSubscribe(obj){
         this.subscribers.push(obj);
-      //  console.log(this)
     };
     //записывает переданное значение в свойство paramValue и вызывает
     //у всех подписчиков событие обновления параметра.    
@@ -879,7 +889,7 @@ class PageParam {
         console.log('setParamValue - ',value)
         this.paramValue = value;
         this.subscribers.forEach(item => {})
-     //   console.log(this)
+
     }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);
