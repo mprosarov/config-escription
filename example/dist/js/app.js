@@ -823,11 +823,13 @@ class DataSources {
             return x.slice(1,-1)
             }))
         )
+        
         for(let i=0; i<arrQueryParams.length; i++){
             let objParam = {
                 param: arrQueryParams[i],
                 value:''
             };
+         
             this.params.push(objParam);
             // Подписываемся на изменение параметра
             var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
