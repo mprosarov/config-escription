@@ -1,18 +1,18 @@
 const PageBuilder = (function(){
 //   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
 // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
-    
+
 
 const URL = "http://localhost:3000/config";
     //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
-    
+
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
     let components = {};
     var pageParams = [];
     var DS = []
-    
+
     window.addEventListener('change',(e)=>{
       updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
     })
@@ -24,7 +24,7 @@ const URL = "http://localhost:3000/config";
     function getParam(name){
       let find = pageParams.find(param => param.getName() === name)
       if(!find) throw new Error('Параметр не удалось получить.Нет такого параметра');
-      return find;      
+      return find;
     }
     //Получаем значение параметра
     function getParamValue(name){
@@ -38,8 +38,8 @@ const URL = "http://localhost:3000/config";
       var p = getParam(name);
       var value;
       switch (type){
-        case 'checkbox': 
-          el.checked ? value = 1 : value = 0;  
+        case 'checkbox':
+          el.checked ? value = 1 : value = 0;
           break
         case 'select':
           value = el.value
@@ -47,7 +47,7 @@ const URL = "http://localhost:3000/config";
       }
       p.setParamValue(value)
       console.log(pageParams)
-    } 
+    }
 
     //Добавление компонента в общий список
     function addComponent(type,component) {
@@ -75,7 +75,7 @@ const URL = "http://localhost:3000/config";
         //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
         //   let result = await response.json();
         //   let config = result.result;
-          
+
         // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
           if(response.status !== 200){
             throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
@@ -91,7 +91,7 @@ const URL = "http://localhost:3000/config";
     function create(parentElement,config) {
         if(!components[config.type]){
             throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
-       
+
           }
         return new components[config.type](parentElement,config);
     }
@@ -110,7 +110,7 @@ const URL = "http://localhost:3000/config";
         }
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{
-            var datasourse = PageBuilder.create('null',item);
+            var datasourse = PageBuilder.create(null,item);
             DS.push(datasourse)
           })
           console.log(DS)
@@ -124,6 +124,8 @@ const URL = "http://localhost:3000/config";
         if (config["sidebars"]) {
             config["sidebars"].forEach(item=>{PageBuilder.create(document.body,item)})
        }
+       // Все компоненты отрисованы, выполняем запросы данных
+       DS.forEach(item=>{item.execute()});
     }
     //Очистить страницу
     function clear(){

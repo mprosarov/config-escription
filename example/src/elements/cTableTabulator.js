@@ -6,6 +6,7 @@ class TableTabulator extends BaseElement {
         super(parentElement, config);
         this.create();
     }
+
     recursiveSearchColumns(data, target) {
       let values = {
         headerHozAlign: "center",
@@ -19,48 +20,30 @@ class TableTabulator extends BaseElement {
         this.recursiveSearchColumns(child, target);
       }
     }
-    async create(){
+    create(){
       //--голый запрос для таблицы (без подставленных параметров) и сами параметры лежат в конфиге таблицы
       //--допустим,что есть и общие параметры, и личные для чего либо
       //--создаем 2 массива объектов параметров(PARAMS - общие, params - частные)
-      //--предполагаемая структура параметра: 
+      //--предполагаемая структура параметра:
       // param = {
-      //   id: '', 
+      //   id: '',
       //   type: 'date',
       //   name: '::pDate',
       //   value: '12/02/2024'
       // }
-      const ds = PageBuilder.getDS(this.config.datasourse); 
-      ds.addSubscribe(this) 
-       console.log(ds) 
-       console.log(this.config.datasourse)  
-      if(this.config.query && this.config.query !== "select 1"){
-        let allParams = [...this.config.params,...TableTabulator.PARAMS];
-        //------------------------------------
-        let query = this.config.query;
-        if(allParams.length)
-          for(let i=0; i<allParams.length; i++){
-            query = query.replace(allParams[i].name,allParams[i].value)
-          }
-        console.log('QUERY - ',query)
-        console.log('PARAMS - ',allParams)
-          var response = await fetch(`${TableTabulator.URL}/doquery`,{
-            method: "POST",
-            headers: { Accept:"text/plain","Content-Type": "text/plain" },
-            body: query
-          })
-        let responseText = await response.text();
-        let json = JSON.parse(responseText);
-        this.config.tdata.data = json.resultset;
-        console.log(this.config.tdata)
-      }    
-      //--должно прийти 
+      const ds = PageBuilder.getDS(this.config.datasourse);
+      ds.addSubscribe(this)
+       console.log(ds)
+       console.log(this.config.datasourse)
+      this.config["tdata"].data = [];
+
+      //--должно прийти
       // {
       //   message:'Успех',
       //   metadata: [],
       //   resultset: []
       // }
-      
+
       let contentTable = `<div><h6>${this.config['name']?this.config['name']:''}</h6>
                               <div id="${this.config["id"]}"></div>
                           </div>`;
@@ -71,11 +54,13 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["data"].unshift(this.config["indexCols"]);
         this.config["tdata"]["frozenRows"] = 1;
       }
-      new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      this.tableObj = new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      console.log(this.tableObj.setData,'asa');
+
       var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
-      
+
       var action = this.config["action"];
-      
+
       if(!action){//пока непонятно везде будет или нет
         return
       }
@@ -106,17 +91,17 @@ class TableTabulator extends BaseElement {
               } else if (action[i]["url"] == "" && !action[i]['config']) {
                 throw new Error(`не указан ни один параметр для перехода (url,config)`);
               }
-              
+
               //если в объекте action указан config,то переадресуемся по нему
-              //если нет, то по полю idconfig таблицы 
+              //если нет, то по полю idconfig таблицы
               let config;
               if(action[i]["config"]){
                 config = action[i]["config"]
-              } 
+              }
               else{
                 config = row.getData()["idconfig"]
-              } 
-              if (!action[i]["newtab"]) 
+              }
+              if (!action[i]["newtab"])
                 PageBuilder.loadPageConfig(config,params);
               else {
                 let redirectUrl = new URL(window.location.href);
@@ -128,11 +113,23 @@ class TableTabulator extends BaseElement {
                 }
                 redirectUrl.search = searchParams.toString();
                 window.open(redirectUrl, "_blank").focus();
-              } 
+              }
             });
             break
         }
       }
     }//end create
+
+    updatedDS(data){
+      console.log('updatedDS',data);
+      if (!this.tableObj.initialized){
+          this.tableObj.on("tableBuilt", function () {
+            this.setData(data);
+            this.off("tableBuilt");
+          });
+          return;
+      }
+      this.tableObj.setData(data);
+    }
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
