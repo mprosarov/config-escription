@@ -4,25 +4,30 @@
 const PageBuilder = (function(){
 //   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
 // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
-    
+
 
 const URL = "http://localhost:3000/config";
     //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
-    
+
     let navbar = null;
     let domPage = null;
     //Коллекция компонентов
     let components = {};
-    var pageParams = []
-    
+    var pageParams = [];
+    var DS = []
+
     window.addEventListener('change',(e)=>{
       updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
     })
+    function  getDS(name){
+      let find = DS.find(ds => ds.config.id === name);
+      return find
+    }
     //Получаем объект параметра
     function getParam(name){
       let find = pageParams.find(param => param.getName() === name)
       if(!find) throw new Error('Параметр не удалось получить.Нет такого параметра');
-      return find;      
+      return find;
     }
     //Получаем значение параметра
     function getParamValue(name){
@@ -36,8 +41,8 @@ const URL = "http://localhost:3000/config";
       var p = getParam(name);
       var value;
       switch (type){
-        case 'checkbox': 
-          el.checked ? value = 1 : value = 0;  
+        case 'checkbox':
+          el.checked ? value = 1 : value = 0;
           break
         case 'select':
           value = el.value
@@ -45,7 +50,7 @@ const URL = "http://localhost:3000/config";
       }
       p.setParamValue(value)
       console.log(pageParams)
-    } 
+    }
 
     //Добавление компонента в общий список
     function addComponent(type,component) {
@@ -73,7 +78,7 @@ const URL = "http://localhost:3000/config";
         //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
         //   let result = await response.json();
         //   let config = result.result;
-          
+
         // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
           if(response.status !== 200){
             throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
@@ -89,7 +94,7 @@ const URL = "http://localhost:3000/config";
     function create(parentElement,config) {
         if(!components[config.type]){
             throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
-       
+
           }
         return new components[config.type](parentElement,config);
     }
@@ -107,7 +112,11 @@ const URL = "http://localhost:3000/config";
         //  console.log(pageParams)
         }
         if (config["dataSources"]){
-          config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
+          config["dataSources"].forEach(item=>{
+            var datasourse = PageBuilder.create(null,item);
+            DS.push(datasourse)
+          })
+          console.log(DS)
         }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
         document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
@@ -118,6 +127,8 @@ const URL = "http://localhost:3000/config";
         if (config["sidebars"]) {
             config["sidebars"].forEach(item=>{PageBuilder.create(document.body,item)})
        }
+       // Все компоненты отрисованы, выполняем запросы данных
+       DS.forEach(item=>{item.execute()});
     }
     //Очистить страницу
     function clear(){
@@ -128,6 +139,7 @@ const URL = "http://localhost:3000/config";
     return {
       addComponent,
       updateParam,
+      getDS,
       getParam,
       getParamValue,
       create,
@@ -482,6 +494,7 @@ class TableTabulator extends BaseElement {
         super(parentElement, config);
         this.create();
     }
+
     recursiveSearchColumns(data, target) {
       let values = {
         headerHozAlign: "center",
@@ -495,45 +508,30 @@ class TableTabulator extends BaseElement {
         this.recursiveSearchColumns(child, target);
       }
     }
-    async create(){
+    create(){
       //--голый запрос для таблицы (без подставленных параметров) и сами параметры лежат в конфиге таблицы
       //--допустим,что есть и общие параметры, и личные для чего либо
       //--создаем 2 массива объектов параметров(PARAMS - общие, params - частные)
-      //--предполагаемая структура параметра: 
+      //--предполагаемая структура параметра:
       // param = {
-      //   id: '', 
+      //   id: '',
       //   type: 'date',
       //   name: '::pDate',
       //   value: '12/02/2024'
       // }
+      const ds = PageBuilder.getDS(this.config.datasourse);
+      ds.addSubscribe(this)
+       console.log(ds)
+       console.log(this.config.datasourse)
+      this.config["tdata"].data = [];
 
-      if(this.config.query && this.config.query !== "select 1"){
-        let allParams = [...this.config.params,...TableTabulator.PARAMS];
-        //------------------------------------
-        let query = this.config.query;
-        if(allParams.length)
-          for(let i=0; i<allParams.length; i++){
-            query = query.replace(allParams[i].name,allParams[i].value)
-          }
-        console.log('QUERY - ',query)
-        console.log('PARAMS - ',allParams)
-          var response = await fetch(`${TableTabulator.URL}/doquery`,{
-            method: "POST",
-            headers: { Accept:"text/plain","Content-Type": "text/plain" },
-            body: query
-          })
-        let responseText = await response.text();
-        let json = JSON.parse(responseText);
-        this.config.tdata.data = json.resultset;
-        console.log(this.config.tdata)
-      }    
-      //--должно прийти 
+      //--должно прийти
       // {
       //   message:'Успех',
       //   metadata: [],
       //   resultset: []
       // }
-      
+
       let contentTable = `<div><h6>${this.config['name']?this.config['name']:''}</h6>
                               <div id="${this.config["id"]}"></div>
                           </div>`;
@@ -544,11 +542,13 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["data"].unshift(this.config["indexCols"]);
         this.config["tdata"]["frozenRows"] = 1;
       }
-      new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      this.tableObj = new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
+      console.log(this.tableObj.setData,'asa');
+
       var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
-      
+
       var action = this.config["action"];
-      
+
       if(!action){//пока непонятно везде будет или нет
         return
       }
@@ -570,7 +570,7 @@ class TableTabulator extends BaseElement {
                   })
                   //params[cols[j]] = row.getData()[cols[j]]
                 }
-                console.log(params)
+                //console.log(params)
               }
               //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
               //если он пустой и его нет, то валится ошибка в консоль
@@ -579,17 +579,17 @@ class TableTabulator extends BaseElement {
               } else if (action[i]["url"] == "" && !action[i]['config']) {
                 throw new Error(`не указан ни один параметр для перехода (url,config)`);
               }
-              
+
               //если в объекте action указан config,то переадресуемся по нему
-              //если нет, то по полю idconfig таблицы 
+              //если нет, то по полю idconfig таблицы
               let config;
               if(action[i]["config"]){
                 config = action[i]["config"]
-              } 
+              }
               else{
                 config = row.getData()["idconfig"]
-              } 
-              if (!action[i]["newtab"]) 
+              }
+              if (!action[i]["newtab"])
                 PageBuilder.loadPageConfig(config,params);
               else {
                 let redirectUrl = new URL(window.location.href);
@@ -601,12 +601,24 @@ class TableTabulator extends BaseElement {
                 }
                 redirectUrl.search = searchParams.toString();
                 window.open(redirectUrl, "_blank").focus();
-              } 
+              }
             });
             break
         }
       }
     }//end create
+
+    updatedDS(data){
+      console.log('updatedDS',data);
+      if (!this.tableObj.initialized){
+          this.tableObj.on("tableBuilt", function () {
+            this.setData(data);
+            this.off("tableBuilt");
+          });
+          return;
+      }
+      this.tableObj.setData(data);
+    }
 }
 PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
 /*
@@ -802,46 +814,78 @@ class ItemsBlock extends BaseElement {
 }
 PageBuilder.addComponent(ItemsBlock.TYPE, ItemsBlock);
 class DataSources {
-    static TYPE = "dataSource";
-    params = [];
-    constructor (parentElement, config) {
-        this.parentElement = parentElement;
-        this.config = config;
-        this.create();
-        this.execute();
+  static TYPE = "dataSource";
+  params = [];
+  subscribes = [];
+  constructor(parentElement, config) {
+    this.parentElement = parentElement;
+    this.config = config;
+    this.create();
+  }
+  create() {
+    let arrQueryParams = Array.from(
+      new Set(
+        this.config.query.match(/\{.+?\}/g).map(function (x) {
+          return x.slice(1, -1);
+        })
+      )
+    );
+
+    for (let i = 0; i < arrQueryParams.length; i++) {
+      let objParam = {
+        param: arrQueryParams[i],
+        value: "",
+      };
+
+      this.params.push(objParam);
+      // Подписываемся на изменение параметра
+      var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
+      if (!p) console.error("Нет параметра");
+      p.addSubscribe(this);
     }
-    create() {
-        let arrQueryParams = Array.from(new Set(this.config.query.match(/\{.+?\}/g).map(function(x){
-            return x.slice(1,-1)
-            }))
-        )
-        
-        for(let i=0; i<arrQueryParams.length; i++){
-            let objParam = {
-                param: arrQueryParams[i],
-                value:''
-            };
-         
-            this.params.push(objParam);
-            // Подписываемся на изменение параметра
-            var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
-            if(!p) console.error('Нет параметра');
-            p.addSubscribe(this)
-        }
+  }
+  paramChanged(name, value) {
+    this.execute();
+  }
+  fetchFIC(query) {
+    console.log("fetchFIC", query);
+    let test = [];
+    for (let i = 0; i < 10; i++) {
+      test.push({
+        idconfig: "oef",
+        2: Date.now(),
+        3: Date.now(),
+        4: Date.now(),
+        5: Date.now(),
+        6: Date.now(),
+        7: Date.now(),
+        8: Date.now(),
+        9: Date.now(),
+        10: Date.now(),
+      });
     }
-    paramChanged(name,value){
-        this.execute();
+    return test;
+  }
+  execute() {
+    for (let i = 0; i < this.params.length; i++) {
+      this.params[i]["value"] = PageBuilder.getParamValue(this.params[i]["param"]);
     }
-    execute() {
-        for(let i=0; i<this.params.length; i++){
-            this.params[i]['value'] = PageBuilder.getParamValue(this.params[i]['param'])
-        }
-        let query = this.config.query;
-        for(let i=0; i<this.params.length; i++){
-            query = query.replaceAll(`{${this.params[i].param}}`,this.params[i].value)
-        }
-     //   console.log(query)
+    let query = this.config.query;
+    for (let i = 0; i < this.params.length; i++) {
+      query = query.replaceAll(`{${this.params[i].param}}`, this.params[i].value);
     }
+    // Отслыем запрос на сервер и оповещаем подписчиков
+    let result = this.fetchFIC(query); // TODO: запрос на сервер - заменить на fetch
+    this.subscribes.forEach((item) => {
+      item.updatedDS(result);
+    });
+    //   console.log(query)
+  }
+  addSubscribe(obj) {
+    if (!this.subscribes.includes(obj)) {
+      this.subscribes.push(obj);
+    }
+  }
 }
 PageBuilder.addComponent(DataSources.TYPE, DataSources);
 class PageParam {
@@ -889,7 +933,6 @@ class PageParam {
     //записывает переданное значение в свойство paramValue и вызывает
     //у всех подписчиков событие обновления параметра.    
     setParamValue(value){
-        console.log('setParamValue - ',value)
         this.paramValue = value;
         this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))
     }
