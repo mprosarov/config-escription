@@ -10,11 +10,16 @@ const URL = "http://localhost:3000/config";
     let domPage = null;
     //Коллекция компонентов
     let components = {};
-    var pageParams = []
+    var pageParams = [];
+    var DS = []
     
     window.addEventListener('change',(e)=>{
       updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
     })
+    function  getDS(name){
+      let find = DS.find(ds => ds.config.id === name);
+      return find
+    }
     //Получаем объект параметра
     function getParam(name){
       let find = pageParams.find(param => param.getName() === name)
@@ -104,7 +109,11 @@ const URL = "http://localhost:3000/config";
         //  console.log(pageParams)
         }
         if (config["dataSources"]){
-          config["dataSources"].forEach(item=>{PageBuilder.create('null',item)})
+          config["dataSources"].forEach(item=>{
+            var datasourse = PageBuilder.create('null',item);
+            DS.push(datasourse)
+          })
+          console.log(DS)
         }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
         document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
@@ -125,6 +134,7 @@ const URL = "http://localhost:3000/config";
     return {
       addComponent,
       updateParam,
+      getDS,
       getParam,
       getParamValue,
       create,

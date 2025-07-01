@@ -3,12 +3,12 @@
   "dataSources": [
     {
       "type": "dataSource",
-      "id": "example-table-theme",
+      "id": "id_ds_1",
       "query": "select {pTest} {pTest2} {pTest} {pTest2}"
     },
     {
       "type": "dataSource",
-      "id": "example-table-theme",
+      "id": "id_ds_2",
       "query": "select  {pTest3} {pTest} {pTestSelect_2}"
     }    
   ],
@@ -522,6 +522,7 @@
                 {
                   "type": "table-tabulator",
                   "id": "table-tabulator_id_8d",
+                  "datasourse": "id_ds_1",
                   "action":[
                     {
                       "name": "redirect",

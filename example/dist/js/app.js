@@ -829,6 +829,9 @@ class DataSources {
             p.addSubscribe(this)
         }
     }
+    paramChanged(name,value){
+        this.execute();
+    }
     execute() {
         for(let i=0; i<this.params.length; i++){
             this.params[i]['value'] = PageBuilder.getParamValue(this.params[i]['param'])
@@ -851,7 +854,7 @@ class PageParam {
     }
     create() {
         //Инициализация
-        let type = this.config.valueType;
+        let type = this.config.init.valueType;
         //raw - "сырое значение", параметр д.б проинициализирован значением из поля value
         if(type == 'raw'){
             this.paramValue = this.config.init.value;
@@ -861,16 +864,16 @@ class PageParam {
         if(type == 'get'){
             let redirectUrlParams = new URL(window.location.href);
             let urlParams = new URLSearchParams(redirectUrlParams.search);
-            const getParams = Object.fromEntries(urlParams.entries());
-            console.log(getParams)
+            urlParams.get(this.getName());
             return
         }
         //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.    
         if(type == 'date'){
-
+            if(this.config.init.value) this.paramValue = this.config.init.value;
+            else this.paramValue = new Date().toLocaleDateString();
             return
         }
-    }
+    };
     //возвращает имя компонента(свойство name из конфигурации)
     getName(){
         return this.config.name;
@@ -888,8 +891,7 @@ class PageParam {
     setParamValue(value){
         console.log('setParamValue - ',value)
         this.paramValue = value;
-        this.subscribers.forEach(item => {})
-
+        this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))
     }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);

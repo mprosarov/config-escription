@@ -30,7 +30,10 @@ class TableTabulator extends BaseElement {
       //   name: '::pDate',
       //   value: '12/02/2024'
       // }
-
+      const ds = PageBuilder.getDS(this.config.datasourse); 
+      ds.addSubscribe(this) 
+       console.log(ds) 
+       console.log(this.config.datasourse)  
       if(this.config.query && this.config.query !== "select 1"){
         let allParams = [...this.config.params,...TableTabulator.PARAMS];
         //------------------------------------
@@ -94,7 +97,7 @@ class TableTabulator extends BaseElement {
                   })
                   //params[cols[j]] = row.getData()[cols[j]]
                 }
-                console.log(params)
+                //console.log(params)
               }
               //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
               //если он пустой и его нет, то валится ошибка в консоль

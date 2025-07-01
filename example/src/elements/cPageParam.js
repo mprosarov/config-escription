@@ -43,7 +43,6 @@ class PageParam {
     //записывает переданное значение в свойство paramValue и вызывает
     //у всех подписчиков событие обновления параметра.    
     setParamValue(value){
-        console.log('setParamValue - ',value)
         this.paramValue = value;
         this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))
     }
