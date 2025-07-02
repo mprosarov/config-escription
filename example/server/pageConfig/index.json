@@ -524,11 +524,27 @@
                   "id": "table-tabulator_id_8d",
                   "datasourse": "id_ds_1",
                   "action":[
+
                     {
                       "name": "redirect",
                       "event": "rowDblClick",
+                      "config":"oef",
                       "newtab": true,
-                      "colparams": ["2","3"]
+                      "params":{
+                        "tableParams":  [
+                          {
+                            "field":"2",
+                            "pName": "pTest"
+                          },
+                          {
+                            "field":"3",
+                            "pName": "pTest2"
+                          }                          
+                        ],
+                        "pageParams": [
+                          "pTest3"
+                        ]
+                      }                     
                     }
                   ],
                   "name": "Расчет-обоснование норматива транспортно-заготовительных затрат",

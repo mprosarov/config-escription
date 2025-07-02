@@ -21,22 +21,9 @@ class TableTabulator extends BaseElement {
       }
     }
     create(){
-      //--голый запрос для таблицы (без подставленных параметров) и сами параметры лежат в конфиге таблицы
-      //--допустим,что есть и общие параметры, и личные для чего либо
-      //--создаем 2 массива объектов параметров(PARAMS - общие, params - частные)
-      //--предполагаемая структура параметра:
-      // param = {
-      //   id: '',
-      //   type: 'date',
-      //   name: '::pDate',
-      //   value: '12/02/2024'
-      // }
       const ds = PageBuilder.getDS(this.config.datasourse);
       ds.addSubscribe(this)
-       console.log(ds)
-       console.log(this.config.datasourse)
       this.config["tdata"].data = [];
-
       //--должно прийти
       // {
       //   message:'Успех',
@@ -55,73 +42,19 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       this.tableObj = new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-      console.log(this.tableObj.setData,'asa');
+    //  console.log(this.tableObj.setData,'asa');
+    //  var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
 
-      var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
-
-      var action = this.config["action"];
-
-      if(!action){//пока непонятно везде будет или нет
+      if(!this.config["action"]){//пока непонятно везде будет или нет
         return
       }
-      for(let i=0; i<action.length; i++){
-        switch(action[i].name){
-          //переадресация
-          case "redirect":
-            table.on(action[i].event, function(e, row){
-              //e — объект события щелчка
-              //row — компонент строки
-              var params = TableTabulator.PARAMS; //передаваемые параметры
-              if(action[i]["colparams"]){
-                var cols = action[i]["colparams"];
-                for(let j=0; j<cols.length; j++){
-                  params.push({
-                    id: cols[j],
-                    name: cols[j],
-                    value: row.getData()[cols[j]]
-                  })
-                  //params[cols[j]] = row.getData()[cols[j]]
-                }
-                //console.log(params)
-              }
-              //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
-              //если он пустой и его нет, то валится ошибка в консоль
-              if (action[i]["url"]) {
-                window.open(action[i]["url"], "_blank").focus();
-              } else if (action[i]["url"] == "" && !action[i]['config']) {
-                throw new Error(`не указан ни один параметр для перехода (url,config)`);
-              }
-
-              //если в объекте action указан config,то переадресуемся по нему
-              //если нет, то по полю idconfig таблицы
-              let config;
-              if(action[i]["config"]){
-                config = action[i]["config"]
-              }
-              else{
-                config = row.getData()["idconfig"]
-              }
-              if (!action[i]["newtab"])
-                PageBuilder.loadPageConfig(config,params);
-              else {
-                let redirectUrl = new URL(window.location.href);
-                let searchParams = new URLSearchParams(redirectUrl.search);
-                searchParams.set("config", config);
-                for(let j=0; j<params.length; j++){
-                  //пока неизвестно name или id
-                  searchParams.set(params[j]['name'], params[j]['value']);
-                }
-                redirectUrl.search = searchParams.toString();
-                window.open(redirectUrl, "_blank").focus();
-              }
-            });
-            break
-        }
+      for(let i=0; i<this.config["action"].length; i++){
+        PageBuilder.performAnAction(this.config["action"][i]["name"],this.config["action"][i], this.config["id"])
       }
     }//end create
 
     updatedDS(data){
-      console.log('updatedDS',data);
+      //console.log('updatedDS',data);
       if (!this.tableObj.initialized){
           this.tableObj.on("tableBuilt", function () {
             this.setData(data);

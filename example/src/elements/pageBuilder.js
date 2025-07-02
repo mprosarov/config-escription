@@ -12,10 +12,81 @@ const URL = "http://localhost:3000/config";
     let components = {};
     var pageParams = [];
     var DS = []
+    //ЭКШЕНЫ
+    function performAnAction(name,obj,tableID){
+      //name - вид действия
+      //id - идентификатор таблицы, если требуется для экшена
+      //obj - объект действия
+                    console.warn(name)
+              console.warn(obj)
+              console.warn(tableID)
+      switch (name){
+        case 'redirect':
+              if(!tableID){
+                
+              }
 
+              var table = Tabulator.findTable(`#${tableID}`)[0];
+              table.on(obj.event, function(e, row){
+                //e — объект события щелчка
+                //row — компонент строки
+                var params = []; //передаваемые параметры
+                if(obj["params"]){
+                  var cols = obj["params"]["tableParams"];
+                  for(let j=0; j<cols.length; j++){
+                    params.push({
+                      name: cols[j]['pName'],
+                      value: row.getData()[cols[j]['field']]
+                    })
+                  }
+                  for(let i=0; i<obj["params"]["pageParams"].length; i++){
+                    params.push({
+                      name: obj["params"]["pageParams"][i],
+                      value: getParamValue(obj["params"]["pageParams"][i])
+                    })
+                  }
+                  //console.log(params)
+                }
+                //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
+                //если он пустой и его нет, то валится ошибка в консоль
+                if (obj["url"]) {
+                  window.open(obj["url"], "_blank").focus();
+                } else if (obj["url"] == "" && !obj['config']) {
+                  throw new Error(`не указан ни один параметр для перехода (url,config)`);
+                }
+                //если в объекте action указан config,то переадресуемся по нему
+                //если нет, то по полю idconfig таблицы
+                let config;
+                if(obj["config"]){
+                  config = obj["config"]
+                }
+                else{
+                  config = row.getData()["idconfig"]
+                }
+                if (!obj["newtab"])
+                  PageBuilder.loadPageConfig(config,params);
+                else {
+                  let redirectUrl = new URL(window.location.href);
+                  let searchParams = new URLSearchParams(redirectUrl.search);
+                  searchParams.set("config", config);
+                  for(let j=0; j<params.length; j++){
+                    //пока неизвестно name или id
+                    searchParams.set(params[j]['name'], params[j]['value']);
+                  }
+                  redirectUrl.search = searchParams.toString();
+                  window.open(redirectUrl, "_blank").focus();
+                }
+            });
+            break
+      }
+
+    }
+    //реагируем на изменение переключалок
     window.addEventListener('change',(e)=>{
       updateParam(e.target,e.target.dataset['param'],e.target.getAttribute('type'))
     })
+
+    //получаем датасорс
     function  getDS(name){
       let find = DS.find(ds => ds.config.id === name);
       return find
@@ -32,7 +103,7 @@ const URL = "http://localhost:3000/config";
       if(!find) throw new Error('Значение не удалось получить.Нет такого параметра');
       return find.getValue();
     }
-
+    //обновляем значения параметров при переключении чекбоксов и селектов
     function updateParam(el,name,type){
        console.log(name, ' ', type)
       var p = getParam(name);
@@ -136,6 +207,7 @@ const URL = "http://localhost:3000/config";
     return {
       addComponent,
       updateParam,
+      performAnAction,
       getDS,
       getParam,
       getParamValue,
