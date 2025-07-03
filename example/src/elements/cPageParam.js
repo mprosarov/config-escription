@@ -1,6 +1,6 @@
 class PageParam {
     static TYPE = "param";
-    paramValue; 
+    paramValue;
     subscribers = []
     constructor (parentElement, config) {
         this.config = config;
@@ -21,27 +21,34 @@ class PageParam {
             urlParams.get(this.getName());
             return
         }
-        //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.    
+        //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.
         if(type == 'date'){
             if(this.config.init.value) this.paramValue = this.config.init.value;
             else this.paramValue = new Date().toLocaleDateString();
             return
         }
+        // TODO: Добавить или проверить инициализацию параметра с valureType = "number" (см. доки);
+        if(type == 'number'){
+            if(this.config.init.value) this.paramValue = this.config.init.value;
+            else this.paramValue = 0;
+            return;
+        }
+        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.name}"`);
     };
     //возвращает имя компонента(свойство name из конфигурации)
     getName(){
         return this.config.name;
     };
-    //возвращает текущее значение параметра    
+    //возвращает текущее значение параметра
     getValue(){
         return this.paramValue;
     };
-    //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента    
+    //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента
     addSubscribe(obj){
         this.subscribers.push(obj);
     };
     //записывает переданное значение в свойство paramValue и вызывает
-    //у всех подписчиков событие обновления параметра.    
+    //у всех подписчиков событие обновления параметра.
     setParamValue(value){
         this.paramValue = value;
         this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))

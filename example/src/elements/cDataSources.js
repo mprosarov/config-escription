@@ -37,7 +37,7 @@ class DataSources {
     let test = [];
     for (let i = 0; i < 10; i++) {
       test.push({
-        idconfig: "oef",
+        idconfig: i%2==0?"oef":"check_list",
         2: Date.now(),
         3: Date.now(),
         4: Date.now(),

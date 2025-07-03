@@ -79,4 +79,47 @@ class BaseElement {
         }
     }
   }
+
+  actionRedirect(configAction, paramsObjArr = []){
+    let resultParams = [];
+    // Собираем "глобальные параметры" страницы, если они есть
+    if (paramsObjArr.params?.pageParams) {
+      for (let i = 0; i < paramsObjArr.params.pageParams.length; i++) {
+        let param = paramsObjArr.params.pageParams[i];
+        resultParams.push({
+          name: param.pName,
+          value: PageBuilder.getParamValue(param.pName),
+        });
+      }
+    };
+    resultParams = resultParams.concat(paramsObjArr);
+    if(configAction.config) this._redirectConfig(configAction, resultParams);
+    else if(configAction.url) this._redirectToURL(configAction, resultParams);
+    else{
+      throw new Error("Не корректная конфигурация.Неизвестный тип redirect", configAction);
+    }
+  }
+
+  _redirectConfig(configAction, resultParams = []) {
+    if (!configAction["newtab"]) {
+      resultParams.push({
+        name: "config",
+        value: configAction.config,
+      });
+      PageBuilder.loadWithParams(configAction.config, resultParams);
+      return;
+    }
+    let redirectUrl = new window.URL(window.location.href);
+    let searchParams = new URLSearchParams(redirectUrl.search);
+    searchParams.set("config", configAction.config);
+
+    resultParams.forEach((p)=>searchParams.set(p.name, p.value));
+
+    redirectUrl.search = searchParams.toString();
+    window.open(redirectUrl, "_blank").focus();
+  }
+  _redirectToURL(configAction, resultParams = []) {
+    //TODO: Реализовать редирект по url
+    console.log('ПЕРЕАДРЕСАЦИЯ ПО УРЛ', configAction.url);
+  }
 }

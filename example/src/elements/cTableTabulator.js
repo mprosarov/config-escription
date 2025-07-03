@@ -49,12 +49,37 @@ class TableTabulator extends BaseElement {
         return
       }
       for(let i=0; i<this.config["action"].length; i++){
-        PageBuilder.performAnAction(this.config["action"][i]["name"],this.config["action"][i], this.config["id"])
+        const currentAction = {...this.config["action"][i]};
+        this.tableObj.on(currentAction.event, (e, row) => {
+          this.runAction(currentAction, e, row)
+        });
       }
     }//end create
-
+    runAction(obj,e,row){
+      //e — объект события щелчка
+      //row — компонент строки
+      let [tableParams] = [];
+      // Собираем параметры из компонента
+      if(obj.params?.tableParams){
+        obj.params.tableParams.forEach(p=>{
+          tableParams.push({
+            name:p.pName,
+            value:row.getData()[p.field]
+          });
+        })
+      }
+      if (obj.name == "redirect") {
+        if (!obj["config"] && !obj["url"]) {
+          if (!row.getData()["idconfig"]) throw new Error("Не удалось определить имя или url для перехода");
+          obj["config"] = row.getData()["idconfig"];
+        }
+        super.actionRedirect(obj, tableParams);
+      }
+    }
     updatedDS(data){
-      //console.log('updatedDS',data);
+      if (this.config["indexCols"]) {
+        data.unshift(this.config["indexCols"]);
+      }
       if (!this.tableObj.initialized){
           this.tableObj.on("tableBuilt", function () {
             this.setData(data);

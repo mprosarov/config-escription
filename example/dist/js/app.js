@@ -6,8 +6,13 @@ const PageBuilder = (function(){
 // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
 
 
-const URL = "http://localhost:3000/config";
+let URL = "";
     //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
+if(location.href.indexOf('file')>=0){
+  URL = 'http://localhost:3000/config';
+} else {
+  URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+}
 
     let navbar = null;
     let domPage = null;
@@ -25,61 +30,6 @@ const URL = "http://localhost:3000/config";
               console.warn(tableID)
       switch (name){
         case 'redirect':
-              if(!tableID){
-                
-              }
-
-              var table = Tabulator.findTable(`#${tableID}`)[0];
-              table.on(obj.event, function(e, row){
-                //e — объект события щелчка
-                //row — компонент строки
-                var params = []; //передаваемые параметры
-                if(obj["params"]){
-                  var cols = obj["params"]["tableParams"];
-                  for(let j=0; j<cols.length; j++){
-                    params.push({
-                      name: cols[j]['pName'],
-                      value: row.getData()[cols[j]['field']]
-                    })
-                  }
-                  for(let i=0; i<obj["params"]["pageParams"].length; i++){
-                    params.push({
-                      name: obj["params"]["pageParams"][i],
-                      value: getParamValue(obj["params"]["pageParams"][i])
-                    })
-                  }
-                  //console.log(params)
-                }
-                //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
-                //если он пустой и его нет, то валится ошибка в консоль
-                if (obj["url"]) {
-                  window.open(obj["url"], "_blank").focus();
-                } else if (obj["url"] == "" && !obj['config']) {
-                  throw new Error(`не указан ни один параметр для перехода (url,config)`);
-                }
-                //если в объекте action указан config,то переадресуемся по нему
-                //если нет, то по полю idconfig таблицы
-                let config;
-                if(obj["config"]){
-                  config = obj["config"]
-                }
-                else{
-                  config = row.getData()["idconfig"]
-                }
-                if (!obj["newtab"])
-                  PageBuilder.loadPageConfig(config,params);
-                else {
-                  let redirectUrl = new URL(window.location.href);
-                  let searchParams = new URLSearchParams(redirectUrl.search);
-                  searchParams.set("config", config);
-                  for(let j=0; j<params.length; j++){
-                    //пока неизвестно name или id
-                    searchParams.set(params[j]['name'], params[j]['value']);
-                  }
-                  redirectUrl.search = searchParams.toString();
-                  window.open(redirectUrl, "_blank").focus();
-                }
-            });
             break
       }
 
@@ -130,8 +80,16 @@ const URL = "http://localhost:3000/config";
         }
         components[type] = component;
     }
+    function loadWithParams(configName,params){
+        let getParams = new URLSearchParams();
+        //getParams.set('name', configName);
+        params.forEach((param) => {
+          getParams.set(param.name, param.value);
+        });
+        window.location.search = `?${getParams.toString()}`;
+    }
     // Загрузить json конфигурацию страницы с сервера по имени файла
-    async function loadPageConfig(configName,params){
+    async function loadPageConfig(configName,params=[]){
         // очищаем страницу, чтобы построить новую по загруженной конфигурации
         clear();
         // лоадер
@@ -184,9 +142,9 @@ const URL = "http://localhost:3000/config";
         }
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{
-            var datasourse = PageBuilder.create(null,item);
-            DS.push(datasourse)
-          })
+              var datasourse = PageBuilder.create(null,item);
+              DS.push(datasourse)
+          });
           console.log(DS)
         }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
@@ -217,7 +175,8 @@ const URL = "http://localhost:3000/config";
       create,
       createPage,
       createMainNavBar,
-      loadPageConfig
+      loadPageConfig,
+      loadWithParams,
     };
 })();
 /*=========================================
@@ -303,6 +262,49 @@ class BaseElement {
             element.style.marginRight = marginStyle[CONFIG_PAGE.MARGIN_RIGHT] + "px";
         }
     }
+  }
+
+  actionRedirect(configAction, paramsObjArr = []){
+    let resultParams = [];
+    // Собираем "глобальные параметры" страницы, если они есть
+    if (paramsObjArr.params?.pageParams) {
+      for (let i = 0; i < paramsObjArr.params.pageParams.length; i++) {
+        let param = paramsObjArr.params.pageParams[i];
+        resultParams.push({
+          name: param.pName,
+          value: PageBuilder.getParamValue(param.pName),
+        });
+      }
+    };
+    resultParams = resultParams.concat(paramsObjArr);
+    if(configAction.config) this._redirectConfig(configAction, resultParams);
+    else if(configAction.url) this._redirectToURL(configAction, resultParams);
+    else{
+      throw new Error("Не корректная конфигурация.Неизвестный тип redirect", configAction);
+    }
+  }
+
+  _redirectConfig(configAction, resultParams = []) {
+    if (!configAction["newtab"]) {
+      resultParams.push({
+        name: "config",
+        value: configAction.config,
+      });
+      PageBuilder.loadWithParams(configAction.config, resultParams);
+      return;
+    }
+    let redirectUrl = new window.URL(window.location.href);
+    let searchParams = new URLSearchParams(redirectUrl.search);
+    searchParams.set("config", configAction.config);
+
+    resultParams.forEach((p)=>searchParams.set(p.name, p.value));
+
+    redirectUrl.search = searchParams.toString();
+    window.open(redirectUrl, "_blank").focus();
+  }
+  _redirectToURL(configAction, resultParams = []) {
+    //TODO: Реализовать редирект по url
+    console.log('ПЕРЕАДРЕСАЦИЯ ПО УРЛ', configAction.url);
   }
 }
 // У конечного пункта могут быть варианты действий (переход на страницу или что-то другое)
@@ -609,12 +611,37 @@ class TableTabulator extends BaseElement {
         return
       }
       for(let i=0; i<this.config["action"].length; i++){
-        PageBuilder.performAnAction(this.config["action"][i]["name"],this.config["action"][i], this.config["id"])
+        const currentAction = {...this.config["action"][i]};
+        this.tableObj.on(currentAction.event, (e, row) => {
+          this.runAction(currentAction, e, row)
+        });
       }
     }//end create
-
+    runAction(obj,e,row){
+      //e — объект события щелчка
+      //row — компонент строки
+      let tableParams = [];
+      // Собираем параметры из компонента
+      if(obj.params?.tableParams){
+        obj.params.tableParams.forEach(p=>{
+          tableParams.push({
+            name:p.pName,
+            value:row.getData()[p.field]
+          });
+        })
+      }
+      if (obj.name == "redirect") {
+        if (!obj["config"] && !obj["url"]) {
+          if (!row.getData()["idconfig"]) throw new Error("Не удалось определить имя или url для перехода");
+          obj["config"] = row.getData()["idconfig"];
+        }
+        super.actionRedirect(obj, tableParams);
+      }
+    }
     updatedDS(data){
-      //console.log('updatedDS',data);
+      if (this.config["indexCols"]) {
+        data.unshift(this.config["indexCols"]);
+      }
       if (!this.tableObj.initialized){
           this.tableObj.on("tableBuilt", function () {
             this.setData(data);
@@ -857,7 +884,7 @@ class DataSources {
     let test = [];
     for (let i = 0; i < 10; i++) {
       test.push({
-        idconfig: "oef",
+        idconfig: i%2==0?"oef":"check_list",
         2: Date.now(),
         3: Date.now(),
         4: Date.now(),
@@ -895,7 +922,7 @@ class DataSources {
 PageBuilder.addComponent(DataSources.TYPE, DataSources);
 class PageParam {
     static TYPE = "param";
-    paramValue; 
+    paramValue;
     subscribers = []
     constructor (parentElement, config) {
         this.config = config;
@@ -916,27 +943,34 @@ class PageParam {
             urlParams.get(this.getName());
             return
         }
-        //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.    
+        //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.
         if(type == 'date'){
             if(this.config.init.value) this.paramValue = this.config.init.value;
             else this.paramValue = new Date().toLocaleDateString();
             return
         }
+        // TODO: Добавить или проверить инициализацию параметра с valureType = "number" (см. доки);
+        if(type == 'number'){
+            if(this.config.init.value) this.paramValue = this.config.init.value;
+            else this.paramValue = 0;
+            return;
+        }
+        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.name}"`);
     };
     //возвращает имя компонента(свойство name из конфигурации)
     getName(){
         return this.config.name;
     };
-    //возвращает текущее значение параметра    
+    //возвращает текущее значение параметра
     getValue(){
         return this.paramValue;
     };
-    //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента    
+    //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента
     addSubscribe(obj){
         this.subscribers.push(obj);
     };
     //записывает переданное значение в свойство paramValue и вызывает
-    //у всех подписчиков событие обновления параметра.    
+    //у всех подписчиков событие обновления параметра.
     setParamValue(value){
         this.paramValue = value;
         this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))

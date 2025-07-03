@@ -528,8 +528,8 @@
                     {
                       "name": "redirect",
                       "event": "rowDblClick",
-                      "config":"oef",
-                      "newtab": true,
+
+                      "newtab": false,
                       "params":{
                         "tableParams":  [
                           {
@@ -539,12 +539,12 @@
                           {
                             "field":"3",
                             "pName": "pTest2"
-                          }                          
+                          }
                         ],
                         "pageParams": [
                           "pTest3"
                         ]
-                      }                     
+                      }
                     }
                   ],
                   "name": "Расчет-обоснование норматива транспортно-заготовительных затрат",

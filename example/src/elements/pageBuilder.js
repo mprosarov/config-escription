@@ -3,8 +3,13 @@ const PageBuilder = (function(){
 // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
 
 
-const URL = "http://localhost:3000/config";
+let URL = "";
     //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
+if(location.href.indexOf('file')>=0){
+  URL = 'http://localhost:3000/config';
+} else {
+  URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+}
 
     let navbar = null;
     let domPage = null;
@@ -22,61 +27,6 @@ const URL = "http://localhost:3000/config";
               console.warn(tableID)
       switch (name){
         case 'redirect':
-              if(!tableID){
-                
-              }
-
-              var table = Tabulator.findTable(`#${tableID}`)[0];
-              table.on(obj.event, function(e, row){
-                //e — объект события щелчка
-                //row — компонент строки
-                var params = []; //передаваемые параметры
-                if(obj["params"]){
-                  var cols = obj["params"]["tableParams"];
-                  for(let j=0; j<cols.length; j++){
-                    params.push({
-                      name: cols[j]['pName'],
-                      value: row.getData()[cols[j]['field']]
-                    })
-                  }
-                  for(let i=0; i<obj["params"]["pageParams"].length; i++){
-                    params.push({
-                      name: obj["params"]["pageParams"][i],
-                      value: getParamValue(obj["params"]["pageParams"][i])
-                    })
-                  }
-                  //console.log(params)
-                }
-                //если в объекте action указан url,то проходим по ссылке(пока новая вкладка)
-                //если он пустой и его нет, то валится ошибка в консоль
-                if (obj["url"]) {
-                  window.open(obj["url"], "_blank").focus();
-                } else if (obj["url"] == "" && !obj['config']) {
-                  throw new Error(`не указан ни один параметр для перехода (url,config)`);
-                }
-                //если в объекте action указан config,то переадресуемся по нему
-                //если нет, то по полю idconfig таблицы
-                let config;
-                if(obj["config"]){
-                  config = obj["config"]
-                }
-                else{
-                  config = row.getData()["idconfig"]
-                }
-                if (!obj["newtab"])
-                  PageBuilder.loadPageConfig(config,params);
-                else {
-                  let redirectUrl = new URL(window.location.href);
-                  let searchParams = new URLSearchParams(redirectUrl.search);
-                  searchParams.set("config", config);
-                  for(let j=0; j<params.length; j++){
-                    //пока неизвестно name или id
-                    searchParams.set(params[j]['name'], params[j]['value']);
-                  }
-                  redirectUrl.search = searchParams.toString();
-                  window.open(redirectUrl, "_blank").focus();
-                }
-            });
             break
       }
 
@@ -127,8 +77,16 @@ const URL = "http://localhost:3000/config";
         }
         components[type] = component;
     }
+    function loadWithParams(configName,params){
+        let getParams = new URLSearchParams();
+        //getParams.set('name', configName);
+        params.forEach((param) => {
+          getParams.set(param.name, param.value);
+        });
+        window.location.search = `?${getParams.toString()}`;
+    }
     // Загрузить json конфигурацию страницы с сервера по имени файла
-    async function loadPageConfig(configName,params){
+    async function loadPageConfig(configName,params=[]){
         // очищаем страницу, чтобы построить новую по загруженной конфигурации
         clear();
         // лоадер
@@ -181,9 +139,9 @@ const URL = "http://localhost:3000/config";
         }
         if (config["dataSources"]){
           config["dataSources"].forEach(item=>{
-            var datasourse = PageBuilder.create(null,item);
-            DS.push(datasourse)
-          })
+              var datasourse = PageBuilder.create(null,item);
+              DS.push(datasourse)
+          });
           console.log(DS)
         }
         if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
@@ -214,6 +172,7 @@ const URL = "http://localhost:3000/config";
       create,
       createPage,
       createMainNavBar,
-      loadPageConfig
+      loadPageConfig,
+      loadWithParams,
     };
 })();
