@@ -58,7 +58,8 @@ class TableTabulator extends BaseElement {
     runAction(obj,e,row){
       //e — объект события щелчка
       //row — компонент строки
-      let [tableParams] = [];
+
+      let tableParams = [];
       // Собираем параметры из компонента
       if(obj.params?.tableParams){
         obj.params.tableParams.forEach(p=>{
