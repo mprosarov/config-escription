@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" data-mdb-theme="dark">
-  
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,12 +19,15 @@
 
 // Тут какой-то запрос кофигурации с сервера
 // Например: let config = await fetch("/config");
-let configName = getUrlParamByName('config') || 'index';
-PageBuilder.loadPageConfig(configName);
+function initPage(params) {
+  let configName = getUrlParamByName('config') || 'index';
+  PageBuilder.loadPageConfig(configName);
+}
 function getUrlParamByName(name, url = window.location.search) {
   let searchParams = new URLSearchParams(url);
   let urlConfigName = searchParams.get("config");
   if(urlConfigName === null) return null;
-  return urlConfigName === undefined ? '' : urlConfigName;  
+  return urlConfigName === undefined ? '' : urlConfigName;
 }
+initPage();
 </script>

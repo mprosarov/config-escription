@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "build.cmd"
+    "build": "build.cmd >> build.log",
+    "serve": "node ./server/server.js & node ./server/watch-and-build.js",
+    "watch": "node ./server/watch-and-build.js"
   },
   "keywords": [],
   "author": "",

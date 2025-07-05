@@ -101,14 +101,13 @@ class BaseElement {
   }
 
   _redirectConfig(configAction, resultParams = []) {
+    // Загружаем конфигурацию на той же странице
     if (!configAction["newtab"]) {
-      resultParams.push({
-        name: "config",
-        value: configAction.config,
-      });
       PageBuilder.loadWithParams(configAction.config, resultParams);
       return;
     }
+
+    // Загружаем конфигурацию в новой вкладке
     let redirectUrl = new window.URL(window.location.href);
     let searchParams = new URLSearchParams(redirectUrl.search);
     searchParams.set("config", configAction.config);
