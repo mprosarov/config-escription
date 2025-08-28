@@ -32,8 +32,8 @@ class DataSources {
   paramChanged(name, value) {
     this.execute();
   }
-  fetchFIC(query) {
-    console.log("fetchFIC", query);
+  fetchQuery(query) {
+  //  console.log("fetchFIC", query);
     let test = [];
     for (let i = 0; i < 10; i++) {
       test.push({
@@ -49,7 +49,25 @@ class DataSources {
         10: Date.now(),
       });
     }
+
+  //------------------------------------------
+    // let URL = "";
+    // if (location.href.indexOf("file") >= 0) {
+    //   URL = "http://localhost:3000/config";
+    // } else {
+    //   URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+    // }
+    // var resp = fetch(`${URL}/doquery`,{
+    //     method: "POST",
+    //     headers: { Accept:"text/plain","Content-Type": "text/plain" },
+    //     body: query
+    //   })
+    // let respText = resp.text();
+    // let json = JSON.parse(respText);
+    // return json.resultset;
+  //---------------------------------------------  
     return test;
+    
   }
   execute() {
     for (let i = 0; i < this.params.length; i++) {
@@ -60,7 +78,7 @@ class DataSources {
       query = query.replaceAll(`{${this.params[i].param}}`, this.params[i].value);
     }
     // Отслыем запрос на сервер и оповещаем подписчиков
-    let result = this.fetchFIC(query); // TODO: запрос на сервер - заменить на fetch
+    let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });

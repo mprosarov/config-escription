@@ -6,7 +6,6 @@ const PageBuilder = (function(){
   // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
 
   let URL = "";
-  //const URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest"
   if (location.href.indexOf("file") >= 0) {
     URL = "http://localhost:3000/config";
   } else {
@@ -15,8 +14,11 @@ const PageBuilder = (function(){
 
   // Подписываемся на событие изменения истории(переход назад)
   window.addEventListener("popstate", (event) => {
-    // инициализируем занова страницу
+    //чистим историю
+    clearState();
+    // инициализируем зановo страницу
     initPage(); // глобальная функция для инициализации страницы( в templates.html)
+
   });
   let navbar = null;
   let domPage = null;
@@ -24,6 +26,14 @@ const PageBuilder = (function(){
   let components = {};
   var pageParams = [];
   var DS = [];
+  var createdComponents = [];
+  
+  function clearState(){
+    DS = [];
+    pageParams = [];
+   // window.history.replaceState({}, null, 'url')
+
+  }
   //ЭКШЕНЫ
   function performAnAction(name, obj, tableID) {
     //name - вид действия
@@ -39,6 +49,7 @@ const PageBuilder = (function(){
   }
   //реагируем на изменение переключалок
   window.addEventListener("change", (e) => {
+    console.log("change - ",e)
     updateParam(e.target, e.target.dataset["param"], e.target.getAttribute("type"));
   });
 
@@ -73,7 +84,7 @@ const PageBuilder = (function(){
         break;
     }
     p.setParamValue(value);
-    console.log(pageParams);
+    console.log('pageParams -',pageParams);
   }
   //Добавление компонента в общий список
   function addComponent(type, component) {
@@ -103,12 +114,12 @@ const PageBuilder = (function(){
     document.body.insertAdjacentHTML(
       "beforeend",
       `<section class="loader-container">
-                                                            <div class="dot"></div>
-                                                            <div class="dot"></div>
-                                                            <div class="dot"></div>
-                                                            <div class="dot"></div>
-                                                            <div class="dot"></div>
-                                                        </section>`
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+      </section>`
     );
     let loader = document.body.querySelector(".loader-container");
     try {
@@ -123,11 +134,13 @@ const PageBuilder = (function(){
         throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
       }
       // создаем страницу по загруженной конфигурации
+      createdComponents = []
       createPage(config);
       // удаляем лоадер
       loader.remove();
     } catch (error) {
       loader.innerHTML = `<div class="loader-error">${error.message}</div>`;
+      createdComponents = [];
     }
   }
   function create(parentElement, config) {
@@ -161,7 +174,10 @@ const PageBuilder = (function(){
     domPage = document.body.lastElementChild;
     if (config["page"]) {
       config.page.forEach((item) => {
-        PageBuilder.create(domPage, item);
+        //PageBuilder.create(domPage, item);
+        createdComponents.push(PageBuilder.create(domPage, item))
+
+
       });
     }
     if (config["sidebars"]) {
@@ -173,6 +189,7 @@ const PageBuilder = (function(){
     DS.forEach((item) => {
       item.execute();
     });
+
   }
   //Очистить страницу
   function clear() {
@@ -192,6 +209,7 @@ const PageBuilder = (function(){
     createMainNavBar,
     loadPageConfig,
     loadWithParams,
+    clearState
   };
 })();
 /*=========================================
@@ -894,8 +912,8 @@ class DataSources {
   paramChanged(name, value) {
     this.execute();
   }
-  fetchFIC(query) {
-    console.log("fetchFIC", query);
+  fetchQuery(query) {
+  //  console.log("fetchFIC", query);
     let test = [];
     for (let i = 0; i < 10; i++) {
       test.push({
@@ -911,7 +929,25 @@ class DataSources {
         10: Date.now(),
       });
     }
+
+  //------------------------------------------
+    // let URL = "";
+    // if (location.href.indexOf("file") >= 0) {
+    //   URL = "http://localhost:3000/config";
+    // } else {
+    //   URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+    // }
+    // var resp = fetch(`${URL}/doquery`,{
+    //     method: "POST",
+    //     headers: { Accept:"text/plain","Content-Type": "text/plain" },
+    //     body: query
+    //   })
+    // let respText = resp.text();
+    // let json = JSON.parse(respText);
+    // return json.resultset;
+  //---------------------------------------------  
     return test;
+    
   }
   execute() {
     for (let i = 0; i < this.params.length; i++) {
@@ -922,7 +958,7 @@ class DataSources {
       query = query.replaceAll(`{${this.params[i].param}}`, this.params[i].value);
     }
     // Отслыем запрос на сервер и оповещаем подписчиков
-    let result = this.fetchFIC(query); // TODO: запрос на сервер - заменить на fetch
+    let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });
