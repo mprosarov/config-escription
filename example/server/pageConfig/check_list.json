@@ -2,19 +2,34 @@
   "dataSources": [
         {
             "type": "dataSource",
-            "id": "example-table-theme",
-            "query": "select {2} {3} {3} {3}"
+            "id": "id_ds_10form",
+            "query": "select {pTest} {pTest2} {pTest} {pTest2}"
         },
         {
             "type": "dataSource",
-            "id": "example-table-theme",
-            "query": "select  {2} {2} {3}"
-        }    
+            "id": "id_ds_11form",
+            "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+        },
+        {
+            "type": "dataSource",
+            "id": "id_ds_12form",
+            "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+        }  ,
+        {
+            "type": "dataSource",
+            "id": "id_ds_22form",
+            "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+        }  ,
+        {
+            "type": "dataSource",
+            "id": "id_ds_23form",
+            "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+        }      
   ],
   "pageParams": [
         {
             "type": "param",
-            "name": "2",
+            "name": "pTest",
             "init":{
                 "valueType": "get",
                 "value": ""
@@ -22,7 +37,7 @@
         },
         {
             "type": "param",
-            "name": "3",
+            "name": "pTest2",
             "init":{
                 "valueType": "get",
                 "value": ""
@@ -56,6 +71,7 @@
                     {
                         "id" : "table-tabulator_id_10form",
                         "type": "table-tabulator",
+                        "datasourse": "id_ds_10form",
                         "name" : "Форма 10",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -83,6 +99,7 @@
                     {
                         "id" : "table-tabulator_id_11form",
                         "name" : "Форма 11",
+                        "datasourse": "id_ds_11form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -109,6 +126,7 @@
                     {
                         "id" : "table-tabulator_id_12form",
                         "name" : "Форма 12",
+                        "datasourse": "id_ds_12form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -135,6 +153,7 @@
                     {
                         "id" : "table-tabulator_id_22form",
                         "name" : "Форма 22",
+                        "datasourse": "id_ds_22form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -162,6 +181,7 @@
                     {
                         "id" : "table-tabulator_id_23form",
                         "name": "Форма 23",
+                        "datasourse": "id_ds_23form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],

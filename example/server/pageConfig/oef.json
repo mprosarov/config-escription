@@ -1,4 +1,87 @@
-{
+{  "dataSources": [
+    {
+      "type": "dataSource",
+      "id": "id_ds_8d",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_10d",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_10d_2",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_11",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_12",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_21",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_22d",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_23",
+      "query": "select {pTest} {pTest2} {pTest} {pTest2}"
+    }
+  ],
+  "pageParams": [
+    {
+      "type": "param",
+      "name": "pTest",
+      "init":{
+        "valueType": "raw",
+        "value": "ololol"
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTest2",
+      "init":{
+        "valueType": "number",
+        "value": 22222
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTestSelect_1",
+      "init":{
+        "valueType": "number",
+        "value": ""
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTest3",
+      "init":{
+        "valueType": "number",
+        "value": 333333
+      }
+    },
+    {
+      "type": "param",
+      "name": "pTestSelect_2",
+      "init":{
+        "valueType": "raw",
+        "value": ""
+      }
+    }
+  ],
   "navbar": {
     "titlePosition": "right",
     "menuPosition": "top",
@@ -27,6 +110,7 @@
                   {
                       "type": "table-tabulator",
                       "id": "table-tabulator_id_8d",
+                      "datasourse": "id_ds_8d",
                       "name": "Расчет-обоснование норматива транспортно-заготовительных затрат",
                       "indexCols": { "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10 },
                       "tdata": {
@@ -84,6 +168,7 @@
                   {
                       "id" : "table-tabulator_id_10d",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_10d",
                       "name" : "",
                       "indexCols": {"11": "1","22": "2","33": "3","44": "4.1","55": "4.2","66": "5"},
                       "tdata" : {
@@ -122,6 +207,7 @@
                   {
                       "id" : "table-tabulator_id_10d_2",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_10d_2",
                       "name" : "",
                       "indexCols": {"11": "1","22": "2","33": "3","44": "4.1","55": "4.2","66": "5"},
                       "tdata" : {
@@ -165,6 +251,7 @@
                   {
                       "id" : "table-tabulator_id_11",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_11",
                       "name" : "",
                       "indexCols": {"11": "1","22": "2","33": "3","44": "4","55": "5","66": "6","77": "7","88": "8","99": "9"},
                       "tdata" : {
@@ -227,6 +314,7 @@
                   {
                       "id" : "table-tabulator_id_12",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_12",
                       "name" : "",
                       "indexCols": {"11": "1","22": "2","33": "3","44": "4","55": "5","66": "6","77": "7","88": "8","99": "9"},
                       "tdata" : {
@@ -288,6 +376,7 @@
                   {
                       "id" : "table-tabulator_id_21",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_21",
                       "name" : "",
                       "indexCols": {"1": "1","2": "2","3": "3","4": "4","5": "5","6": "6","7": "7","8": "8","9": "9","10": "10","11": "11","12": "12","13": "13","14": "14","15": "15"},
                       "tdata" : {
@@ -360,6 +449,7 @@
                   {
                       "id" : "table-tabulator_id_22d",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_22d",
                       "name" : "",
                       "indexCols": {"11": "1","22": "2","33": "3","44": "4","55": "5"},
                       "tdata" : {
@@ -391,6 +481,7 @@
                   {
                       "id" : "table-tabulator_id_23",
                       "type": "table-tabulator",
+                      "datasourse": "id_ds_23",
                       "name" : "",
                       "indexCols": {"1": "1","2": "2","3": "3","4": "4","5": "5","6": "6","7": "7","8": "8","9": "9","10": "10","11": "11","12": "12","13": "13","14": "14","15": "15","16": "16","17": "17"},
                       "tdata" : {
