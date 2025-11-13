@@ -1,0 +1,41 @@
+:root {
+    --borderForm: 1px solid #d8d8d8;
+}
+ .editorForm{
+
+ }
+ .treeForm-body{
+    overflow-y: auto;
+    flex: 1;
+
+ }
+ .treeForm-explorer_name{
+    font-size: larger;
+    font-weight: 600;
+
+ }
+ .treeForm-explorer{
+    border-bottom: var(--borderForm);
+ }
+ .treeForm div{
+    padding: 20px 10px;
+ }
+ .treeForm{
+    border-right: var(--borderForm);
+    display: flex;
+    flex-direction: column;
+    
+ }
+
+html,body{
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+body {
+    display: flex;
+    overflow: hidden;
+
+    
+}
