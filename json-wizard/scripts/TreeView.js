@@ -108,10 +108,14 @@ class TreeView {
   addNode(type, parent) {
     console.log(type, parent);
     const newNode = Utils.getEmptyElementByType(type);
-    let childContainer = parent.dom.parentNode.querySelector(".tree-children");
+    // let childContainer = parent.dom.querySelector(".tree-children");
+    let childContainer = null;
+    if(parent.dom.nextElementSibling.classList.contains('tree-children'))
+      childContainer = parent.dom.nextElementSibling;
     if (!childContainer) {
       childContainer = document.createElement("div");
-    }
+      parent.dom.insertAdjacentElement('afterend',childContainer)
+    } 
     let currentLevel = parent.level;
     this.createNode(childContainer, newNode, (currentLevel += 1));
   }
