@@ -11,13 +11,22 @@ class RadioGroup extends BaseElement {
     this.create();
   }
   create() {
-    this.parentElement.insertAdjacentHTML("beforeend", '<div class="form-group"></div>');
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      '<div class="form-group"></div>'
+    );
     let block = this.parentElement.lastElementChild;
     let content = "";
-    for (let i = 0; i < this.config.items.length; i++) {
-      let item = this.config.items[i];
-      content += `<div class="form-check ${this.config.inline ? "form-check-inline" : ""}">
-                        <input class="form-check-input" type='radio' name="${this.config.name}" value="" id="${item.id}" ${item.status} ${item.checked ? "checked" : ""} >
+    for (let i = 0; i < this.config.elements.length; i++) {
+      let item = this.config.elements[i];
+      content += `<div class="form-check ${
+        this.config.inline ? "form-check-inline" : ""
+      }">
+                        <input class="form-check-input" type='radio' name="${
+                          this.config.name
+                        }" value="" id="${item.id}" ${item.status} ${
+        item.checked ? "checked" : ""
+      } >
                         <label class="form-check-label" for=${item.id}>
                           ${item.label}
                         </label>

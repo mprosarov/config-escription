@@ -1,0 +1,875 @@
+const TEST_DATA = [
+  {
+    id: "name-config-id",
+    text: "name-config",
+    type: "folder",
+    raw: {},
+    children: [
+      {
+        id: "name-config-id-1",
+        text: "datasource",
+        raw: {},
+        children: [],
+        type: "folder",
+      },
+      {
+        id: "name-config-id-2",
+        text: "params2",
+        raw: {},
+        children: [
+          {
+            id: "name-config-id-2",
+            text: "params454",
+            raw: {},
+            children: [],
+            type: "param",
+          },
+          {
+            id: "name-config-id-2",
+            text: "params454",
+            raw: {},
+            children: [],
+            type: "param",
+          },
+        ],
+        type: "folder",
+      },
+      {
+        id: "name-config-id-3",
+        text: "page",
+        raw: {},
+        children: [],
+        type: "folder",
+      },
+    ],
+  },
+  {
+    id: "name-config-id-2",
+    text: "name-config-2",
+    type: "folder",
+    raw: {},
+    children: [
+      {
+        id: "name-config-id-1",
+        text: "datasource",
+        raw: {},
+        children: [],
+        type: "folder",
+      },
+      {
+        id: "name-config-id-2",
+        text: "params2",
+        raw: {},
+        children: [
+          {
+            id: "name-config-id-2",
+            text: "params454",
+            raw: {},
+            children: [],
+            type: "param",
+          },
+          {
+            id: "name-config-id-2",
+            text: "params454",
+            raw: {},
+            children: [],
+            type: "param",
+          },
+        ],
+        type: "folder",
+      },
+      {
+        id: "name-config-id-3",
+        text: "page",
+        raw: {},
+        children: [],
+        type: "folder",
+      },
+    ],
+  },
+];
+
+const TEST_CONFIG = {
+  dataSources: [
+    {
+      type: "dataSource",
+      id: "id_ds_1",
+      query: "select {pTest} {pTest2} {pTest} {pTest2}",
+    },
+    {
+      type: "dataSource",
+      id: "id_ds_2",
+      query: "select  {pTest3} {pTest} {pTestSelect_2}",
+    },
+  ],
+  pageParams: [
+    {
+      type: "param",
+      name: "pTest",
+      init: {
+        valueType: "raw",
+        value: "ololol",
+      },
+    },
+    {
+      type: "param",
+      name: "pTest2",
+      init: {
+        valueType: "number",
+        value: 22222,
+      },
+    },
+    {
+      type: "param",
+      name: "pTestSelect_1",
+      init: {
+        valueType: "number",
+        value: "",
+      },
+    },
+    {
+      type: "param",
+      name: "pTest3",
+      init: {
+        valueType: "number",
+        value: 333333,
+      },
+    },
+    {
+      type: "param",
+      name: "pTestSelect_2",
+      init: {
+        valueType: "raw",
+        value: "",
+      },
+    },
+  ],
+  navbar: {
+    titlePosition: "right",
+    menuPosition: "top",
+    items: [
+      {
+        type: "header",
+        text: "Главная",
+        size: "5",
+      },
+      {
+        type: "menu",
+        items: [
+          {
+            title: "Главная",
+            submenu: [
+              {
+                title: "Проекты",
+                submenu: [
+                  {
+                    title: "ОЭФ",
+                    action: "redirect",
+                    config: "main_oef",
+                    newtab: true,
+                  },
+                  {
+                    title: "Тест",
+                    action: "redirect",
+                    url: "https://www.wildberries.ru/",
+                  },
+                  {
+                    title: "Юристы",
+                    action: "redirect",
+                    config: "lawyers",
+                    newtab: true,
+                  },
+                  {
+                    title: "ОЭФ_переадресация",
+                    submenu: [
+                      {
+                        config: "oef",
+                        title: "ОЭФ",
+                        action: "redirect",
+                        newtab: true,
+                      },
+                      {
+                        config: "check_list",
+                        title: "Чек-лист",
+                        action: "redirect",
+                        newtab: false,
+                      },
+                      {
+                        config: "calculation",
+                        title: "Калькуляция",
+                        action: "redirect",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                title: "Уровень-1.2",
+                link: "/",
+                submenu: [
+                  {
+                    title: "Уровень-1-1",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "button",
+        icon: "printer",
+        text: "Кнопка",
+      },
+      {
+        type: "button-group",
+        elements: [
+          {
+            text: "кнопка_1",
+            class: "primary",
+            icon: "floppy",
+            action: {
+              params: [],
+              func: [],
+            },
+          },
+          {
+            text: "кнопка_2",
+            icon: "arrow-clockwise",
+            class: "secondary",
+            action: {
+              params: [],
+              func: [],
+            },
+          },
+          {
+            text: "",
+            class: "danger",
+            icon: "x-circle",
+            action: {
+              params: [],
+              func: [],
+            },
+          },
+        ],
+      },
+      {
+        type: "checkbox",
+        inline: "inline",
+        elements: [
+          {
+            label: "текст_1",
+            id: "chb_1",
+            checked: "checked",
+            status: "disabled",
+            value: "",
+          },
+          {
+            label: "текст_2",
+            id: "chb_21",
+            checked: "",
+            status: "unabled",
+            value: "",
+          },
+        ],
+      },
+    ],
+  },
+  sidebars: [
+    {
+      type: "sidebar",
+      position: "top",
+      items: [
+        {
+          type: "tabs",
+          items: [
+            {
+              type: "tab",
+              tab_name: "8(8д)ТЗР11",
+              items: [
+                {
+                  type: "button",
+                  icon: "printer",
+                  text: "Кнопка",
+                },
+                {
+                  type: "button-group",
+                  elements: [
+                    {
+                      type: "button-group-item",
+                      text: "кнопка_1",
+                      class: "secondary",
+                      icon: "floppy",
+                      action: {
+                        params: [],
+                        func: [],
+                      },
+                    },
+                    {
+                      type: "button-group-item",
+                      text: "кнопка_2",
+                      icon: "arrow-clockwise",
+                      class: "secondary",
+                      action: {
+                        params: [],
+                        func: [],
+                      },
+                    },
+                    {
+                      type: "button-group-item",
+                      text: "",
+                      class: "secondary",
+                      icon: "x-circle",
+                      action: {
+                        params: [],
+                        func: [],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "tab",
+              tab_name: "10(10д)ДЗП",
+              items: [
+                {
+                  type: "menu",
+                  elements: [
+                    {
+                      title: "Главная",
+                      submenu: [
+                        {
+                          title: "Уровень-1.1",
+                          link: "/",
+                          submenu: [
+                            {
+                              title: "Уровень-1-1",
+                            },
+                          ],
+                        },
+                        {
+                          title: "Уровень-1.2",
+                          link: "/",
+                          submenu: [
+                            {
+                              title: "Уровень-1-1",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "sidebar",
+      position: "end",
+      items: [
+        {
+          type: "tabs",
+          items: [
+            {
+              type: "tab",
+              tab_name: "8(8д)ТЗР11",
+              items: [
+                {
+                  type: "button",
+                  icon: "printer",
+                  text: "Кнопка",
+                },
+              ],
+            },
+            {
+              type: "tab",
+              tab_name: "10(10д)ДЗП",
+              items: [
+                {
+                  type: "menu",
+                  items: [
+                    {
+                      title: "Главная",
+                      submenu: [
+                        {
+                          title: "Уровень-1.1",
+                          link: "/",
+                          submenu: [
+                            {
+                              title: "Уровень-1-1",
+                            },
+                          ],
+                        },
+                        {
+                          title: "Уровень-1.2",
+                          link: "/",
+                          submenu: [
+                            {
+                              title: "Уровень-1-1",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  page: [
+    {
+      type: "header",
+      text: "Это главная страница",
+      size: "2",
+    },
+    {
+      type: "block",
+      orientation: "row",
+      items: [
+        {
+          type: "block",
+          orientation: "column",
+          items: [
+            {
+              type: "checkbox",
+              inline: "inline",
+              elements: [
+                {
+                  id: "id_1",
+                  label: "параметр_1",
+                  paramName: "pTest",
+                  checked: "checked",
+                  status: "unabled",
+                  value: "",
+                  role: "switch",
+                },
+                {
+                  id: "id_2",
+                  label: "параметр_2",
+                  paramName: "pTest2",
+                  checked: "",
+                  status: "unabled",
+                  value: "",
+                },
+                {
+                  id: "id_3",
+                  label: "параметр_3",
+                  paramName: "pTest3",
+                  checked: "",
+                  status: "unabled",
+                  value: "",
+                },
+              ],
+            },
+            {
+              type: "button-group",
+              elements: [
+                {
+                  text: "кнопка_1",
+                  class: "secondary",
+                  icon: "floppy",
+                  action: {
+                    params: [],
+                    func: [],
+                  },
+                  status: "disabled",
+                },
+                {
+                  text: "кнопка_2",
+                  icon: "arrow-clockwise",
+                  class: "secondary",
+                  action: {
+                    params: [],
+                    func: [],
+                  },
+                  status: "unabled",
+                },
+                {
+                  text: "",
+                  class: "secondary",
+                  icon: "x-circle",
+                  action: {
+                    params: [],
+                    func: [],
+                  },
+                  status: "unabled",
+                },
+              ],
+            },
+            {
+              type: "button",
+              icon: "printer",
+              text: "Кнопка",
+            },
+            {
+              type: "button",
+              icon: "printer",
+              text: "Кнопка",
+              status: "disabled",
+            },
+          ],
+        },
+        {
+          type: "block",
+          orientation: "column",
+          items: [
+            {
+              type: "radio-group",
+              name: "radio-name",
+
+              elements: [
+                {
+                  id: "r_id_1",
+                  label: "Радио_1",
+                  status: "unabled",
+                  paramName: "pTestRadio_1",
+                  checked: "",
+                },
+                {
+                  id: "r_id_2",
+                  label: "Радио_2",
+                  status: "unabled",
+                  paramName: "pTestRadio_2",
+                },
+              ],
+            },
+            {
+              type: "checkbox",
+              inline: true,
+              elements: [
+                {
+                  label: "текст_1",
+                  id: "chb_1",
+                  checked: "checked",
+                  status: "disabled",
+                  value: "",
+                },
+                {
+                  label: "текст_2",
+                  id: "chb_21",
+                  checked: "",
+                  status: "unabled",
+                  value: "",
+                },
+              ],
+            },
+            {
+              type: "button-group",
+              elements: [
+                {
+                  text: "кнопка_1",
+                  class: "secondary",
+                  icon: "floppy",
+                  action: {
+                    params: [],
+                    func: [],
+                  },
+                },
+                {
+                  text: "кнопка_2",
+                  icon: "arrow-clockwise",
+                  class: "secondary",
+                  action: {
+                    params: [],
+                    func: [],
+                  },
+                },
+                {
+                  text: "",
+                  class: "secondary",
+                  icon: "x-circle",
+                  action: {
+                    params: [],
+                    func: [],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "tabs",
+      items: [
+        {
+          type: "tab",
+          tab_name: "8(8д)ТЗР",
+          items: [
+            {
+              type: "block",
+              orientation: "row",
+              items: [
+                {
+                  type: "table-tabulator",
+                  id: "table-tabulator_id_8d",
+                  datasourse: "id_ds_1",
+                  action: [
+                    {
+                      name: "redirect",
+                      event: "rowDblClick",
+
+                      newtab: false,
+                      params: {
+                        tableParams: [
+                          {
+                            field: "2",
+                            pName: "pTest",
+                          },
+                          {
+                            field: "3",
+                            pName: "pTest2",
+                          },
+                        ],
+                        pageParams: ["pTest3"],
+                      },
+                    },
+                  ],
+                  name: "Расчет-обоснование норматива транспортно-заготовительных затрат",
+                  indexCols: {
+                    idconfig: 1,
+                    2: 2,
+                    3: 3,
+                    4: 4,
+                    5: 5,
+                    6: 6,
+                    7: 7,
+                    8: 8,
+                    9: 9,
+                    10: 10,
+                  },
+                  tdata: {
+                    data: [
+                      {
+                        idconfig: "check_list",
+                        2: 1,
+                        3: 1,
+                        4: 1,
+                        5: 1,
+                        6: 1,
+                        7: 1,
+                        8: 1,
+                        9: 1,
+                        10: 1,
+                      },
+                      {
+                        idconfig: "oef",
+                        2: 2,
+                        3: 2,
+                        4: 2,
+                        5: 2,
+                        6: 2,
+                        7: 2,
+                        8: 2,
+                        9: 2,
+                        10: 2,
+                      },
+                      {
+                        idconfig: "calculation",
+                        2: 3,
+                        3: 3,
+                        4: 3,
+                        5: 3,
+                        6: 3,
+                        7: 3,
+                        8: 3,
+                        9: 3,
+                        10: 3,
+                      },
+                    ],
+                    layout: "fitColumns",
+                    resizableRows: true,
+                    columnHeaderVertAlign: "middle",
+                    columns: [
+                      {
+                        title: "№ п/п",
+                        field: "idconfig",
+                      },
+                      {
+                        title: "Вид транспортно-заготовительных затрат",
+                        field: "2",
+                        hozAlign: "center",
+                      },
+                      {
+                        title:
+                          "Отчетный период/период,предшествующий планируемому(год____)",
+                        columns: [
+                          {
+                            title: "Всего транспортно-заготовительных затрат",
+                            field: "3",
+                          },
+                          {
+                            title: "из транспортно-заготовительных затрат на:",
+                            columns: [
+                              {
+                                title: "сырье и материалы",
+                                field: "4",
+                              },
+                              {
+                                title: "покупные полуфабрикаты",
+                                field: "5",
+                              },
+                              {
+                                title: "покупные комплектующие изделия",
+                                field: "6",
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                      {
+                        title: "Планируемый период(n-ый год____)",
+                        columns: [
+                          {
+                            title: "Всего транспортно-заготовительных затрат",
+                            field: "7",
+                          },
+                          {
+                            title: "из транспортно-заготовительных затрат на:",
+                            columns: [
+                              {
+                                title: "сырье и материалы",
+                                field: "8",
+                              },
+                              {
+                                title: "покупные полуфабрикаты",
+                                field: "9",
+                              },
+                              {
+                                title: "покупные комплектующие изделия",
+                                field: "10",
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                    renderHorizontal: "virtual",
+                  },
+                },
+              ],
+            },
+            {
+              type: "block",
+              orientation: "row",
+              items: [
+                {
+                  type: "block",
+                  orientation: "column",
+                  items: [
+                    {
+                      type: "input",
+                      dataType: "text",
+                      id: "inputId",
+                      label: "введите что-то там...",
+                      status: "",
+                    },
+                    {
+                      type: "input",
+                      dataType: "date",
+                      id: "inputId",
+                      label: "введите что-то там...",
+                      status: "",
+                    },
+                    {
+                      type: "select",
+                      label: "текст_селекта_2",
+                      labelPosition: "right",
+                      paramName: "pTestSelect_2",
+                      options: [
+                        {
+                          name: "имя_1",
+                          value: "значение_1",
+                          selected: "selected",
+                        },
+                        {
+                          name: "имя_2",
+                          value: "значение_2",
+                          selected: "",
+                        },
+                        {
+                          name: "имя_3",
+                          value: "значение_3",
+                          selected: "",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: "block",
+                  orientation: "column",
+                  items: [
+                    {
+                      type: "input",
+                      dataType: "search",
+                      id: "inputId",
+                      label: "TEST",
+                      status: "",
+                    },
+                    {
+                      type: "select",
+                      paramName: "pTestSelect_1",
+                      label: "текст_селекта_1",
+                      labelPosition: "left",
+                      status: "",
+                      options: [
+                        {
+                          name: "значение_1",
+                          value: "",
+                          selected: "selected",
+                        },
+                        {
+                          name: "значение_2",
+                          value: "",
+                          selected: "",
+                        },
+                        {
+                          name: "значение_3",
+                          value: "",
+                          selected: "",
+                        },
+                      ],
+                    },
+                    {
+                      type: "radio-group",
+                      name: "radio-name-tab",
+                      inline: "form-check-inline",
+                      elements: [
+                        {
+                          id: "r_id_5",
+                          label: "Радио_в_табе_1",
+                          status: "unabled",
+                          checked: "checked",
+                        },
+                        {
+                          id: "r_id_6",
+                          label: "Радио_в_табе_2",
+                          status: "unabled",
+                          checked: "",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: "tab",
+          tab_name: "10(10д)ДЗП",
+          items: [],
+        },
+      ],
+    },
+  ],
+};

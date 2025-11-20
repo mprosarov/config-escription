@@ -1,23 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Object</title>
-    <link rel="stylesheet" href="styles/styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="assets/fa/css/all.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="../example/src/css/bootstrap.min.css" />
+  </head>
+  <body>
     <div class="sidebar">
-        <div class="sidebar-explorer">
-            <span class="sidebar-explorer_name">Object Explorer</span>
+      <div class="sidebar-explorer">
+        <span class="sidebar-explorer_name">Object Explorer</span>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary btn-sm dropdown-toggle text-dark"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <ul class="dropdown-menu" id="addTreeNode"></ul>
         </div>
-        <div class="sidebar-body">
-            <div style="height: 2000px;"></div>
+      </div>
+      <div class="sidebar-body">
+        <div class="tree" id="tree">
+          <div class="tree-node-content">
+            <button class="expand tree-button">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <span class="tree-node-icon">
+              <i class="fa-regular fa-folder"></i>
+            </span>
+            <div class="node-text">Имя</div>
+          </div>
+          <div class="tree-children">
+            <!-- padding-left = level * 24 -->
+            <div class="tree-node-content" style="padding-left: 24px">
+              <button class="expand tree-button">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+              <span class="tree-node-icon">
+                <i class="fa-regular fa-folder"></i>
+              </span>
+              <div class="node-text">Имя</div>
+            </div>
+            <div class="tree-children">
+              <!-- padding-left = level * 24 -->
+              <div class="tree-node-content" style="padding-left: 48px">
+                <div class="tree-spacer"></div>
+                <span class="tree-node-icon">
+                  <i class="fa-solid fa-database"></i>
+                </span>
+                <div class="node-text">Имя</div>
+              </div>
+              <div class="tree-node-content" style="padding-left: 48px">
+                <div class="tree-spacer"></div>
+                <span class="tree-node-icon">
+                  <i class="fa-solid fa-database"></i>
+                </span>
+                <div class="node-text">Имя</div>
+              </div>
+            </div>
+            <div class="tree-node-content" style="padding-left: 24px">
+              <div class="tree-spacer"></div>
+              <span class="tree-node-icon">
+                <i class="fa-solid fa-database"></i>
+              </span>
+              <div class="node-text">Имя</div>
+            </div>
+          </div>
         </div>
-    </div>    
-    <div class="editorForm">
-
+      </div>
     </div>
-    
-</body>
+    <div class="main-panel">
+      <div class="form-container" id="dynamic-form">
+        <div class="empty-state">
+          <div class="empty-state-content">
+            <h3>Нет выделенного элемента</h3>
+            <p>Выберите объект из дерева, чтобы просмотреть его свойства</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="../example/src/vendors/bootstrap.min.js"></script>
+  <script src="scripts/test-JSON.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/TreeView.js"></script>
+  <script src="scripts/main.js"></script>
+  <script></script>
 </html>

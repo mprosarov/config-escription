@@ -1,3 +1,5 @@
+
+
 {
 
   "dataSources": [
@@ -136,7 +138,7 @@
       },
       {
         "type": "button-group",
-        "items": [
+        "elements": [
           {
             "text": "кнопка_1",
             "class": "primary",
@@ -169,7 +171,7 @@
         {
           "type": "checkbox",
           "inline": "inline",
-          "items": [
+          "elements": [
             {
               "label": "текст_1",
               "id": "chb_1",
@@ -207,7 +209,7 @@
                 },
                 {
                   "type": "button-group",
-                  "items": [
+                  "elements": [
                     {
                       "text": "кнопка_1",
                       "class": "secondary",
@@ -351,7 +353,7 @@
             {
               "type": "checkbox",
               "inline": "inline",
-              "items": [
+              "elements": [
                 {
                   "id": "id_1",
                   "label": "параметр_1",
@@ -381,7 +383,7 @@
             },
             {
               "type": "button-group",
-              "items": [
+              "elements": [
                 {
                   "text": "кнопка_1",
                   "class": "secondary",
@@ -435,7 +437,7 @@
               "type": "radio-group",
               "name": "radio-name",
 
-              "items": [
+              "elements": [
                 {
                   "id": "r_id_1",
                   "label": "Радио_1",
@@ -454,7 +456,7 @@
             {
               "type": "checkbox",
               "inline": true,
-              "items": [
+              "elements": [
                 {
                   "label": "текст_1",
                   "id": "chb_1",
@@ -474,7 +476,7 @@
             },
             {
               "type": "button-group",
-              "items": [
+              "elements": [
                 {
                   "text": "кнопка_1",
                   "class": "secondary",
@@ -697,7 +699,7 @@
                       "label": "текст_селекта_2",
                       "labelPosition": "right",
                       "paramName":"pTestSelect_2",
-                      "items": [
+                      "options": [
                         {
                           "name": "имя_1",
                           "value": "значение_1",
@@ -734,7 +736,7 @@
                       "label": "текст_селекта_1",
                       "labelPosition": "left",
                       "status": "",
-                      "items": [
+                      "options": [
                         {
                           "name": "значение_1",
                           "value": "",
@@ -756,7 +758,7 @@
                       "type": "radio-group",
                       "name": "radio-name-tab",
                       "inline": "form-check-inline",
-                      "items": [
+                      "elements": [
                         {
                           "id": "r_id_5",
                           "label": "Радио_в_табе_1",

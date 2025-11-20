@@ -510,27 +510,28 @@ class Button extends BaseElement {
 }
 PageBuilder.addComponent(Button.TYPE, Button);
 class ButtonGroup extends BaseElement {
-    static TYPE = 'button-group';
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        this.create();
+  static TYPE = "button-group";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+  create() {
+    let content = "";
+    for (let i = 0; i < this.config.elements.length; i++) {
+      let icon = "";
+      let text = "";
+      if (this.config.elements[i].icon)
+        icon = `<i class="bi bi-${this.config.elements[i].icon}${
+          this.config.elements[i].text ? " me-2" : ""
+        }"></i>`;
+      if (this.config.elements[i].text) text = this.config.elements[i].text;
+      content += `<button class="btn btn-outline-${this.config.elements[i].class} btn-sm" type="button" ${this.config.elements[i].status}>${icon}${text}</button>`;
     }
-    create() {
-        let content = "";
-        for (let i = 0; i < this.config.items.length; i++){
-            let icon = '';
-            let text = '';
-            if(this.config.items[i].icon)
-                icon = `<i class="bi bi-${this.config.items[i].icon}${(this.config.items[i].text)?' me-2':''}"></i>`;
-            if(this.config.items[i].text)
-                text = this.config.items[i].text;
-            content += `<button class="btn btn-outline-${this.config.items[i].class} btn-sm" type="button" ${this.config.items[i].status}>${icon}${text}</button>`;
-        } 
-        let result = `<div class="input-group">${content}</div>`;
-        this.parentElement.insertAdjacentHTML("beforeend", result);
-        let dom = this.parentElement.lastElementChild;
-        BaseElement.applyCss(dom, this.config);
-    }
+    let result = `<div class="input-group">${content}</div>`;
+    this.parentElement.insertAdjacentHTML("beforeend", result);
+    let dom = this.parentElement.lastElementChild;
+    BaseElement.applyCss(dom, this.config);
+  }
 }
 PageBuilder.addComponent(ButtonGroup.TYPE, ButtonGroup);
 /*
@@ -546,13 +547,22 @@ class RadioGroup extends BaseElement {
     this.create();
   }
   create() {
-    this.parentElement.insertAdjacentHTML("beforeend", '<div class="form-group"></div>');
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      '<div class="form-group"></div>'
+    );
     let block = this.parentElement.lastElementChild;
     let content = "";
-    for (let i = 0; i < this.config.items.length; i++) {
-      let item = this.config.items[i];
-      content += `<div class="form-check ${this.config.inline ? "form-check-inline" : ""}">
-                        <input class="form-check-input" type='radio' name="${this.config.name}" value="" id="${item.id}" ${item.status} ${item.checked ? "checked" : ""} >
+    for (let i = 0; i < this.config.elements.length; i++) {
+      let item = this.config.elements[i];
+      content += `<div class="form-check ${
+        this.config.inline ? "form-check-inline" : ""
+      }">
+                        <input class="form-check-input" type='radio' name="${
+                          this.config.name
+                        }" value="" id="${item.id}" ${item.status} ${
+        item.checked ? "checked" : ""
+      } >
                         <label class="form-check-label" for=${item.id}>
                           ${item.label}
                         </label>
@@ -565,31 +575,40 @@ class RadioGroup extends BaseElement {
 }
 PageBuilder.addComponent(RadioGroup.TYPE, RadioGroup);
 class CheckBoxGroup extends BaseElement {
-    static TYPE = 'checkbox';
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        this.create();
-    }
- 
-    create() {
-      this.parentElement.insertAdjacentHTML("beforeend", `<div class="form-group ${this.config.inline ? "flex" : ""}"></div>`);
-      let block = this.parentElement.lastElementChild;          
-      let content = "";
-      
-      for (let i = 0; i < this.config.items.length; i++) {
-        let item = this.config.items[i];
-        content += `<div class="form-check ${item.role ? "form-switch" : ""} ">
-                          <input class="form-check-input"  role="${item.role ? "form-switch" : ""}" data-param='${item.paramName}' type='checkbox' value="${item.checked ? "1" : "0"}" id="${item.id}" ${item.status} ${item.checked ? "checked" : ""}>
+  static TYPE = "checkbox";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+
+  create() {
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      `<div class="form-group ${this.config.inline ? "flex" : ""}"></div>`
+    );
+    let block = this.parentElement.lastElementChild;
+    let content = "";
+
+    for (let i = 0; i < this.config.elements.length; i++) {
+      let item = this.config.elements[i];
+      content += `<div class="form-check ${item.role ? "form-switch" : ""} ">
+                          <input class="form-check-input"  role="${
+                            item.role ? "form-switch" : ""
+                          }" data-param='${
+        item.paramName
+      }' type='checkbox' value="${item.checked ? "1" : "0"}" id="${item.id}" ${
+        item.status
+      } ${item.checked ? "checked" : ""}>
                           <label class="form-check-label" for=${item.id}>
                             ${item.label}
                           </label>
                       </div>`;
-      }
+    }
 
-      block.insertAdjacentHTML("beforeend", content);
-      BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
-      return block;
-     }
+    block.insertAdjacentHTML("beforeend", content);
+    BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
+    return block;
+  }
 }
 PageBuilder.addComponent(CheckBoxGroup.TYPE, CheckBoxGroup);
 class TableTabulator extends BaseElement {
@@ -821,61 +840,86 @@ class Header extends BaseElement {
 }
 PageBuilder.addComponent(Header.TYPE, Header);
 class Select extends BaseElement {
-    static TYPE = 'select';
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        this.create();
+  static TYPE = "select";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+  create() {
+    let content = "";
+    for (let i = 0; i < this.config.options.length; i++) {
+      let item = this.config.options[i];
+      content += `<option value=${item.value} ${
+        item.selected ? "selected" : ""
+      }>${item.name}</option>`;
     }
-    create() {
-      let content = "";
-      for (let i = 0; i < this.config.items.length; i++) {
-        let item = this.config.items[i];
-        content += `<option value=${item.value} ${item.selected?"selected":""}>${item.name}</option>`;
-      }
-      this.parentElement.insertAdjacentHTML("beforeend",`<div class="input-group input-group-sm mb-3">
-        <select type="${this.config.type}" data-param="${this.config.paramName}"  class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status:'unabled' }>${content}</select>` );
-      let position = "";  
-      if(this.config.labelPosition == 'left') position = "afterbegin"
-      else position = "beforeend"
-      let dom = this.parentElement.lastElementChild;
-      dom.insertAdjacentHTML(position,`<label class="input-group-text">
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      `<div class="input-group input-group-sm mb-3">
+        <select type="${this.config.type}" data-param="${
+        this.config.paramName
+      }"  class="form-select form-select-sm" aria-label=".form-select-sm" ${
+        this.config.status ? this.config.status : "unabled"
+      }>${content}</select>`
+    );
+    let position = "";
+    if (this.config.labelPosition == "left") position = "afterbegin";
+    else position = "beforeend";
+    let dom = this.parentElement.lastElementChild;
+    dom.insertAdjacentHTML(
+      position,
+      `<label class="input-group-text">
         ${this.config.label}
-        </label></div>`) 
-      BaseElement.applyCss(dom, this.config);
+        </label></div>`
+    );
+    BaseElement.applyCss(dom, this.config);
   }
 }
 PageBuilder.addComponent(Select.TYPE, Select);
 class InputField extends BaseElement {
-    static TYPE = 'input';
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        this.create();
-    }
-    create() {
-        this.parentElement.insertAdjacentHTML("beforeend", `<div class="input-group input-group-sm mb-3">
-            ${this.config.label ? `<span class="input-group-text" id="${this.config.id}">${this.config.label}</span> `: ""}
+  static TYPE = "input";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+  create() {
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      `<div class="input-group input-group-sm mb-3">
+            ${
+              this.config.label
+                ? `<span class="input-group-text" id="${this.config.id}">${this.config.label}</span> `
+                : ""
+            }
   
-  <input type="${this.config.dataType}" class="form-control" aria-label="" aria-describedby="${this.config.id}" ${this.config.status ? this.config.status:'unabled' } >
-</div>`);
-        let dom = this.parentElement.lastElementChild;
-        BaseElement.applyCss(dom, this.config);
-    }
-} 
+  <input type="${
+    this.config.dataType
+  }" class="form-control" aria-label="" aria-describedby="${this.config.id}" ${
+        this.config.status ? this.config.status : "unabled"
+      } >
+</div>`
+    );
+    let dom = this.parentElement.lastElementChild;
+    BaseElement.applyCss(dom, this.config);
+  }
+}
 PageBuilder.addComponent(InputField.TYPE, InputField);
 class ItemsBlock extends BaseElement {
-    static TYPE = 'block';
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        this.create();
-    }
-    create() {
-        this.parentElement.insertAdjacentHTML("beforeend", `<div class="itemsBlock d-flex flex-fill flex-${this.config.orientation}"></div>`);
-        let dom = this.parentElement.lastElementChild;
-        let items = this.config.items;
-        for(let i=0; i<items.length; i++)
-            PageBuilder.create(dom,items[i])
-        BaseElement.applyCss(dom, this.config);
-    }
+  static TYPE = "block";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+  create() {
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      `<div class="itemsBlock d-flex flex-fill flex-${this.config.orientation}"></div>`
+    );
+    let dom = this.parentElement.lastElementChild;
+    let items = this.config.items;
+    for (let i = 0; i < items.length; i++) PageBuilder.create(dom, items[i]);
+    BaseElement.applyCss(dom, this.config);
+  }
 }
 PageBuilder.addComponent(ItemsBlock.TYPE, ItemsBlock);
 class DataSources {
