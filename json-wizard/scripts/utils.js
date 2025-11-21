@@ -32,7 +32,7 @@ const Utils = (function () {
 
     function addChildren(parent, item) {
       for (let i = 0; i < item.length; i++) {
-        if (!item[i]["type"]) console.log(item[i]);
+        //if (!item[i]["type"]) console.log(item[i]);
         //--------------Временное решение----------------
         let name = item[i]["id"]
           ? item[i]["id"]

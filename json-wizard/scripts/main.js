@@ -64,25 +64,26 @@ const availableFormat = [
 ];
 selectList.onclick = function (e) {
   const menuItem = e.target.closest("li");
+
   if (!menuItem) return;
   const menuElemType = menuItem.dataset?.type;
   if (!menuElemType) return;
   tree.addNode(menuElemType, tree.selectedNode);
 };
-function clickNode(obj) {
-  createSelectList(obj);
+function clickNode(treeNodeObj) {
+  createSelectList(treeNodeObj);
 }
-function createSelectList(obj) {
+function createSelectList(treeNodeObj) {
+  const typeComponent = treeNodeObj.getComponentType();
   selectList.innerHTML = "";
   var options = [];
   for (let i = 0; i < availableFormat.length; i++) {
-    if (availableFormat[i]["parents"].includes(obj.type)) {
+    if (availableFormat[i]["parents"].includes(typeComponent)) {
       options.push(
         `<li data-type="${availableFormat[i]["type"]}"><a class="dropdown-item"  href="#">${availableFormat[i]?.label}</a></li>`
       );
     }
   }
-
   selectList.insertAdjacentHTML(
     "beforeend",
     options.length

@@ -1,17 +1,15 @@
 class TreeView {
-  SELECTED_CLASS = "selectedNode";
-
   constructor(rootSelector, nodeClickHandler) {
     this.container = document.querySelector(rootSelector);
     this.objects = [];
     this.nodeClickHandler = nodeClickHandler;
-    this.selectedNode = null;
+    this.nodes = [];
   }
   setData(objects) {
     this.objects = objects;
     this.render();
   }
-
+  getNewId() {}
   getIcon(type) {
     switch (type) {
       case "folder":
@@ -46,78 +44,31 @@ class TreeView {
     }
   }
 
-  createNode(parent, nodeObject, level) {
-    const hasChildren = nodeObject.children.length;
-    nodeObject.level = level;
-    const expand = hasChildren
-      ? `<button class="expand tree-button">
-            <i class="fa-solid fa-chevron-right"></i>
-         </button>`
-      : `<div class="tree-spacer"></div>`;
-    const typeIcon = `<span class="tree-node-icon">
-                <i class="${this.getIcon(nodeObject.type)}"></i>
-              </span>`;
-    const nodeName = `<div class="node-text">${nodeObject.text}</div>`;
-    const node = document.createElement("div");
-    node.classList.add("tree-node-content");
-    node.style.paddingLeft = `${24 * level}px`;
-    node.innerHTML = `
-        ${expand}
-        ${typeIcon}
-        ${nodeName}`;
-    node.addEventListener("click", () => this.nodeClick(node, nodeObject));
-    nodeObject.dom = node;
-    parent.appendChild(node);
-    if (hasChildren) {
-      node.querySelector("button").addEventListener("click", this.expandClick);
-      const div = document.createElement("div");
-      div.classList.add("tree-children");
-      for (var i = 0; i < hasChildren; i++) {
-        this.createNode(div, nodeObject.children[i], level + 1);
-      }
-      parent.appendChild(div);
-    }
-  }
-  unselectAll() {
-    let selected = this.container.querySelectorAll(".selectedNode");
-    selected.forEach((item) => item.classList.remove("selectedNode"));
-  }
-  nodeClick(htmlNode, obj) {
-    this.unselectAll();
-    htmlNode.classList.add(this.SELECTED_CLASS);
-    this.selectedNode = obj;
-    this.nodeClickHandler(obj);
-  }
-
-  expandClick() {
-    const item = event.target.closest("button");
-    if (!item) return;
-    item.classList.toggle("expand");
-    item.classList.toggle("unexpand");
-    item.querySelector("i").classList.toggle("fa-chevron-right");
-    item.querySelector("i").classList.toggle("fa-chevron-down");
-    item.parentNode.classList.toggle("expand");
-  }
   render() {
     this.container.innerHTML = "";
     this.objects.forEach((node) => {
-      this.createNode(this.container, node, 0);
+      node = new TreeNode(this, this.container, 0, node);
+      this.container.appendChild(node.render());
+      this.nodes.push(node);
+      this.setNodeClickHandler(node);
+    });
+  }
+  setNodeClickHandler(node) {
+    const that = this;
+    node.setClickHandler(this.nodeClickHandler);
+    if (node.treeNodeChildren.length == 0) return;
+    node.treeNodeChildren.forEach((item) => {
+      if (item.treeNodeChildren.length) {
+        item.treeNodeChildren.forEach((child) =>
+          this.setNodeClickHandler(child)
+        );
+      }
     });
   }
   getData() {}
-  addNode(type, parent) {
-    console.log(type, parent);
+  addNode(type, treeNodeParent) {
     const newNode = Utils.getEmptyElementByType(type);
-    // let childContainer = parent.dom.querySelector(".tree-children");
-    let childContainer = null;
-    if(parent.dom.nextElementSibling.classList.contains('tree-children'))
-      childContainer = parent.dom.nextElementSibling;
-    if (!childContainer) {
-      childContainer = document.createElement("div");
-      parent.dom.insertAdjacentElement('afterend',childContainer)
-    } 
-    let currentLevel = parent.level;
-    this.createNode(childContainer, newNode, (currentLevel += 1));
+    treeNodeParent.addChild(newNode);
   }
   deleteNode(path) {}
   updateNode(path, newKey, newValue) {}
