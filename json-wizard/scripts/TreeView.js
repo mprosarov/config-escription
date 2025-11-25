@@ -12,9 +12,12 @@ class TreeView {
   getNewId() {}
   getIcon(type) {
     switch (type) {
-      case "folder":
+      case "dataSources":
+      case "pageParams":
+      case "navbar":
+      case "sidebars":
+      case "page":
         return "fa-regular fa-folder";
-
       case "param":
         return "fa-solid fa-gears";
       case "sidebar":
@@ -25,7 +28,6 @@ class TreeView {
         return "fa-regular fa-window-restore";
       case "tab":
         return "fa-regular fa-window-maximize";
-
       case "dataSource":
         return "fa-solid fa-database";
       case "checkbox":
@@ -58,17 +60,15 @@ class TreeView {
     node.setClickHandler(this.nodeClickHandler);
     if (node.treeNodeChildren.length == 0) return;
     node.treeNodeChildren.forEach((item) => {
-      if (item.treeNodeChildren.length) {
-        item.treeNodeChildren.forEach((child) =>
-          this.setNodeClickHandler(child)
-        );
-      }
+      this.setNodeClickHandler(item);
+      // item.treeNodeChildren.forEach((child) => this.setNodeClickHandler(child));
     });
   }
   getData() {}
   addNode(type, treeNodeParent) {
     const newNode = Utils.getEmptyElementByType(type);
     treeNodeParent.addChild(newNode);
+    // treeNodeParent.reRender();
   }
   deleteNode(path) {}
   updateNode(path, newKey, newValue) {}

@@ -1,5 +1,10 @@
 const Utils = (function () {
-  const transformToTree = (config) => {
+  const transformToTree = (config, configName) => {
+    explorerName = document.getElementById("sidebarConfigName");
+    configName
+      ? (explorerName.innerText = configName)
+      : (explorerName.innerText = "Без названия");
+
     let result = [];
     const name = {
       dataSources: "Источники данных",

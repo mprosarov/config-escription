@@ -1,8 +1,10 @@
 :root {
   --borderForm: 1px solid #d8d8d8;
   --sidebarBg: #fafafa;
-  --expandButton: 18px;
+  --expandButton: 21px;
   --fontSize: 14px;
+  --paddingNodeContent: 6px;
+  --selected: rgb(203 229 255);
 }
 * {
   box-sizing: border-box;
@@ -57,6 +59,28 @@ button {
 }
 .empty-state-content {
 }
+.delete-item{
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  opacity: 0;
+  pointer-events: none;
+}
+.delete-button{
+  color: #ffc1b6;
+  
+}
+.delete-button:hover{
+  color: tomato
+}
+.tree-node-content:hover >.delete-item{
+  opacity: 1;
+  transition: all 0.6s;
+  cursor: pointer;
+  pointer-events:all; 
+
+
+}
 .sidebar {
   min-width: 300px;
   border-right: var(--borderForm);
@@ -68,14 +92,24 @@ button {
   overflow-y: auto;
   flex: 1;
 }
+.sidebar-name{
+  padding: 10px;
+}
+.sidebar-name button{
+  visibility: hidden;
+}
+
 .sidebar-explorer_name {
   font-size: larger;
   font-weight: 600;
-  padding: 10px;
 }
+.sidebar-name:hover button{
+  visibility: visible;
+  cursor: pointer;
+  color: rgb(175 175 175);
+} 
 .sidebar-explorer {
   border-bottom: var(--borderForm);
-
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -87,33 +121,31 @@ button {
 .tree-node-content {
   display: flex;
   gap: 8px;
-  padding: 6px 0;
+  padding: var(--paddingNodeContent);
   cursor: pointer;
 }
 .selectedNode,
 .selectedNode:hover {
-  background-color: rgb(181, 208, 231) !important;
+  background-color: var(--selected) !important;
 }
 .tree-node-content:hover {
   background-color: #f0f0f0;
+  border-radius: 4px;
 }
-
 .tree-node-content button {
-  padding: 0;
+  /* margin-left:var(--paddingNodeContent) */
 }
 .tree-node .tree-node-content {
 }
 .tree {
   padding: 8px;
 }
-
 .tree-node-content + .tree-children {
   display: none;
 }
 .tree-node-content.expand + .tree-children {
   display: block;
 }
-
 .hide {
   display: none;
 }
@@ -125,4 +157,10 @@ button {
 }
 .tree-button:hover {
   background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.dropdown-item:active {
+    color: #212529 !important;
+    text-decoration: none;
+    background-color: var(--selected) !important;
 }

@@ -1,8 +1,32 @@
+const selectList = document.getElementById("addTreeNode");
+function createSelectList(treeNodeObj) {
+  const typeComponent = treeNodeObj.getComponentType();
+  selectList.innerHTML = "";
+  var options = [];
+  for (let i = 0; i < availableFormat.length; i++) {
+    if (availableFormat[i]["parents"].includes(typeComponent)) {
+      options.push(
+        `<li data-type="${availableFormat[i]["type"]}"><a class="dropdown-item"  href="#">${availableFormat[i]?.label}</a></li>`
+      );
+    }
+  }
+  selectList.insertAdjacentHTML(
+    "beforeend",
+    options.length
+      ? options.join("")
+      : `<li>
+        <a class="dropdown-item disabled" href="#">
+          нет доступных элементов
+        </a>
+      </li>`
+  );
+}
+
 const tree = new TreeView("#tree", clickNode);
 // tree.setData(TEST_DATA);
-const transformData = Utils.transformToTree(TEST_CONFIG);
+const transformData = Utils.transformToTree(TEST_CONFIG, "NAME_TEST_CONFIG");
 tree.setData(transformData);
-const selectList = document.getElementById("addTreeNode");
+
 const availableFormat = [
   {
     label: "параметр",
@@ -70,28 +94,17 @@ selectList.onclick = function (e) {
   if (!menuElemType) return;
   tree.addNode(menuElemType, tree.selectedNode);
 };
+
+const FormContainer = (function () {
+  const form = document.getElementById("dynamic-form");
+  showConfig = (config) => {
+    form.innerHTML = JSON.stringify(config, null, 1);
+  };
+  return { showConfig };
+})();
+
 function clickNode(treeNodeObj) {
+  console.log("click");
   createSelectList(treeNodeObj);
-}
-function createSelectList(treeNodeObj) {
-  const typeComponent = treeNodeObj.getComponentType();
-  selectList.innerHTML = "";
-  var options = [];
-  for (let i = 0; i < availableFormat.length; i++) {
-    if (availableFormat[i]["parents"].includes(typeComponent)) {
-      options.push(
-        `<li data-type="${availableFormat[i]["type"]}"><a class="dropdown-item"  href="#">${availableFormat[i]?.label}</a></li>`
-      );
-    }
-  }
-  selectList.insertAdjacentHTML(
-    "beforeend",
-    options.length
-      ? options.join("")
-      : `<li>
-        <a class="dropdown-item disabled" href="#">
-          нет доступных элементов
-        </a>
-      </li>`
-  );
+  FormContainer.showConfig(treeNodeObj.node);
 }
