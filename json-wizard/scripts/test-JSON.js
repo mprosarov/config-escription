@@ -102,6 +102,7 @@ const TEST_CONFIG = {
       query: "select  {pTest3} {pTest} {pTestSelect_2}",
     },
   ],
+  //TODO перепивать name на id
   pageParams: [
     {
       type: "param",
