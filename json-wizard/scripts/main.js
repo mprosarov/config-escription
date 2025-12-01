@@ -100,11 +100,17 @@ const FormContainer = (function () {
   showConfig = (config) => {
     form.innerHTML = JSON.stringify(config, null, 1);
   };
-  return { showConfig };
+  showSchema = (type) => {
+    const URL = "http://localhost:3000";
+    fetch(`${URL}/schemes/${type}.schema.json`)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
+  return { showConfig, showSchema };
 })();
 
 function clickNode(treeNodeObj) {
-  console.log("click");
   createSelectList(treeNodeObj);
   FormContainer.showConfig(treeNodeObj.node);
+  FormContainer.showSchema(treeNodeObj.node.type);
 }
