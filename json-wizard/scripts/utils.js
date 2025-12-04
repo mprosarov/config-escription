@@ -49,7 +49,7 @@ const Utils = (function () {
           id: `${item[i]["type"]}_${i}`,
           text: `${name}`,
           //text: `${item[i]["type"]}_${i}`,
-          raw: {},
+          raw: item[i],
           children: [],
           type: item[i]["type"],
         };

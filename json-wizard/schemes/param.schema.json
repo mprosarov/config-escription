@@ -14,7 +14,7 @@
     "init": {
       "type": "object",
       "properties": {
-        "valueType": { "type": "string" },
+        "valueType": { "type": "string", "title":"Тип параметра", "enum":["number","raw","string"] },
         "value": { "type": "string"}
       },
       "required": ["valueType", "value"]

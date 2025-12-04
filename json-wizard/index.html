@@ -103,8 +103,8 @@
     </div>
   </body>
   <script type="text/javascript">
-    function showSchemaForm(schema, typeElement) {
-      console.log(typeElement);
+    function showSchemaForm(schema, nodeJson) {
+      console.log(nodeJson);
       $("form").empty();
       let dataInit = {
         schema: schema,
@@ -125,17 +125,18 @@
           }
         },
       };
-      if (typeElement == "param") {
-        dataInit.value = {
-          type: "param",
-          id: 7,
-          name: "pTest",
-          init: {
-            valueType: "raw",
-            value: "ololol",
-          },
-        };
-      }
+      dataInit.value = nodeJson.raw;
+      // if (nodeJson.type == "param") {
+      //   dataInit.value = {
+      //     type: "param",
+      //     id: 7,
+      //     name: "pTest",
+      //     init: {
+      //       valueType: "raw",
+      //       value: "ololol",
+      //     },
+      //   };
+      // }
 
       $("form").jsonForm(dataInit);
     }

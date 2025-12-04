@@ -42,12 +42,11 @@ const FormContainer = (function () {
   showConfig = (config) => {
     // form.innerHTML = JSON.stringify(config, null, 1);
   };
-  showSchema = (type) => {
-    console.log(type);
+  showSchema = (nodeJson) => {
     const URL = "http://localhost:3000";
-    fetch(`${URL}/schemes/${type}.schema.json`)
+    fetch(`${URL}/schemes/${nodeJson.type}.schema.json`)
       .then((res) => res.json())
-      .then((data) => showSchemaForm(data, type));
+      .then((data) => showSchemaForm(data, nodeJson));
   };
   return { showConfig, showSchema };
 })();
@@ -55,5 +54,5 @@ const FormContainer = (function () {
 function clickNode(treeNodeObj) {
   createSelectList(treeNodeObj);
   FormContainer.showConfig(treeNodeObj.node);
-  FormContainer.showSchema(treeNodeObj.node.type);
+  FormContainer.showSchema(treeNodeObj.node);
 }

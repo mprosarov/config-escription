@@ -160,3 +160,8 @@ button {
   text-decoration: none;
   background-color: var(--selected) !important;
 }
+
+/* СТИЛИЗАЦИЯ ФОРМЫ Json-schema */
+.jsonform-readonly {
+  pointer-events: none;
+}

@@ -50,7 +50,7 @@ class TreeNode {
     this.treeNodeChildren = [];
     this.childContainer = null;
     this.nodeContainer = null;
-    this.component = factory.createComponent(data.raw);
+    // this.component = factory.createComponent(data.raw);
   }
   reRender() {
     this.container.innerHTML = "";
