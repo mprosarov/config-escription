@@ -2,16 +2,23 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "type": { "type": "string" },
+    "type": { 
+      "type": "string", 
+      "default": "param", 
+      "title": "Тип компонента",
+      "readonly":true
+      
+    },
+
     "id": { "type": "string" },
     "init": {
       "type": "object",
       "properties": {
         "valueType": { "type": "string" },
-        "value": { "type": null }
+        "value": { "type": "string"}
       },
       "required": ["valueType", "value"]
     }
   },
-  "required": ["id"]
+  "required": ["id","type"]
 }

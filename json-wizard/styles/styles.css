@@ -41,45 +41,41 @@ button {
   margin: 0;
   background: none;
 }
-
 .form-container {
-  display: flex;
-  flex: 1;
   border: var(--borderForm);
   padding: 20px;
-  margin: 20px;
   border-radius: 10px;
+  width: 100%;
+  min-height: 100%;
 }
 .main-panel {
-  display: flex;
-  flex: 1;
+  overflow: auto;
+  width: 100%;
+  padding: 20px;
 }
 
 .empty-state {
 }
 .empty-state-content {
 }
-.delete-item{
+.delete-item {
   display: flex;
   flex: 1;
   justify-content: flex-end;
   opacity: 0;
   pointer-events: none;
 }
-.delete-button{
+.delete-button {
   color: #ffc1b6;
-  
 }
-.delete-button:hover{
-  color: tomato
+.delete-button:hover {
+  color: tomato;
 }
-.tree-node-content:hover >.delete-item{
+.tree-node-content:hover > .delete-item {
   opacity: 1;
   transition: all 0.6s;
   cursor: pointer;
-  pointer-events:all; 
-
-
+  pointer-events: all;
 }
 .sidebar {
   min-width: 300px;
@@ -92,10 +88,10 @@ button {
   overflow-y: auto;
   flex: 1;
 }
-.sidebar-name{
+.sidebar-name {
   padding: 10px;
 }
-.sidebar-name button{
+.sidebar-name button {
   visibility: hidden;
 }
 
@@ -103,11 +99,11 @@ button {
   font-size: larger;
   font-weight: 600;
 }
-.sidebar-name:hover button{
+.sidebar-name:hover button {
   visibility: visible;
   cursor: pointer;
   color: rgb(175 175 175);
-} 
+}
 .sidebar-explorer {
   border-bottom: var(--borderForm);
   padding: 10px;
@@ -160,7 +156,7 @@ button {
   border-radius: 4px;
 }
 .dropdown-item:active {
-    color: #212529 !important;
-    text-decoration: none;
-    background-color: var(--selected) !important;
+  color: #212529 !important;
+  text-decoration: none;
+  background-color: var(--selected) !important;
 }

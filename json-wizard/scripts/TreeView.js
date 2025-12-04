@@ -4,7 +4,21 @@ class TreeView {
     this.objects = [];
     this.nodeClickHandler = nodeClickHandler;
     this.nodes = [];
+    this.initState = {
+      dataSources: [],
+      pageParams: [],
+      navbar: [],
+      sidebars: [],
+      page: [],
+    };
   }
+  MAIN_NODES = {
+    dataSources: "Источники данных",
+    pageParams: "Наборы параметров",
+    navbar: "Панель навигации",
+    sidebars: "Анимированные панели",
+    page: "Основное тело страницы",
+  };
   setData(objects) {
     this.objects = objects;
     this.render();
@@ -48,6 +62,21 @@ class TreeView {
 
   render() {
     this.container.innerHTML = "";
+    // for (let key in this.MAIN_NODES) {
+    //   const item = {
+    //     id: key,
+    //     text: this.MAIN_NODES[key],
+    //     raw: {},
+    //     children: [],
+    //     type: key,
+    //   };
+    //   const treeNode = new TreeNode(this, this.container, 0, item);
+    //   this.container.appendChild(treeNode.render());
+    //   this.nodes.push(treeNode);
+    //   this.setNodeClickHandler(treeNode);
+    // }
+    // return;
+
     this.objects.forEach((node) => {
       node = new TreeNode(this, this.container, 0, node);
       this.container.appendChild(node.render());

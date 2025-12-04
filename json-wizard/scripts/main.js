@@ -25,67 +25,9 @@ function createSelectList(treeNodeObj) {
 const tree = new TreeView("#tree", clickNode);
 // tree.setData(TEST_DATA);
 const transformData = Utils.transformToTree(TEST_CONFIG, "NAME_TEST_CONFIG");
+console.log(transformData);
 tree.setData(transformData);
 
-const availableFormat = [
-  {
-    label: "параметр",
-    type: "param",
-    parents: ["pageParams"],
-  },
-
-  {
-    label: "источник данных",
-    type: "dataSource",
-    parents: ["dataSources", "pageParams"],
-  },
-  {
-    label: "заголовок",
-    type: "header",
-    parents: ["page", "block", "sidebar", "tab", "pageParams"],
-  },
-  {
-    label: "секция",
-    type: "block",
-    parents: ["page", "block", "sidebar", "tab"],
-  },
-  //   {
-  //     type: "sidebar",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "button-group",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "button",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "tabs",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "tab",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "select",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "table-tabulator",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "radio-group",
-  //     parents: [],
-  //   },
-  //   {
-  //     type: "checkbox",
-  //     parents: [],
-  //   },
-];
 selectList.onclick = function (e) {
   const menuItem = e.target.closest("li");
 
@@ -98,13 +40,14 @@ selectList.onclick = function (e) {
 const FormContainer = (function () {
   const form = document.getElementById("dynamic-form");
   showConfig = (config) => {
-    form.innerHTML = JSON.stringify(config, null, 1);
+    // form.innerHTML = JSON.stringify(config, null, 1);
   };
   showSchema = (type) => {
+    console.log(type);
     const URL = "http://localhost:3000";
     fetch(`${URL}/schemes/${type}.schema.json`)
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then((data) => showSchemaForm(data, type));
   };
   return { showConfig, showSchema };
 })();

@@ -3,7 +3,7 @@ class ComponentFactory {
   createComponent(configComponent) {
     const type = configComponent.type;
     if (!configComponent.type) {
-      console.warn("Компонент не имеет типа");
+      // console.warn("Компонент не имеет типа");
       return null;
     }
     switch (type) {
