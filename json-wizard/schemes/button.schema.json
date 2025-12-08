@@ -2,8 +2,23 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "type": { "type": "string" },
-    "icon": { "type": "string" },
-    "text": { "type": "string" }
+    "type": {
+      "type": "string",
+      "default": "button",
+      "title": "Тип компонента",
+      "readonly": true
+    },
+    "icon": {
+      "type": "string",
+      "title": "Иконка"
+    },
+    "text": {
+      "type": "string",
+      "title": "Текст"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["disabled", "unabled"]
+    }
   }
 }

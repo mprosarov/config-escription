@@ -2,23 +2,26 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "type": { 
-      "type": "string", 
-      "default": "param", 
+    "type": {
+      "type": "string",
+      "default": "param",
       "title": "Тип компонента",
-      "readonly":true
-      
+      "readonly": true
     },
 
     "id": { "type": "string" },
     "init": {
       "type": "object",
       "properties": {
-        "valueType": { "type": "string", "title":"Тип параметра", "enum":["number","raw","string"] },
-        "value": { "type": "string"}
+        "valueType": {
+          "type": "string",
+          "title": "Тип параметра",
+          "enum": ["number", "raw", "string"]
+        },
+        "value": { "type": "string", "title": "Значение" }
       },
       "required": ["valueType", "value"]
     }
   },
-  "required": ["id","type"]
+  "required": ["id", "type"]
 }

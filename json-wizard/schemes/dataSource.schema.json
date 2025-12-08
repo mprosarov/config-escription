@@ -2,7 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "type": { "type": "string" },
+    "type": {
+      "type": "string",
+      "default": "dataSource",
+      "title": "Тип компонента",
+      "readonly": true
+    },
     "id": { "type": "string" },
     "query": { "type": "string" }
   },

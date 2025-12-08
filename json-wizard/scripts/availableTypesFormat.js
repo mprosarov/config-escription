@@ -35,11 +35,11 @@ const availableFormat = [
     label: "Кнопка",
     parents: ["page", "block", "sidebar", "tab", "navbar"],
   },
-  {
-    type: "tabs",
-    label: "Табы",
-    parents: ["page", "block", "sidebar", "tab", "navbar"],
-  },
+  // {
+  //   type: "tabs",
+  //   label: "Табы",
+  //   parents: ["page", "block", "sidebar", "tab", "navbar"],
+  // },
   {
     type: "tab",
     label: "Таб",
@@ -63,6 +63,12 @@ const availableFormat = [
   {
     type: "checkbox",
     label: "Чекбокс",
+    parents: ["page", "block", "sidebar", "tab", "navbar"],
+  },
+
+  {
+    type: "input",
+    label: "Поле ввода",
     parents: ["page", "block", "sidebar", "tab", "navbar"],
   },
 ];

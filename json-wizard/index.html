@@ -96,7 +96,7 @@
             <h3>Нет выделенного элемента</h3>
             <p>Выберите объект из дерева, чтобы просмотреть его свойства</p>
             <form></form>
-            <pre id="res"></pre>
+            <pre style="margin-top: 8px" id="res"></pre>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@
   </body>
   <script type="text/javascript">
     function showSchemaForm(schema, nodeJson) {
-      console.log(nodeJson);
+      console.log(schema, nodeJson);
       $("form").empty();
       let dataInit = {
         schema: schema,

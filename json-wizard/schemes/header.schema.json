@@ -2,8 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "type": { "type": "string" },
-    "text": { "type": "string" },
+    "type": {
+      "type": "string",
+      "default": "header",
+      "title": "Тип компонента",
+      "readonly": true
+    },
+    "text": {
+      "type": "string",
+      "title": "Текст"
+    },
     "size": { "type": "integer" }
   },
   "required": ["text"]
