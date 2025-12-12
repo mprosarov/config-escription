@@ -22,10 +22,9 @@ function createSelectList(treeNodeObj) {
   );
 }
 
-const tree = new TreeView("#tree", clickNode);
+let tree = new TreeView("#tree", clickNode);
 // tree.setData(TEST_DATA);
 const transformData = Utils.transformToTree(TEST_CONFIG, "NAME_TEST_CONFIG");
-console.log(transformData);
 tree.setData(transformData);
 
 selectList.onclick = function (e) {

@@ -1,6 +1,8 @@
 const Utils = (function () {
   const transformToTree = (config, configName) => {
     explorerName = document.getElementById("sidebarConfigName");
+    // tree = document.getElementById("tree");
+    // tree.innerHTML = "";
     configName
       ? (explorerName.innerText = configName)
       : (explorerName.innerText = "Без названия");
@@ -13,6 +15,7 @@ const Utils = (function () {
       sidebars: "Анимированные панели",
       page: "Основное тело страницы",
     };
+    console.warn(explorerName.innerText, " - ", config);
     for (let key in config) {
       const item = {
         id: key,

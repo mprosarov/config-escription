@@ -53,6 +53,7 @@ class TreeNode {
     // this.component = factory.createComponent(data.raw);
   }
   reRender() {
+    alert("reRender");
     this.container.innerHTML = "";
     this.container.appendChild(this.render());
   }

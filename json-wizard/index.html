@@ -93,6 +93,7 @@
       <div class="form-container" id="dynamic-form">
         <div class="empty-state">
           <div class="empty-state-content">
+            <input type="file" onchange = "downloadConfig(this)"></input>
             <h3>Нет выделенного элемента</h3>
             <p>Выберите объект из дерева, чтобы просмотреть его свойства</p>
             <form></form>
@@ -102,7 +103,30 @@
       </div>
     </div>
   </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  <script src="scripts/availableTypesFormat.js"></script>
+  <script src="scripts/test-JSON.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/TreeView.js"></script>
+  <script src="scripts/TreeNode.js"></script>
+  <script src="scripts/main.js"></script>
   <script type="text/javascript">
+        function downloadConfig(input) {
+      let file = input.files[0];
+      let reader = new FileReader();
+      reader.readAsText(file)
+      reader.onload = function() {
+
+        const transformData = Utils.transformToTree(JSON.parse(reader.result), input.files[0].name);
+        if(!tree){
+          tree = new TreeView("#tree", clickNode)
+        }
+        tree.setData(transformData)
+        console.log(transformData);
+      };
+    }
     function showSchemaForm(schema, nodeJson) {
       console.log(schema, nodeJson);
       $("form").empty();
@@ -126,28 +150,7 @@
         },
       };
       dataInit.value = nodeJson.raw;
-      // if (nodeJson.type == "param") {
-      //   dataInit.value = {
-      //     type: "param",
-      //     id: 7,
-      //     name: "pTest",
-      //     init: {
-      //       valueType: "raw",
-      //       value: "ololol",
-      //     },
-      //   };
-      // }
-
       $("form").jsonForm(dataInit);
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-  <script src="scripts/availableTypesFormat.js"></script>
-  <script src="scripts/test-JSON.js"></script>
-  <script src="scripts/utils.js"></script>
-  <script src="scripts/TreeView.js"></script>
-  <script src="scripts/TreeNode.js"></script>
-  <script src="scripts/main.js"></script>
-  <script></script>
 </html>
