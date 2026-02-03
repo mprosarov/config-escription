@@ -82,6 +82,11 @@ class BaseElement {
 
   actionRedirect(configAction, paramsObjArr = []){
     let resultParams = [];
+
+    console.log("Action Redirect in base Element: ")
+    console.log("paramsObjArr: ", paramsObjArr);
+    console.log("configAction: ", configAction);
+
     // Собираем "глобальные параметры" страницы, если они есть
     if (paramsObjArr.params?.pageParams) {
       for (let i = 0; i < paramsObjArr.params.pageParams.length; i++) {
@@ -92,7 +97,12 @@ class BaseElement {
         });
       }
     };
+    console.log("resultParams after if: ", resultParams)
+
     resultParams = resultParams.concat(paramsObjArr);
+
+    console.log("resultParams after concat: ", resultParams)
+
     if(configAction.config) this._redirectConfig(configAction, resultParams);
     else if(configAction.url) this._redirectToURL(configAction, resultParams);
     else{

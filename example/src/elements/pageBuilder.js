@@ -3,6 +3,9 @@ const PageBuilder = (function(){
   // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
 
   let URL = "";
+
+  console.log("location.href: ", location.href)
+
   if (location.href.indexOf("file") >= 0) {
     URL = "http://localhost:3000/config";
   } else {
@@ -11,6 +14,7 @@ const PageBuilder = (function(){
 
   // Подписываемся на событие изменения истории(переход назад)
   window.addEventListener("popstate", (event) => {
+    console.log("popstate event:", event)
     //чистим историю
     clearState();
     // инициализируем зановo страницу
@@ -53,23 +57,35 @@ const PageBuilder = (function(){
   //получаем датасорс
   function getDS(name) {
     let find = DS.find((ds) => ds.config.id === name);
+
+    console.log("ds sourse find: ", find);
+
     return find;
   }
   //Получаем объект параметра
   function getParam(name) {
     let find = pageParams.find((param) => param.getName() === name);
+
+    console.log("getParam find: ", find);
+
     if (!find) throw new Error("Параметр не удалось получить.Нет такого параметра");
     return find;
   }
   //Получаем значение параметра
   function getParamValue(name) {
     let find = pageParams.find((param) => param.getName() === name);
+
+    console.log("getParamValue find: ", find);
+
     if (!find) throw new Error("Значение не удалось получить.Нет такого параметра");
     return find.getValue();
   }
   //обновляем значения параметров при переключении чекбоксов и селектов
   function updateParam(el, name, type) {
+
+    console.log("el, name, type: ", el, name, type);
     console.log(name, " ", type);
+
     var p = getParam(name);
     var value;
     switch (type) {
@@ -85,14 +101,23 @@ const PageBuilder = (function(){
   }
   //Добавление компонента в общий список
   function addComponent(type, component) {
+
+    console.log('addComponent params: ', type, component)
+
     if (components[type]) {
       throw new Error(`Компонент с таким типом уже существует. type=${type}`);
     }
     components[type] = component;
   }
   function loadWithParams(configName, params) {
+
+    console.log("loadWithParams params: ", configName, params)
+
     // получаем все текущие GET параметры страницы
     let getParams = new URLSearchParams();
+
+    console.log("new URLSearchParams: ", getParams);
+
     // добавляем имя конфигурации в GEt параметры, чтобы при перезагрузке страницы(F5) - загрузилась нужная конфигурация
     getParams.set("config", configName);
     // добавляем переданные параметры в GEt параметры
@@ -105,6 +130,10 @@ const PageBuilder = (function(){
   }
   // Загрузить json конфигурацию страницы с сервера по имени файла
   async function loadPageConfig(configName, params = []) {
+
+    console.log("configName loadPageConfig: ", configName);
+    console.log("params loadPageConfig: ", params);
+
     // очищаем страницу, чтобы построить новую по загруженной конфигурации
     clear();
     // лоадер
@@ -120,8 +149,10 @@ const PageBuilder = (function(){
     );
     let loader = document.body.querySelector(".loader-container");
     try {
+      console.log("${URL}?name=${configName}: ", `${URL}?name=${configName}`)
       let response = await fetch(`${URL}?name=${configName}`);
       let config = await response.json();
+      console.log('config: ', config)
       //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
       //   let result = await response.json();
       //   let config = result.result;
@@ -136,11 +167,15 @@ const PageBuilder = (function(){
       // удаляем лоадер
       loader.remove();
     } catch (error) {
+      console.log('catch: ', error)
       loader.innerHTML = `<div class="loader-error">${error.message}</div>`;
       createdComponents = [];
     }
   }
   function create(parentElement, config) {
+    console.log("parentElement create: ", parentElement);
+    console.log("config create: ", config);
+
     if (!components[config.type]) {
       throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
     }
@@ -152,11 +187,20 @@ const PageBuilder = (function(){
   }
   // создать страницу по конфигурации
   function createPage(config) {
+    
+    console.log("createPage config", config);
+
     if (config["pageParams"]) {
       config.pageParams.forEach((item) => {
         var param = new PageParam(`null`, item);
+
+        console.log("param exemplar", param);
+
         pageParams.push(param);
       });
+
+      console.log("createPage pageParams: ", pageParams);
+
       //  console.log(pageParams)
     }
     if (config["dataSources"]) {
@@ -164,7 +208,7 @@ const PageBuilder = (function(){
         var datasourse = PageBuilder.create(null, item);
         DS.push(datasourse);
       });
-      console.log(DS);
+      console.log("DS:", DS);
     }
     if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
     document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
@@ -179,6 +223,13 @@ const PageBuilder = (function(){
     }
     if (config["sidebars"]) {
       config["sidebars"].forEach((item) => {
+        PageBuilder.create(document.body, item);
+      });
+    }
+    if (config["modal"]) {
+      console.log("!!!if modal config: ", config["modal"])
+
+      config["modal"].forEach((item) => {
         PageBuilder.create(document.body, item);
       });
     }
@@ -209,3 +260,4 @@ const PageBuilder = (function(){
     clearState
   };
 })();
+console.log("PAGEBUILDER RETURN: ", PageBuilder)

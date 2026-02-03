@@ -16,13 +16,15 @@ class DataSources {
       )
     );
 
+    console.log("datasources set to array: ", arrQueryParams);
+
     for (let i = 0; i < arrQueryParams.length; i++) {
       let objParam = {
         param: arrQueryParams[i],
         value: "",
       };
 
-      this.params.push(objParam);
+      this.params.push( );
       // Подписываемся на изменение параметра
       var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
       if (!p) console.error("Нет параметра");
@@ -70,6 +72,9 @@ class DataSources {
     
   }
   execute() {
+
+    console.log('Execute log this.params: ', this.params);
+
     for (let i = 0; i < this.params.length; i++) {
       this.params[i]["value"] = PageBuilder.getParamValue(this.params[i]["param"]);
     }
@@ -79,6 +84,9 @@ class DataSources {
     }
     // Отслыем запрос на сервер и оповещаем подписчиков
     let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
+
+    console.log("datasource subscribes:", this.subscribes);
+
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });

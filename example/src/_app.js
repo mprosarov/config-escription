@@ -21,3 +21,9 @@
 //= elements/cItemsBlock.js
 //= elements/cDataSources.js
 //= elements/cPageParam.js
+//= elements/baseAction.js
+//= elements/cEditAction.js
+//= elements/cContextMenuAction.js
+//= elements/cRedirectAction.js
+//= elements/cModal.js
+//= elements/cModalAction.js

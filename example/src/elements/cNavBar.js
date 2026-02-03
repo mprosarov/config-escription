@@ -4,6 +4,10 @@ class NavBar {
     buttonsBlock = null;
     titleBlock = null;
     constructor (parentElement, config) {
+        
+        console.log("parent Element NavBar: ", parentElement);
+        console.log("config NavBar: ", config);
+
         this.parentElement = parentElement;
         this.config = config;
         this.create();

@@ -1,3 +1,5 @@
+
+
 {
 
   "dataSources": [
@@ -136,14 +138,23 @@
       },
       {
         "type": "button-group",
-        "items": [
+        "elements": [
           {
             "text": "кнопка_1",
+            "id":"button_1",
             "class": "primary",
             "icon": "floppy",
-            "action": {
-              "params": [],
-              "func": []
+            "actions": {
+              "type": "baseAction",
+              "items": [
+                {
+                  "action": "modalAction",
+                  "trigger": "click",
+                  "title": "Информация от кнопки 1",
+                  "content": "Это модальное окно открыто по нажатию кнопки 1",
+                  "modalId": "modal1"
+                }
+              ]
             }
           },
           {
@@ -169,7 +180,7 @@
         {
           "type": "checkbox",
           "inline": "inline",
-          "items": [
+          "elements": [
             {
               "label": "текст_1",
               "id": "chb_1",
@@ -203,11 +214,23 @@
                 {
                   "type": "button",
                   "icon": "printer",
-                  "text": "Кнопка"
+                  "text": "Кнопка side",
+                  "actions": {
+                    "type": "baseAction",
+                    "items": [
+                      {
+                        "action": "modalAction",
+                        "trigger": "click",
+                        "title": "Информация от кнопки в боковом меню",
+                        "content": "Это модальное окно открыто по нажатию кнопки в боковом меню",
+                        "modalId": "modal1"
+                      }
+                    ]
+                  }
                 },
                 {
                   "type": "button-group",
-                  "items": [
+                  "elements": [
                     {
                       "text": "кнопка_1",
                       "class": "secondary",
@@ -291,7 +314,19 @@
                 {
                   "type": "button",
                   "icon": "printer",
-                  "text": "Кнопка"
+                  "text": "Кнопка",
+                  "actions": {
+                    "type": "baseAction",
+                    "items": [
+                      {
+                        "action": "modalAction",
+                        "trigger": "click",
+                        "title": "Информация от кнопки в боковом правом меню",
+                        "content": "Это модальное окно открыто по нажатию кнопки в правом боковом меню",
+                        "modalId": "modal1"
+                      }
+                    ]
+                  }
                 }
               ]
             },
@@ -351,7 +386,7 @@
             {
               "type": "checkbox",
               "inline": "inline",
-              "items": [
+              "elements": [
                 {
                   "id": "id_1",
                   "label": "параметр_1",
@@ -381,16 +416,25 @@
             },
             {
               "type": "button-group",
-              "items": [
+              "elements": [
                 {
                   "text": "кнопка_1",
                   "class": "secondary",
                   "icon": "floppy",
-                  "action": {
-                    "params": [],
-                    "func": []
+                  "actions": {
+                    "type": "baseAction",
+                    "items": [
+                      {
+                        "action": "modalAction",
+                        "trigger": "click",
+                        "title": "Информация от кнопки 1 на странице",
+                        "content": "Это модальное окно открыто по нажатию кнопки 1 на странице",
+                        "modalId": "modal1"
+                      }
+                    ]
                   },
-                  "status": "disabled"
+                  "status": "unabled",
+                  "id": "button_1_page"
                 },
                 {
                   "text": "кнопка_2",
@@ -435,7 +479,7 @@
               "type": "radio-group",
               "name": "radio-name",
 
-              "items": [
+              "elements": [
                 {
                   "id": "r_id_1",
                   "label": "Радио_1",
@@ -454,7 +498,7 @@
             {
               "type": "checkbox",
               "inline": true,
-              "items": [
+              "elements": [
                 {
                   "label": "текст_1",
                   "id": "chb_1",
@@ -474,7 +518,7 @@
             },
             {
               "type": "button-group",
-              "items": [
+              "elements": [
                 {
                   "text": "кнопка_1",
                   "class": "secondary",
@@ -487,10 +531,19 @@
                 {
                   "text": "кнопка_2",
                   "icon": "arrow-clockwise",
+                  "id":"button_2_right",
                   "class": "secondary",
-                  "action": {
-                    "params": [],
-                    "func": []
+                  "actions": {
+                    "type": "baseAction",
+                    "items": [
+                      {
+                        "action": "modalAction",
+                        "trigger": "click",
+                        "title": "Информация от кнопки 2 на странице",
+                        "content": "Это модальное окно открыто по нажатию кнопки 2 на странице",
+                        "modalId": "modal1"
+                      }
+                    ]
                   }
                 },
                 {
@@ -523,30 +576,53 @@
                   "type": "table-tabulator",
                   "id": "table-tabulator_id_8d",
                   "datasourse": "id_ds_1",
-                  "action":[
 
-                    {
-                      "name": "redirect",
-                      "event": "rowDblClick",
-
-                      "newtab": false,
-                      "params":{
-                        "tableParams":  [
-                          {
-                            "field":"2",
-                            "pName": "pTest"
-                          },
-                          {
-                            "field":"3",
-                            "pName": "pTest2"
+                  "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "modalAction",
+                          "trigger": "rowClick",
+                          "contentType": "tableRow",
+                          "modalId": "modal1"
+                        },
+                        {
+                          "action": "tabulatorEditAction",
+                          "trigger": "mousewheel",
+                          "target": {
+                            "columns": ["idconfig", "2", "3", "6"],
+                            "condition": {}
                           }
-                        ],
-                        "pageParams": [
-                          "pTest3"
-                        ]
-                      }
-                    }
-                  ],
+                        },
+                        {
+                          "action": "contextMenuAction",
+                          "trigger": "rightClick",
+                          "target": "parentElement"
+                        },
+                        {
+                          "action": "redirectAction",
+                          "trigger": "rowDblClick",
+                          "config": "",
+                          "newtab": false,
+                          "params": {
+                            "tableParams": [
+                              {
+                                "field": "2",
+                                "pName": "pTest"
+                              },
+                              {
+                                "field": "3",
+                                "pName": "pTest2"
+                              }
+                            ],
+                            "pageParams": [
+                              "pTest3"
+                            ]
+                          }
+                        }
+                      ]
+                  },
+
                   "name": "Расчет-обоснование норматива транспортно-заготовительных затрат",
                   "indexCols": {
                     "idconfig": 1,
@@ -697,7 +773,7 @@
                       "label": "текст_селекта_2",
                       "labelPosition": "right",
                       "paramName":"pTestSelect_2",
-                      "items": [
+                      "options": [
                         {
                           "name": "имя_1",
                           "value": "значение_1",
@@ -734,7 +810,7 @@
                       "label": "текст_селекта_1",
                       "labelPosition": "left",
                       "status": "",
-                      "items": [
+                      "options": [
                         {
                           "name": "значение_1",
                           "value": "",
@@ -756,7 +832,7 @@
                       "type": "radio-group",
                       "name": "radio-name-tab",
                       "inline": "form-check-inline",
-                      "items": [
+                      "elements": [
                         {
                           "id": "r_id_5",
                           "label": "Радио_в_табе_1",
@@ -784,6 +860,12 @@
         }
       ]
     }
+  ],
+  "modal": [{
+      "type": "modal",
+      "modalId": "modal1",
+      "title": "Стандартное название модального окна",
+      "content": "Стандрадная трока текста для модального окна"
+    }
   ]
-
 }

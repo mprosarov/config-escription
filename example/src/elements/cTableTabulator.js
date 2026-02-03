@@ -8,11 +8,16 @@ class TableTabulator extends BaseElement {
     }
 
     recursiveSearchColumns(data, target) {
+
+      //console.log("recursiveSearchColumns data: ", data);
+      //console.log("recursiveSearchColumns target: ", target);
+      //debugger
       let values = {
         headerHozAlign: "center",
         hozAlign: "center",
         headerWordWrap: true,
       };
+
       if (!data[target] || data[target].length < 1) return;
       for (let i = 0; i < data[target].length; i++) {
         let child = data[target][i];
@@ -22,6 +27,12 @@ class TableTabulator extends BaseElement {
     }
     create(){
       const ds = PageBuilder.getDS(this.config.datasourse);
+      const config = this.config;
+      const parentElement = this.parentElement;
+
+      console.log('ds tabulator: ', ds);
+      console.log("tabulator this.config: ", this.config);
+
       ds.addSubscribe(this)
       this.config["tdata"].data = [];
       //--должно прийти
@@ -42,10 +53,21 @@ class TableTabulator extends BaseElement {
         this.config["tdata"]["frozenRows"] = 1;
       }
       this.tableObj = new Tabulator(`#${this.config["id"]}`, this.config["tdata"]);
-    //  console.log(this.tableObj.setData,'asa');
-    //  var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
 
-      if(!this.config["action"]){//пока непонятно везде будет или нет
+      console.log("Tabulator: ", Tabulator);
+      console.log("this.tableobj: ", this.tableObj)
+
+      //  console.log(this.tableObj.setData,'asa');
+      //  var table = Tabulator.findTable(`#${this.config["id"]}`)[0];
+      let table = this.tableObj;
+      //console.log(this.tableObj.on("tableBuilt", function(){console.log("THE TABLE IS READY"); debugger}))
+      this.tableObj.on("tableBuilt", function(){
+        if (config.actions){
+          //PageBuilder.create(parentElement, this.config.actions)
+          new BaseAction(parentElement, config.actions, table);
+        }
+      })
+      /*if(!this.config["action"]){//пока непонятно везде будет или нет
         return
       }
       for(let i=0; i<this.config["action"].length; i++){
@@ -53,9 +75,9 @@ class TableTabulator extends BaseElement {
         this.tableObj.on(currentAction.event, (e, row) => {
           this.runAction(currentAction, e, row)
         });
-      }
+      }*/
     }//end create
-    runAction(obj,e,row){
+    /*runAction(obj,e,row){
       //e — объект события щелчка
       //row — компонент строки
 
@@ -69,18 +91,32 @@ class TableTabulator extends BaseElement {
           });
         })
       }
+
+      console.log("tableParams in runaction: ", tableParams);
+
       if (obj.name == "redirect") {
         if (!obj["config"] && !obj["url"]) {
+
+          console.log("Inside check runaction row.getData: ", row.getData()["idconfig"]);
+          console.log("Inside check runaction obj['config']: ", obj["config"])
+          console.log("Inside check runaction obj['url']: ", obj["url"])
+          
           if (!row.getData()["idconfig"]) throw new Error("Не удалось определить имя или url для перехода");
           obj["config"] = row.getData()["idconfig"];
         }
         super.actionRedirect(obj, tableParams);
       }
-    }
+    }*/
     updatedDS(data){
+
+      console.log('this.config.indexCols', this.config.indexCols);
+
       if (this.config["indexCols"]) {
         data.unshift(this.config["indexCols"]);
       }
+
+      console.log("tabulator new data from ds: ", data)
+
       if (!this.tableObj.initialized){
           this.tableObj.on("tableBuilt", function () {
             this.setData(data);
