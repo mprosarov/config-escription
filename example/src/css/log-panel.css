@@ -1,0 +1,288 @@
+/**
+ * log-panel.css
+ *
+ * Стили для панели логирования действий пользователя (LogPanel).
+ * Панель является компонентом страницы и размещается в потоке документа
+ * через JSON-конфиг в секции page.
+ *
+ * Позиционирование задаётся через конфиг (position: "right" | "left"):
+ * - .log-panel--right: float: right, отступ слева (по умолчанию)
+ * - .log-panel--left:  float: left,  отступ справа
+ *
+ * Высота панели управляется через CSS custom property --log-panel-max-height,
+ * которая устанавливается из JS на основе конфига (поле maxHeight).
+ * Если свойство не задано, используется значение по умолчанию.
+ *
+ * Для растягивания на всю высоту экрана используется position: sticky с top: 0.
+ */
+
+/* ===================== ОСНОВНОЙ КОНТЕЙНЕР ===================== */
+
+.log-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  width: 350px;
+  margin-bottom: 12px;
+  position: sticky;
+  top: 0;
+  height: var(--log-panel-max-height, 250px);
+}
+
+/* Позиционирование справа (по умолчанию) */
+.log-panel--right {
+  float: right;
+  margin-left: 12px;
+}
+
+/* Позиционирование слева */
+.log-panel--left {
+  float: left;
+  margin-right: 12px;
+}
+
+/* ===================== ЗАГОЛОВОК ===================== */
+
+.log-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.log-panel-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-panel-title-icon {
+  font-size: 16px;
+}
+
+.log-panel-clear-btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6c757d;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.log-panel-clear-btn:hover {
+  color: #dc3545;
+  background: #fff5f5;
+  border-color: #f5c6cb;
+}
+
+.log-panel-clear-btn:active {
+  background: #f8d7da;
+}
+
+/* ===================== СПИСОК ЗАПИСЕЙ ===================== */
+
+.log-panel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+  min-height: 60px;
+}
+
+/* Стилизация скроллбара */
+.log-panel-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-panel-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.log-panel-list::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 3px;
+}
+
+.log-panel-list::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+/* ===================== ЗАПИСЬ ЛОГА ===================== */
+
+.log-panel-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s ease;
+  animation: logEntrySlideIn 0.2s ease-out;
+}
+
+@keyframes logEntrySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.log-panel-entry:last-child {
+  border-bottom: none;
+}
+
+.log-panel-entry:hover {
+  background: #f8f9fa;
+}
+
+/* Иконка типа действия */
+.log-panel-entry-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+/* Контент записи */
+.log-panel-entry-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.log-panel-entry-description {
+  color: #212529;
+  word-break: break-word;
+}
+
+.log-panel-entry-timestamp {
+  font-size: 11px;
+  color: #adb5bd;
+  margin-top: 1px;
+}
+
+/* ===================== ЦВЕТОВЫЕ ИНДИКАТОРЫ ПО ТИПАМ ===================== */
+
+/* Редактирование */
+.log-panel-entry--edit .log-panel-entry-icon {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+/* Добавление */
+.log-panel-entry--add .log-panel-entry-icon {
+  background: #ebfbee;
+  color: #2b8a3e;
+}
+
+/* Удаление */
+.log-panel-entry--delete .log-panel-entry-icon {
+  background: #fff5f5;
+  color: #c92a2a;
+}
+
+/* Фильтрация */
+.log-panel-entry--filter .log-panel-entry-icon {
+  background: #f3f0ff;
+  color: #7048e8;
+}
+
+/* Сохранение */
+.log-panel-entry--save .log-panel-entry-icon,
+.log-panel-entry--saveUserConfig .log-panel-entry-icon {
+  background: #fff3e0;
+  color: #e67700;
+}
+
+/* Загрузка конфигурации */
+.log-panel-entry--loadUserConfig .log-panel-entry-icon {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+/* Сброс */
+.log-panel-entry--reset .log-panel-entry-icon {
+  background: #fff9db;
+  color: #f08c00;
+}
+
+/* Изменение параметра */
+.log-panel-entry--paramChange .log-panel-entry-icon {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+/* Загрузка данных */
+.log-panel-entry--dataLoad .log-panel-entry-icon {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+/* Ошибка */
+.log-panel-entry--error .log-panel-entry-icon {
+  background: #fff5f5;
+  color: #c92a2a;
+}
+
+/* Undo */
+.log-panel-entry--undo .log-panel-entry-icon {
+  background: #fff3e0;
+  color: #e67700;
+}
+
+/* ===================== ПУСТОЙ ЛОГ ===================== */
+
+.log-panel-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  color: #adb5bd;
+  font-size: 13px;
+  text-align: center;
+  gap: 4px;
+}
+
+.log-panel-empty-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+  opacity: 0.5;
+}
+
+/* ===================== АДАПТИВНОСТЬ ===================== */
+
+@media (max-width: 768px) {
+  .log-panel {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .log-panel-entry {
+    padding: 6px 8px;
+  }
+}

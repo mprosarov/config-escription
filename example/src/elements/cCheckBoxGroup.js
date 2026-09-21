@@ -4,7 +4,7 @@ class CheckBoxGroup extends BaseElement {
     super(parentElement, config);
     this.create();
   }
-
+  //TODO: не работает статус, доработать
   create() {
     this.parentElement.insertAdjacentHTML(
       "beforeend",

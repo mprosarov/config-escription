@@ -7,10 +7,7 @@ class RedirectAction extends BaseAction {
     }
 
     create() {
-        console.log("RedirectAction config:", this.config);
-        console.log("RedirectAction target:", this.target);
-        
-        // Получаем конфигурацию redirect из this.config
+        //получаем конфигурацию redirect из this.config
         const redirectConfig = this.config;
         
         if (!redirectConfig.trigger) {
@@ -55,8 +52,6 @@ class RedirectAction extends BaseAction {
         
         const params = this.collectParams(row, config);
 
-        console.log('tabulator row', row);
-
         this.executeRedirect(config, params, row);
     }
 
@@ -82,7 +77,6 @@ class RedirectAction extends BaseAction {
             });
         }
         
-        console.log("RedirectAction собранные параметры:", params);
         return params;
     }
 
@@ -94,7 +88,6 @@ class RedirectAction extends BaseAction {
         } else {
             //TODO получение конфига из строки
             const rowConfig = this.getConfigFromRow(row);
-            console.log("rowConfig: ", rowConfig);
             if (rowConfig){
                 config.config = rowConfig;
                 this._redirectToConfig(config, params)
@@ -106,7 +99,6 @@ class RedirectAction extends BaseAction {
     }
 
     getConfigFromRow(row) {
-        console.log("getConfigFromRow row:", row.getData()["idconfig"]);
         //TODO: метод определяющий конфиг по строке таблицы
         return row.getData()["idconfig"];
     }
@@ -136,3 +128,4 @@ class RedirectAction extends BaseAction {
 }
 
 PageBuilder.addComponent(RedirectAction.TYPE, RedirectAction);
+ActionRegistry.register(RedirectAction.TYPE, RedirectAction);

@@ -21,6 +21,10 @@
 // Например: let config = await fetch("/config");
 function initPage(params) {
   let configName = getUrlParamByName('config') || 'index';
+
+  console.log("configName: ", configName);
+  console.log("getUrlParamByName('config'): ", getUrlParamByName('config'));
+
   PageBuilder.loadPageConfig(configName);
 }
 function getUrlParamByName(name, url = window.location.search) {

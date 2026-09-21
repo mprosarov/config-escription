@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "default": "button-group",
+      "title": "Тип компонента",
+      "readonly": true
+    },
+    "items": {
+      "type": "array",
+      "title": "Элементы",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string",
+            "title": "Иконка"
+          },
+          "text": {
+            "type": "string",
+            "title": "Текст"
+          },
+          "class": {
+            "type": "string",
+            "title": "CSS класс",
+            "enum": [
+              "primary",
+              "secondary",
+              "success",
+              "info",
+              "warning",
+              "danger"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "title": "Активность элемента",
+            "enum": ["disabled", "unabled"]
+          },
+          "action": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "required": []
+      }
+    }
+  }
+}

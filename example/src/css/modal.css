@@ -8,7 +8,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 .vnf-modal {
@@ -70,4 +70,57 @@
     display: inline-block;
     min-width: 120px;
     color: #666;
+}
+
+/* Footer модального окна */
+.vnf-modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Форма редактирования */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.edit-form-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #495057;
+}
+
+.edit-form-input,
+.edit-form-textarea,
+.edit-form-select {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.15s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-form-input:focus,
+.edit-form-textarea:focus,
+.edit-form-select:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.edit-form-textarea {
+  min-height: 80px;
+  resize: vertical;
 }

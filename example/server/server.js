@@ -6,11 +6,91 @@ const path = require("path");
 const server = http.createServer((req, res) => {
   // Устанавливаем заголовки CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Обработка preflight запросов (OPTIONS) для CORS
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   // Парсим URL и параметры запроса
   const parsedUrl = url.parse(req.url, true);
   const query = parsedUrl.query;
+
+  // POST /saveData — сохранение данных таблиц
+  // Формат данных: { configName: string, data: { tableId: row[] } }
+  if (req.method === 'POST' && parsedUrl.pathname === '/saveData') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        let data = JSON.parse(body);
+        let dirPath = path.join(__dirname, 'savedData');
+        fs.mkdirSync(dirPath, { recursive: true });
+        let filePath = path.join(dirPath, `${data.configName || 'default'}.json`);
+        fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: 'Ошибка сохранения данных' }));
+          } else {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+          }
+        });
+      } catch (e) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: 'Некорректный JSON' }));
+      }
+    });
+    return;
+  }
+
+  // POST /saveUserConfig — сохранение пользовательской конфигурации
+  // Формат данных: { configName: string, params: {}, tables: {}, savedAt: string }
+  if (req.method === 'POST' && parsedUrl.pathname === '/saveUserConfig') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        let data = JSON.parse(body);
+        let dirPath = path.join(__dirname, 'userConfigs');
+        fs.mkdirSync(dirPath, { recursive: true });
+        let filePath = path.join(dirPath, `${data.configName || 'default'}.json`);
+        fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: 'Ошибка сохранения конфигурации' }));
+          } else {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+          }
+        });
+      } catch (e) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: 'Некорректный JSON' }));
+      }
+    });
+    return;
+  }
+
+  // GET /loadUserConfig?name=... — загрузка пользовательской конфигурации
+  if (req.method === 'GET' && parsedUrl.pathname === '/loadUserConfig') {
+    let fileName = query.name || 'default';
+    let filePath = path.join(__dirname, 'userConfigs', `${fileName}.json`);
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: 'Конфигурация не найдена' }));
+      } else {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(data);
+      }
+    });
+    return;
+  }
 
   // Проверяем, что запрос идет по пути /config
   if (parsedUrl.pathname === "/config") {
@@ -28,6 +108,7 @@ const server = http.createServer((req, res) => {
       } else {
         // Возвращаем содержимое файла как JSON
         res.writeHead(200, { "Content-Type": "application/json" });
+        //console.log("ЧИТАЕМ ФАЙЛ И ВОЗВРАЩАЕМ ДАННЫЕ: ", data);
         res.end(data);
       }
     });

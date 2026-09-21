@@ -14,7 +14,7 @@ class Select extends BaseElement {
     }
     this.parentElement.insertAdjacentHTML(
       "beforeend",
-      `<div class="input-group input-group-sm mb-3">
+      `<div class="input-group input-group-sm">
         <select type="${this.config.type}" data-param="${
         this.config.paramName
       }"  class="form-select form-select-sm" aria-label=".form-select-sm" ${

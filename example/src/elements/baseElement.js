@@ -43,8 +43,12 @@ class BaseElement {
     this.config = config;
   }
   static applyCss(element, config) {
+    //console.log("BaseElement element:", element)
+    //console.log("BaseElement config:", config)
+
     if (!config[CONFIG_PAGE.STYLE]) return;
     const style = config[CONFIG_PAGE.STYLE];
+    
     if (style[CONFIG_PAGE.PADDING_STYLE]) {
       if (style[CONFIG_PAGE.PADDING_STYLE][CONFIG_PAGE.PADDING_TOP]) {
         element.style.paddingTop = style[CONFIG_PAGE.PADDING_STYLE][CONFIG_PAGE.PADDING_TOP] + "px";
@@ -83,9 +87,9 @@ class BaseElement {
   actionRedirect(configAction, paramsObjArr = []){
     let resultParams = [];
 
-    console.log("Action Redirect in base Element: ")
-    console.log("paramsObjArr: ", paramsObjArr);
-    console.log("configAction: ", configAction);
+    //console.log("Action Redirect in base Element: ")
+    //console.log("paramsObjArr: ", paramsObjArr);
+    //console.log("configAction: ", configAction);
 
     // Собираем "глобальные параметры" страницы, если они есть
     if (paramsObjArr.params?.pageParams) {
@@ -97,11 +101,11 @@ class BaseElement {
         });
       }
     };
-    console.log("resultParams after if: ", resultParams)
+    //console.log("resultParams after if: ", resultParams)
 
     resultParams = resultParams.concat(paramsObjArr);
 
-    console.log("resultParams after concat: ", resultParams)
+    //console.log("resultParams after concat: ", resultParams)
 
     if(configAction.config) this._redirectConfig(configAction, resultParams);
     else if(configAction.url) this._redirectToURL(configAction, resultParams);

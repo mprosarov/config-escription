@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Object</title>
+    <link rel="stylesheet" href="assets/fa/css/all.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="deps/opt/bootstrap.css" />
+    <script type="text/javascript" src="deps/jquery.min.js"></script>
+    <script type="text/javascript" src="deps/underscore.js"></script>
+    <script type="text/javascript" src="deps/opt/jsv.js"></script>
+    <script type="text/javascript" src="lib/jsonform.js"></script>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-explorer">
+        <div class="sidebar-name">
+          <button type="button">
+            <i class="fa-regular fa-pen-to-square"></i>
+          </button>
+          <span class="sidebar-explorer_name" id="sidebarConfigName"
+            >Object Explorer</span
+          >
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary btn-sm dropdown-toggle text-dark"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <ul class="dropdown-menu" id="addTreeNode"></ul>
+        </div>
+      </div>
+      <div class="sidebar-body">
+        <div class="tree" id="tree">
+          <div class="tree-node-content">
+            <button class="expand tree-button">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <span class="tree-node-icon">
+              <i class="fa-regular fa-folder"></i>
+            </span>
+            <div class="node-text">Имя</div>
+          </div>
+          <div class="tree-children">
+            <!-- padding-left = level * 24 -->
+            <div class="tree-node-content" style="padding-left: 24px">
+              <button class="expand tree-button">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+              <span class="tree-node-icon">
+                <i class="fa-regular fa-folder"></i>
+              </span>
+              <div class="node-text">Имя</div>
+            </div>
+            <div class="tree-children">
+              <!-- padding-left = level * 24 -->
+              <div class="tree-node-content" style="padding-left: 48px">
+                <div class="tree-spacer"></div>
+                <span class="tree-node-icon">
+                  <i class="fa-solid fa-database"></i>
+                </span>
+                <div class="node-text">Имя</div>
+              </div>
+              <div class="tree-node-content" style="padding-left: 48px">
+                <div class="tree-spacer"></div>
+                <span class="tree-node-icon">
+                  <i class="fa-solid fa-database"></i>
+                </span>
+                <div class="node-text">Имя</div>
+              </div>
+            </div>
+            <div class="tree-node-content" style="padding-left: 24px">
+              <div class="tree-spacer"></div>
+              <span class="tree-node-icon">
+                <i class="fa-solid fa-database"></i>
+              </span>
+              <div class="node-text">Имя</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main-panel">
+      <div class="form-container" id="dynamic-form">
+        <div class="empty-state">
+          <div class="empty-state-content">
+            <h3>Нет выделенного элемента</h3>
+            <p>Выберите объект из дерева, чтобы просмотреть его свойства</p>
+            <form></form>
+            <pre id="res"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    function showSchemaForm(schema, nodeJson) {
+      console.log(nodeJson);
+      $("form").empty();
+      let dataInit = {
+        schema: schema,
+        form: [
+          "*",
+          {
+            type: "submit",
+            title: "Сохранить",
+          },
+        ],
+        onSubmit: function (errors, values) {
+          if (errors) {
+            console.log(errors, values);
+            $("#res").html("<p>Ошибка</p>");
+            $("#res").html(JSON.stringify(values, null, 4));
+          } else {
+            $("#res").html(JSON.stringify(values));
+          }
+        },
+      };
+      dataInit.value = nodeJson.raw;
+      // if (nodeJson.type == "param") {
+      //   dataInit.value = {
+      //     type: "param",
+      //     id: 7,
+      //     name: "pTest",
+      //     init: {
+      //       valueType: "raw",
+      //       value: "ololol",
+      //     },
+      //   };
+      // }
+
+      $("form").jsonForm(dataInit);
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  <script src="scripts/availableTypesFormat.js"></script>
+  <script src="scripts/test-JSON.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/TreeView.js"></script>
+  <script src="scripts/TreeNode.js"></script>
+  <script src="scripts/main.js"></script>
+  <script></script>
+</html>

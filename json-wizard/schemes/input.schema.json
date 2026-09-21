@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "default": "input",
+      "title": "Тип компонента",
+      "readonly": true
+    },
+    "dataType": {
+      "type": "string",
+      "title": "Тип поля",
+      "enum": ["text", "date", "number", "file", "search"]
+    },
+    "id": {
+      "type": "string",
+      "title": "ID"
+    },
+    "label": {
+      "type": "string",
+      "title": "Лэйбл"
+    },
+    "status": {
+      "type": "string",
+      "title": "Активность поля",
+      "enum": ["disabled", "unabled"]
+    }
+  },
+  "required": ["id"]
+}

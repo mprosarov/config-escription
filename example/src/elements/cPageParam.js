@@ -27,6 +27,7 @@ class PageParam {
             else this.paramValue = new Date().toLocaleDateString();
             return
         }
+
         // TODO: Добавить или проверить инициализацию параметра с valureType = "number" (см. доки);
         if(type == 'number'){
             if(this.config.init.value) this.paramValue = this.config.init.value;
@@ -51,6 +52,7 @@ class PageParam {
     //у всех подписчиков событие обновления параметра.
     setParamValue(value){
         this.paramValue = value;
+        console.log("PAGEPARAM setParamValue check");
         this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))
     }
 }

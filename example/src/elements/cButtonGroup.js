@@ -4,12 +4,19 @@ class ButtonGroup extends BaseElement {
     super(parentElement, config);
     this.create();
   }
+  /**
+   * TODO: дописать проверку на id с добавлением дефолтного значения
+   */
   create() {
+    
     let content = "";
+    let result = "";
     const groupId = this.config.id || `btngroup_${Date.now()}`;
+
     console.log("ButtonGroup config: ", this.config);
+    console.log("ButtonGroup parentElement", this.parentElement);
+
     for (let i = 0; i < this.config.elements.length; i++) {
-      console.log("ButtonGroup config id", this.config.elements[i].id)
       let icon = "";
       let text = "";
       if (this.config.elements[i].icon)
@@ -19,29 +26,31 @@ class ButtonGroup extends BaseElement {
       if (this.config.elements[i].text) text = this.config.elements[i].text;
       content += `<button class="btn btn-outline-${this.config.elements[i].class} btn-sm" type="button" id="${this.config.elements[i].id}" ${this.config.elements[i].status}>${icon}${text}</button>`;
     }
-    let result = `<div class="input-group">${content}</div>`;
+
+    //Костыль для кнопок у таблицы
+    console.log("isTable-menu: ", this.config["table-menu"]);
+    if (this.config["table-menu"])
+      result = `<div class="input-group-table">${content}</div>`;
+    else 
+      result = `<div class="input-group" >${content}</div>`;
+    console.log("After result", result)
+
+    //result = `<div class="input-group">${content}</div>`;
     this.parentElement.insertAdjacentHTML("beforeend", result);
     let dom = this.parentElement.lastElementChild;
     BaseElement.applyCss(dom, this.config);
 
-    //добавляем экшены для каждой кнопки 
+    //после создания DOM, добавляем actions для каждой кнопки
     for (let i = 0; i < this.config.elements.length; i++) {
         const elementConfig = this.config.elements[i];
-        console.log("ButtonGroup elementConfig for:", elementConfig);
-        console.log("ButtonGroup elementConfig id for", elementConfig.id);
-
         const buttonId = elementConfig.id || `${groupId}_btn${i}`;
         const buttonElement = document.getElementById(buttonId);
-
-        console.log("ButtonGroup log buttonElement: ", buttonElement)
-        console.log("ButtonGroup log elementConfig.action: ", elementConfig.actions)
-        console.log("ButtonGroup log isIf: ", buttonElement && elementConfig.actions)
 
         if (buttonElement && elementConfig.actions) {
           console.log("Creating BaseAction for button:", buttonId, elementConfig.actions);
           
-          //создаем BaseAction для кнопки в группе кнопок
-          new BaseAction(this.parentElement, elementConfig.actions, buttonElement);
+          // Создаем BaseAction для кнопки 
+          ActionRegistry.createFromConfig(this.parentElement, elementConfig.actions, buttonElement);
         }
       }
   }

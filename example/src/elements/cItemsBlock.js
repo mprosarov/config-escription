@@ -7,7 +7,8 @@ class ItemsBlock extends BaseElement {
   create() {
     this.parentElement.insertAdjacentHTML(
       "beforeend",
-      `<div class="itemsBlock d-flex flex-fill flex-${this.config.orientation}"></div>`
+      `<div class="itemsBlock  flex-fill flex-${this.config.orientation}"></div>`
+      //`<div class="itemsBlock  flex-${this.config.orientation}"></div>`
     );
     let dom = this.parentElement.lastElementChild;
     let items = this.config.items;

@@ -149,6 +149,15 @@ button[data-type="sidebar"]{
 .input-group{
     width: auto;
 }
+
+/***Плашка с группой кнопок у таблицы***/
+.input-group-table{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+}
+/***************************************/
+
 .itemsBlock {
     padding: 10px 8px;
     gap: 10px;   
@@ -207,6 +216,7 @@ body {
     position: relative;
     overflow: auto;
     height: calc(100vh - var(--headerHeigth));
+    padding: 12px 0;
 }
 
 .nav-link.active {
@@ -214,9 +224,10 @@ body {
 }
 
 .navbar {
-    /* height: var(--headerHeigth); */
+    padding: 8px 12px;
     z-index: 1058;
 }
+
 
 /************************LEFT****************************/
 .offcanvas.show>button[data-type="sidebar"] {
@@ -331,11 +342,864 @@ body {
     font-family: 'bootstrap-icons';
 }
 .navbar {
-    padding-top: 0;
+    padding-top: 15px;
 }
 .navbar-expand {
     padding-bottom: 0;
 }
 .offcanvas-top {
     top: var(--headerHeigth);
+}
+
+/*************************Table*****************************/
+
+.table-edit{
+    display: flex;
+    flex-direction: column;
+}
+.table-noedit{
+    display: flex;
+    flex-direction: column;
+}
+
+.table-edit-minwidth{
+    min-width: 90%;
+}
+
+/**********************Table header**************************/
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title-wrap {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+    padding: 2px 4px;
+}
+.tabulator .tabulator-header .tabulator-col {
+    min-height: 40px;
+}
+
+/**********************Numbering via titleFormatter ************/
+/* Скрываем сортировщик в листовых колонках с нумерацией (с !important для переопределения Tabulator) */
+.tabulator-col.tabulator-col-leaf .tabulator-col-sorter {
+    display: none !important;
+}
+
+/* === ВСЕ листовые колонки (уровень 1 и вложенные) === */
+/* Листовая колонка занимает всю высоту родителя */
+/* ВАЖНО: height: 100% убран, так как он заставляет Tabulator пересчитывать
+   высоту заголовка при каждом изменении, что триггерит fitColumns и сбрасывает
+   пользовательские изменения ширины колонок. */
+.tabulator-col.tabulator-col-leaf {
+    /* height: 100% — удалено для предотвращения конфликтов с fitColumns */
+}
+
+/* Растягиваем .tabulator-col-content на всю высоту колонки (flex: 1 в flex-контейнере .tabulator-col) */
+.tabulator-col.tabulator-col-leaf .tabulator-col-content {
+    flex: 1 !important;
+    position: relative;
+}
+
+/* Убираем position:relative у title-holder (Tabulator ставит его по умолчанию),
+   чтобы .tabulator-col-content стал контекстом позиционирования для нумерации */
+.tabulator-col.tabulator-col-leaf .tabulator-col-title-holder {
+    position: static !important;
+}
+
+/* Растягиваем .tabulator-col-title, отключаем overflow и white-space:nowrap от Tabulator */
+.tabulator-col.tabulator-col-leaf .tabulator-col-title {
+    overflow: visible !important;
+    white-space: normal !important;
+    word-break: break-word;
+    line-height: 1.2;
+    padding: 2px 4px;
+}
+
+/* Текст заголовка - с отступом снизу для нумерации */
+.tabulator-col-title-text {
+    display: block;
+    text-align: center;
+    padding: 8px 4px 36px; /* отступ снизу для нумерации */
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+/* Нумерация в нижней части заголовка - position: absolute */
+/* Позиционируется относительно .tabulator-col-content (ближайший positioned ancestor) */
+.tabulator-col-numbering {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    text-align: center;
+    padding: 4px 2px;
+    border-top: 1px solid #dee2e6;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #495057;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+    line-height: 1.4;
+    min-height: 28px;
+}
+
+/**********************Flex alignment for nested leaf columns (NEW SOLUTION) ************/
+/* Эти стили активируются классом .tabulator-header-flex-equalized, который
+   добавляется на таблицу ОДИН раз после tableBuilt через _applyHeaderFlexAlignment().
+   
+   В отличие от старого решения (equalizeNestedLeafColumnHeights через JS),
+   этот подход использует только CSS flexbox и не требует изменений DOM
+   после инициализации, что исключает конфликты с fitColumns. */
+
+/* Делаем .tabulator-col-group-cols flex-контейнером с растяжением дочерних элементов */
+.tabulator-header-flex-equalized .tabulator-col-group-cols.tabulator-group-cols-flex {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    flex: 1 !important;
+}
+
+/* Дочерние колонки внутри group-cols растягиваются по высоте */
+.tabulator-header-flex-equalized .tabulator-col-group-cols.tabulator-group-cols-flex > .tabulator-col {
+    height: auto !important;
+    min-height: 100% !important;
+    align-self: stretch !important;
+}
+
+/* Сбрасываем явную высоту, которую Tabulator устанавливает через inline-стиль,
+   чтобы flexbox мог управлять высотой */
+.tabulator-header-flex-equalized .tabulator-col-group-cols.tabulator-group-cols-flex > .tabulator-col[style*="height"] {
+    height: auto !important;
+}
+
+/**********************Table Toolbar (vertical panel on the right) ************/
+/* Wrapper: contains title + container */
+.table-tabulator-wrapper {
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+/* Container: flex row with table content + toolbar */
+.table-tabulator-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  position: relative;
+}
+
+/* Table content area: takes remaining space */
+.table-tabulator-content {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+/* Vertical toolbar panel on the right */
+.table-tabulator-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 4px;
+  _background: #f8f9fa;
+  _border-left: 1px solid #dee2e6;
+  border-radius: 0 4px 4px 0;
+  min-width: 44px;
+  width: auto;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  max-height: 100%;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* Individual toolbar button */
+.table-tabulator-toolbar .toolbar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  min-width: 36px;
+  white-space: nowrap;
+  color: #495057;
+}
+
+.table-tabulator-toolbar .toolbar-btn:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.table-tabulator-toolbar .toolbar-btn:active {
+  background: #dee2e6;
+}
+
+.table-tabulator-toolbar .toolbar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.table-tabulator-toolbar .toolbar-btn .toolbar-btn-text {
+  font-size: 10px;
+  writing-mode: horizontal-tb;
+  display: block;
+  line-height: 1.2;
+}
+
+/* Responsive: on narrow screens, toolbar moves below the table */
+@media (max-width: 768px) {
+  .table-tabulator-container {
+    flex-direction: column;
+  }
+
+  .table-tabulator-toolbar {
+    flex-direction: row;
+    border-left: none;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 4px 4px;
+    position: static;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 6px 4px;
+  }
+
+  .table-tabulator-toolbar .toolbar-btn {
+    flex-direction: row;
+    gap: 4px;
+    padding: 6px 10px;
+  }
+
+  .table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
+    margin-bottom: 0;
+  }
+}
+
+/* Контейнер для диапазона дат */
+.date-range-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.date-range-container .form-control {
+    width: 150px;
+}
+.vnf-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.vnf-modal {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.vnf-modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vnf-modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vnf-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    color: #666;
+}
+
+.vnf-modal-close:hover {
+    color: #333;
+}
+
+.vnf-modal-body {
+    padding: 20px;
+}
+
+.table-row-details {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.row-detail {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.row-detail:last-child {
+    border-bottom: none;
+}
+
+.row-detail strong {
+    display: inline-block;
+    min-width: 120px;
+    color: #666;
+}
+
+/* Footer модального окна */
+.vnf-modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Форма редактирования */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.edit-form-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #495057;
+}
+
+.edit-form-input,
+.edit-form-textarea,
+.edit-form-select {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.15s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-form-input:focus,
+.edit-form-textarea:focus,
+.edit-form-select:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.edit-form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+/* ==================== Filter Modal Styles ==================== */
+
+.filter-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* === Каждая секция === */
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: #fafbfc;
+}
+
+.filter-section-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+/* === Часть 1: Выбор поля === */
+.filter-field-select {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background: white;
+  cursor: pointer;
+}
+
+.filter-field-select:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* === Часть 2: Настройка фильтра === */
+.filter-config-info {
+  font-size: 13px;
+  color: #6c757d;
+  padding: 4px 0;
+}
+
+.filter-config-field-name {
+  color: #adb5bd;
+  font-size: 12px;
+}
+
+.filter-config-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-operator-select {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 160px;
+  box-sizing: border-box;
+  background: white;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.filter-operator-select:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.filter-value-input {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  flex: 1;
+  min-width: 120px;
+  box-sizing: border-box;
+}
+
+.filter-value-input:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.filter-apply-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* === Часть 3: Список активных фильтров === */
+.filter-active-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.filter-empty {
+  color: #adb5bd;
+  font-style: italic;
+  font-size: 13px;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.filter-active-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 13px;
+  transition: background 0.15s ease;
+}
+
+.filter-active-item:hover {
+  background: #f8f9fa;
+}
+
+.filter-active-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-active-value {
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+.filter-remove-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  margin-left: 8px;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.filter-remove-btn:hover {
+  opacity: 1;
+  color: #b02a37;
+}
+
+/* === Адаптация для узких экранов === */
+@media (max-width: 576px) {
+  .filter-config-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-operator-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .filter-value-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .filter-apply-btn {
+    width: 100%;
+  }
+}
+/**
+ * log-panel.css
+ *
+ * Стили для панели логирования действий пользователя (LogPanel).
+ * Панель является компонентом страницы и размещается в потоке документа
+ * через JSON-конфиг в секции page.
+ *
+ * Позиционирование задаётся через конфиг (position: "right" | "left"):
+ * - .log-panel--right: float: right, отступ слева (по умолчанию)
+ * - .log-panel--left:  float: left,  отступ справа
+ *
+ * Высота панели управляется через CSS custom property --log-panel-max-height,
+ * которая устанавливается из JS на основе конфига (поле maxHeight).
+ * Если свойство не задано, используется значение по умолчанию.
+ *
+ * Для растягивания на всю высоту экрана используется position: sticky с top: 0.
+ */
+
+/* ===================== ОСНОВНОЙ КОНТЕЙНЕР ===================== */
+
+.log-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  width: 350px;
+  margin-bottom: 12px;
+  position: sticky;
+  top: 0;
+  height: var(--log-panel-max-height, 250px);
+}
+
+/* Позиционирование справа (по умолчанию) */
+.log-panel--right {
+  float: right;
+  margin-left: 12px;
+}
+
+/* Позиционирование слева */
+.log-panel--left {
+  float: left;
+  margin-right: 12px;
+}
+
+/* ===================== ЗАГОЛОВОК ===================== */
+
+.log-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.log-panel-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-panel-title-icon {
+  font-size: 16px;
+}
+
+.log-panel-clear-btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6c757d;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.log-panel-clear-btn:hover {
+  color: #dc3545;
+  background: #fff5f5;
+  border-color: #f5c6cb;
+}
+
+.log-panel-clear-btn:active {
+  background: #f8d7da;
+}
+
+/* ===================== СПИСОК ЗАПИСЕЙ ===================== */
+
+.log-panel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+  min-height: 60px;
+}
+
+/* Стилизация скроллбара */
+.log-panel-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-panel-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.log-panel-list::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 3px;
+}
+
+.log-panel-list::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+/* ===================== ЗАПИСЬ ЛОГА ===================== */
+
+.log-panel-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s ease;
+  animation: logEntrySlideIn 0.2s ease-out;
+}
+
+@keyframes logEntrySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.log-panel-entry:last-child {
+  border-bottom: none;
+}
+
+.log-panel-entry:hover {
+  background: #f8f9fa;
+}
+
+/* Иконка типа действия */
+.log-panel-entry-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+/* Контент записи */
+.log-panel-entry-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.log-panel-entry-description {
+  color: #212529;
+  word-break: break-word;
+}
+
+.log-panel-entry-timestamp {
+  font-size: 11px;
+  color: #adb5bd;
+  margin-top: 1px;
+}
+
+/* ===================== ЦВЕТОВЫЕ ИНДИКАТОРЫ ПО ТИПАМ ===================== */
+
+/* Редактирование */
+.log-panel-entry--edit .log-panel-entry-icon {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+/* Добавление */
+.log-panel-entry--add .log-panel-entry-icon {
+  background: #ebfbee;
+  color: #2b8a3e;
+}
+
+/* Удаление */
+.log-panel-entry--delete .log-panel-entry-icon {
+  background: #fff5f5;
+  color: #c92a2a;
+}
+
+/* Фильтрация */
+.log-panel-entry--filter .log-panel-entry-icon {
+  background: #f3f0ff;
+  color: #7048e8;
+}
+
+/* Сохранение */
+.log-panel-entry--save .log-panel-entry-icon,
+.log-panel-entry--saveUserConfig .log-panel-entry-icon {
+  background: #fff3e0;
+  color: #e67700;
+}
+
+/* Загрузка конфигурации */
+.log-panel-entry--loadUserConfig .log-panel-entry-icon {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+/* Сброс */
+.log-panel-entry--reset .log-panel-entry-icon {
+  background: #fff9db;
+  color: #f08c00;
+}
+
+/* Изменение параметра */
+.log-panel-entry--paramChange .log-panel-entry-icon {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+/* Загрузка данных */
+.log-panel-entry--dataLoad .log-panel-entry-icon {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+/* Ошибка */
+.log-panel-entry--error .log-panel-entry-icon {
+  background: #fff5f5;
+  color: #c92a2a;
+}
+
+/* Undo */
+.log-panel-entry--undo .log-panel-entry-icon {
+  background: #fff3e0;
+  color: #e67700;
+}
+
+/* ===================== ПУСТОЙ ЛОГ ===================== */
+
+.log-panel-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  color: #adb5bd;
+  font-size: 13px;
+  text-align: center;
+  gap: 4px;
+}
+
+.log-panel-empty-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+  opacity: 0.5;
+}
+
+/* ===================== АДАПТИВНОСТЬ ===================== */
+
+@media (max-width: 768px) {
+  .log-panel {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .log-panel-entry {
+    padding: 6px 8px;
+  }
 }

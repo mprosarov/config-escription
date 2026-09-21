@@ -2,10 +2,8 @@ class Modal extends BaseElement {
     static TYPE = 'modal';
     
     constructor(parentElement, config) {
-        console.log("modal parentElement: ", parentElement);
-        console.log("modal parentElement config: ", config);
-
         super(parentElement, config);
+        this._overlayHandler = null; // ссылка на обработчик клика по overlay
         this.setupModal();
     }
 
@@ -22,6 +20,9 @@ class Modal extends BaseElement {
                     <div class="vnf-modal-body" id="${modalId}_content">
                         ${this.config.content || ''}
                     </div>
+                    <div class="vnf-modal-footer" id="${modalId}_footer">
+                        <!-- Сюда экшены будут добавлять кнопки -->
+                    </div>
                 </div>
             </div>
         `;
@@ -29,17 +30,36 @@ class Modal extends BaseElement {
         this.parentElement.insertAdjacentHTML('beforeend', modalHtml);
         this.modalElement = this.parentElement.lastElementChild;
         
-        //закрытие по кнопке
+        // Сохраняем ссылку на экземпляр Modal в DOM-элементе,
+        // чтобы экшены (EditAction, AddAction, FilterAction) могли управлять overlay
+        this.modalElement._modalInstance = this;
+        
+        //закрытие по кнопке X
         this.modalElement.querySelector('.vnf-modal-close').addEventListener('click', () => {
             this.close();
         });
         
-        //закрытие по клику на фон
-        this.modalElement.addEventListener('click', (e) => {
+        //закрытие по клику на фон — сохраняем ссылку на обработчик
+        this._overlayHandler = (e) => {
             if (e.target === this.modalElement) {
                 this.close();
             }
-        });
+        };
+        this.modalElement.addEventListener('click', this._overlayHandler);
+    }
+
+    /**
+     * Включает/отключает закрытие модального окна по клику на фон (overlay).
+     * @param {boolean} enable - true = закрывать по клику на фон, false = не закрывать
+     */
+    setCloseOnOverlay(enable) {
+        if (!this.modalElement || !this._overlayHandler) return;
+        
+        if (enable) {
+            this.modalElement.addEventListener('click', this._overlayHandler);
+        } else {
+            this.modalElement.removeEventListener('click', this._overlayHandler);
+        }
     }
 
     open() {
@@ -51,7 +71,8 @@ class Modal extends BaseElement {
     }
 
     setContent(content) {
-        this.modalElement.querySelector('.vnf-modal-body').innerHTML = content;
+        const body = this.modalElement.querySelector('.vnf-modal-body');
+        if (body) body.innerHTML = content;
     }
 
     setTitle(title) {
@@ -59,6 +80,23 @@ class Modal extends BaseElement {
         if (titleElement) {
             titleElement.textContent = title;
         }
+    }
+
+    /**
+     * Устанавливает HTML-контент в footer модального окна.
+     * @param {string} footerHtml - HTML строка с кнопками
+     */
+    setFooter(footerHtml) {
+        const footer = this.modalElement.querySelector('.vnf-modal-footer');
+        if (footer) footer.innerHTML = footerHtml;
+    }
+
+    /**
+     * Очищает footer модального окна.
+     */
+    clearFooter() {
+        const footer = this.modalElement.querySelector('.vnf-modal-footer');
+        if (footer) footer.innerHTML = '';
     }
 }
 

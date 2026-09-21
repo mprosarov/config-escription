@@ -20,6 +20,10 @@ class Tabs extends BaseElement {
         this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>'); // убери тут id="myTab"
         let tabBox = this.parentElement.lastElementChild;
         let tabs = this.config.items;
+
+        console.log("Tabs config: ", this.config);
+        console.log("Tabs parentElement: ", this.parentElement);
+
         for (let i=0; i<tabs.length; i++) {
             contentTab = `<li class="nav-item" role="presentation">
                                 <button class="nav-link" id="tab-${globalID}-${i}" data-bs-toggle="tab" data-bs-target="#tab-${globalID}-${i}-pane" type="button" role="tab" aria-controls="tab-${globalID}-${i}-pane" aria-selected="false">${tabs[i]["tab_name"]}</button>
@@ -28,15 +32,33 @@ class Tabs extends BaseElement {
         }
         tabBox.firstElementChild.querySelector("button").click();
         this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content"></div>');
+
         let tab = this.parentElement.lastElementChild;
         for (let i=0; i<tabs.length; i++) {
             if (i==0) contentUL = `<div class="tab-pane fade show active" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
             else contentUL = `<div class="tab-pane fade" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
             
             tab.insertAdjacentHTML("beforeend", contentUL);
-            for (let j = 0; j < tabs[i].items.length; j++) 
+            for (let j = 0; j < tabs[i].items.length; j++)
                 PageBuilder.create(tab.lastElementChild,tabs[i].items[j]);
         }
+
+        // Решение визуальной проблемы отрисовки таблицы без размеров при переключении вкладок
+        // Обрабатываем событие показа вкладки Bootstrap
+        tabBox.addEventListener('shown.bs.tab', (event) => {
+            const targetId = event.target.getAttribute('data-bs-target');
+            const targetPane = document.querySelector(targetId);
+            if (!targetPane) return;
+
+            // Находим все Tabulator внутри показанной панели и перерисовываем их
+            const tabulatorElements = targetPane.querySelectorAll('[tabulator-layout]');
+            tabulatorElements.forEach((el) => {
+                const tables = Tabulator.findTable(`#${el.id}`);
+                if (tables && tables.length > 0) {
+                    tables[0].redraw(true);
+                }
+            });
+        });
     }
 }
 

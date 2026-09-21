@@ -2,64 +2,36 @@ class ModalAction extends BaseAction {
     static TYPE = 'modalAction';
     
     constructor(parentElement, config, target) {
-        console.log("ModalAction parentElement: ", parentElement)
         console.log("ModalAction config: ",config)
-        console.log("ModalAction target: ",target)
-
         super(parentElement, config, target);
         this.create();
     }
 
     create() {
-        /*const eventName = this.config.trigger || 'click';
-        const targetElement = this.target || this.parentElement;
+        const eventName = this.config.trigger || 'click';
         
-        // Назначаем обработчик события
-        if (targetElement.addEventListener) {
-            targetElement.addEventListener(eventName, (e) => {
-                this.openModal(e);
-            });
-        } else if (this.target && typeof this.target.on === 'function') {
-            // Если target - объект Tabulator
-            this.target.on(eventName, (e, row) => {
-                this.openModal(e, row);
-            });
-        }*/
-       const eventName = this.config.trigger || 'click';
-        
-        console.log("ModalAction.create() - eventName:", eventName);
-        console.log("ModalAction.create() - this.target:", this.target);
-        console.log("ModalAction.create() - target type:", typeof this.target);
-        
-        //проверяем, является ли target кнопкой
+        //проверяем, является ли target DOM элементом (кнопкой)
         if (this.target && this.target.addEventListener) {
-            console.log("ModalAction: target is DOM element, adding event listener for", eventName);
-            
             //для кнопок используем обычный click
             if (eventName === 'click' || eventName === 'rowClick') {
                 this.target.addEventListener('click', (e) => {
-                    console.log("Button click event:", e);
                     e.preventDefault();
                     e.stopPropagation();
                     this.openModal(e);
                 });
             }
-        } 
+        }
         //проверяем, является ли target объектом Tabulator
         else if (this.target && typeof this.target.on === 'function') {
-            console.log("ModalAction target is Tabulator:", eventName);
-            
             // Для Tabulator используем rowClick
             if (eventName === 'rowClick' || eventName === 'click') {
                 this.target.on('rowClick', (e, row) => {
-                    console.log("Tabulator rowClick event:", row);
                     this.openModal(e, row);
                 });
             }
         }
         //если target указан как строка "parentElement"
         else if (this.config.target === 'parentElement' && this.parentElement) {
-            console.log("ModalAction using parentElement as target: ");
             this.parentElement.addEventListener(eventName, (e) => {
                 this.openModal(e);
             });
@@ -72,19 +44,32 @@ class ModalAction extends BaseAction {
     openModal(event, row = null) {
         let content = '';
         const config = this.config;
+        console.log("OPEN MODAL CHECK config", config);
+        console.log("OPEN MODAL CHECK row", row);
         
         //определяем контент в зависимости от флага
         if (config.contentType === 'tableRow' && row) {
-            //если клик по строке таблицы, то выводим данные строки
+            console.log("OPEN MODAL CHECK CONTENTTYPE TABLE ROW")
+
+            //если клик по строке таблицы - выводим данные строки
             const rowData = row.getData ? row.getData() : row;
-            console.log("Table row data:", rowData);
+
             content = this.formatTableRowData(rowData, config);
         } else if (config.contentType === 'text') {
+            console.log("OPEN MODAL CHECK CONTENTTYPE TEXT")
+            if (config.tableID){ 
+                let table = Tabulator.findTable(`#${config.tableID}`)[0]; 
+                console.log("OPEN MODAL CHECK findTable", table);
+                console.log("OPEN MODAL Column definitions", table.getColumnDefinitions());
+                console.log("OPEN MODAL CHECK getSelected Data", table.getSelectedData());
+            }
             //выводим текст
             content = `<p>${config.content || 'Нет содержимого'}</p>`;
-            console.log("Text content:", content);
+
         } else if (config.content) {
-            //другое содержимое
+            console.log("OPEN MODAL CHECK CONTENTTYPE CONTENT")
+
+            //любое другое содержимое
             content = config.content;
         }
         
@@ -94,13 +79,11 @@ class ModalAction extends BaseAction {
         //сначала ищем по modalId из конфига
         if (config.modalId) {
             modalElement = document.getElementById(config.modalId);
-            console.log("if modalid modalElement: ", modalElement);
         }
         
         //если не нашли, ищем по классу
         if (!modalElement) {
             modalElement = document.querySelector('.vnf-modal-overlay');
-            console.log("if class modalElement: ", modalElement);
         }
         
         //если все еще нет, создаем новое
@@ -108,23 +91,23 @@ class ModalAction extends BaseAction {
             modalElement = this.createModal();
         }
         
-        //получаем объект с методами для работы с модальным окном
+        //получаем экземпляр модального окна
         const modalInstance = this.getModalInstance(modalElement.id);
         
         if (modalInstance) {
-            
             //устанавливаем заголовок
             if (config.title) {
                 modalInstance.setTitle(config.title);
             } else if (config.contentType === 'tableRow') {
                 modalInstance.setTitle("Детали записи");
             } else {
-                modalInstance.setTitle("Название модального окна");
+                modalInstance.setTitle("Информация");
             }
             
             //устанавливаем контент
             modalInstance.setContent(content);
-
+            
+            //открываем
             modalInstance.open();
         } else {
             console.error("Modal instance not found!");
@@ -176,7 +159,6 @@ class ModalAction extends BaseAction {
 
     getModalInstance(modalId) {
         const modalElement = document.getElementById(modalId);
-        console.log("getModalInstance modalElement: ", modalElement);
         if (!modalElement) return null;
         
         //возвращаем простой объект с методами управления
@@ -190,10 +172,8 @@ class ModalAction extends BaseAction {
                 if (bodyElement) bodyElement.innerHTML = content;
             },
             open: () => {
-                console.log("open modalElement before: ", modalElement)
                 modalElement.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
-                console.log("open modalElement after: ", modalElement)
             },
             close: () => {
                 modalElement.style.display = 'none';
@@ -204,3 +184,4 @@ class ModalAction extends BaseAction {
 }
 
 PageBuilder.addComponent(ModalAction.TYPE, ModalAction);
+ActionRegistry.register(ModalAction.TYPE, ModalAction);

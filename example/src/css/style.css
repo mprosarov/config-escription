@@ -7,6 +7,15 @@
 .input-group{
     width: auto;
 }
+
+/***Плашка с группой кнопок у таблицы***/
+.input-group-table{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+}
+/***************************************/
+
 .itemsBlock {
     padding: 10px 8px;
     gap: 10px;   
@@ -65,6 +74,7 @@ body {
     position: relative;
     overflow: auto;
     height: calc(100vh - var(--headerHeigth));
+    padding: 12px 0;
 }
 
 .nav-link.active {
@@ -72,9 +82,10 @@ body {
 }
 
 .navbar {
-    /* height: var(--headerHeigth); */
+    padding: 8px 12px;
     z-index: 1058;
 }
+
 
 /************************LEFT****************************/
 .offcanvas.show>button[data-type="sidebar"] {
@@ -189,11 +200,264 @@ body {
     font-family: 'bootstrap-icons';
 }
 .navbar {
-    padding-top: 0;
+    padding-top: 15px;
 }
 .navbar-expand {
     padding-bottom: 0;
 }
 .offcanvas-top {
     top: var(--headerHeigth);
+}
+
+/*************************Table*****************************/
+
+.table-edit{
+    display: flex;
+    flex-direction: column;
+}
+.table-noedit{
+    display: flex;
+    flex-direction: column;
+}
+
+.table-edit-minwidth{
+    min-width: 90%;
+}
+
+/**********************Table header**************************/
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title-wrap {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+    padding: 2px 4px;
+}
+.tabulator .tabulator-header .tabulator-col {
+    min-height: 40px;
+}
+
+/**********************Numbering via titleFormatter ************/
+/* Скрываем сортировщик в листовых колонках с нумерацией (с !important для переопределения Tabulator) */
+.tabulator-col.tabulator-col-leaf .tabulator-col-sorter {
+    display: none !important;
+}
+
+/* === ВСЕ листовые колонки (уровень 1 и вложенные) === */
+/* Листовая колонка занимает всю высоту родителя */
+/* ВАЖНО: height: 100% убран, так как он заставляет Tabulator пересчитывать
+   высоту заголовка при каждом изменении, что триггерит fitColumns и сбрасывает
+   пользовательские изменения ширины колонок. */
+.tabulator-col.tabulator-col-leaf {
+    /* height: 100% — удалено для предотвращения конфликтов с fitColumns */
+}
+
+/* Растягиваем .tabulator-col-content на всю высоту колонки */
+/* ВАЖНО: flex: 1 убран, так как он заставляет Tabulator пересчитывать
+   высоту заголовка, что триггерит fitColumns. */
+.tabulator-col.tabulator-col-leaf .tabulator-col-content {
+    /* flex: 1 — удалено для предотвращения конфликтов с fitColumns */
+    position: relative;
+}
+
+/* Убираем position:relative у title-holder (Tabulator ставит его по умолчанию),
+   чтобы .tabulator-col-content стал контекстом позиционирования для нумерации */
+.tabulator-col.tabulator-col-leaf .tabulator-col-title-holder {
+    position: static !important;
+}
+
+/* Растягиваем .tabulator-col-title, отключаем overflow и white-space:nowrap от Tabulator */
+.tabulator-col.tabulator-col-leaf .tabulator-col-title {
+    overflow: visible !important;
+    white-space: normal !important;
+    word-break: break-word;
+    line-height: 1.2;
+    padding: 2px 4px;
+}
+
+/* Текст заголовка - с отступом снизу для нумерации */
+.tabulator-col-title-text {
+    display: block;
+    text-align: center;
+    padding: 8px 4px 36px; /* отступ снизу для нумерации */
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+/* Нумерация в нижней части заголовка - position: absolute */
+/* Позиционируется относительно .tabulator-col-content (ближайший positioned ancestor) */
+.tabulator-col-numbering {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    text-align: center;
+    padding: 4px 2px;
+    border-top: 1px solid #dee2e6;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #495057;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+    line-height: 1.4;
+    min-height: 28px;
+}
+
+/**********************Flex alignment for nested leaf columns (NEW SOLUTION) ************/
+/* Эти стили активируются классом .tabulator-header-flex-equalized, который
+   добавляется на таблицу ОДИН раз после tableBuilt через _applyHeaderFlexAlignment().
+   
+   В отличие от старого решения (equalizeNestedLeafColumnHeights через JS),
+   этот подход использует только CSS flexbox и не требует изменений DOM
+   после инициализации, что исключает конфликты с fitColumns. */
+
+/* Делаем .tabulator-col-group-cols flex-контейнером с растяжением дочерних элементов */
+.tabulator-header-flex-equalized .tabulator-col-group-cols.tabulator-group-cols-flex {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    flex: 1 !important;
+}
+
+/* Дочерние колонки внутри group-cols растягиваются по высоте */
+.tabulator-header-flex-equalized .tabulator-col-group-cols.tabulator-group-cols-flex > .tabulator-col {
+    height: auto !important;
+    min-height: 100% !important;
+    align-self: stretch !important;
+}
+
+/* Сбрасываем явную высоту, которую Tabulator устанавливает через inline-стиль,
+   чтобы flexbox мог управлять высотой */
+.tabulator-header-flex-equalized .tabulator-col-group-cols.tabulator-group-cols-flex > .tabulator-col[style*="height"] {
+    height: auto !important;
+}
+
+/**********************Table Toolbar (vertical panel on the right) ************/
+/* Wrapper: contains title + container */
+.table-tabulator-wrapper {
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+/* Container: flex row with table content + toolbar */
+.table-tabulator-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  position: relative;
+}
+
+/* Table content area: takes remaining space */
+.table-tabulator-content {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+/* Vertical toolbar panel on the right */
+.table-tabulator-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 4px;
+  _background: #f8f9fa;
+  _border-left: 1px solid #dee2e6;
+  border-radius: 0 4px 4px 0;
+  min-width: 44px;
+  width: auto;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  max-height: 100%;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* Individual toolbar button */
+.table-tabulator-toolbar .toolbar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  min-width: 36px;
+  white-space: nowrap;
+  color: #495057;
+}
+
+.table-tabulator-toolbar .toolbar-btn:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.table-tabulator-toolbar .toolbar-btn:active {
+  background: #dee2e6;
+}
+
+.table-tabulator-toolbar .toolbar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.table-tabulator-toolbar .toolbar-btn .toolbar-btn-text {
+  font-size: 10px;
+  writing-mode: horizontal-tb;
+  display: block;
+  line-height: 1.2;
+}
+
+/* Responsive: on narrow screens, toolbar moves below the table */
+@media (max-width: 768px) {
+  .table-tabulator-container {
+    flex-direction: column;
+  }
+
+  .table-tabulator-toolbar {
+    flex-direction: row;
+    border-left: none;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 4px 4px;
+    position: static;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 6px 4px;
+  }
+
+  .table-tabulator-toolbar .toolbar-btn {
+    flex-direction: row;
+    gap: 4px;
+    padding: 6px 10px;
+  }
+
+  .table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
+    margin-bottom: 0;
+  }
+}
+
+/* Контейнер для диапазона дат */
+.date-range-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.date-range-container .form-control {
+    width: 150px;
 }

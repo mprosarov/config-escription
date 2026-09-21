@@ -17,14 +17,17 @@ class Button extends BaseElement {
         let dom = this.parentElement.lastElementChild;
         BaseElement.applyCss(dom, this.config);
 
+        // Сохраняем ссылку на DOM элемент
         this.buttonElement = dom;
+
         console.log("Button config: ", this.config)
-        //проверяем есть ли в конфиге экшены 
+
+        // Если есть actions, создаем BaseAction для кнопки (так же как в TableTabulator)
         if (this.config.actions) {
-            console.log("Button has actions, creating BaseAction:", this.config.actions);
+            console.log("Button has actions, creating via ActionRegistry:", this.config.actions);
             
-            //создаем BaseAction для кнопки 
-            new BaseAction(this.parentElement, this.config.actions, this.buttonElement);
+            // Создаем экшены через ActionRegistry (аналогично TableTabulator)
+            ActionRegistry.createFromConfig(this.parentElement, this.config.actions, this.buttonElement);
         }
     }
 }

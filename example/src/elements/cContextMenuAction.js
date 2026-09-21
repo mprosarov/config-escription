@@ -197,3 +197,6 @@ class ContextMenuAction extends BaseAction {
       console.log(`Выполняется действие: ${action}`, contextData);
     }
 }
+
+PageBuilder.addComponent(ContextMenuAction.TYPE, ContextMenuAction);
+ActionRegistry.register(ContextMenuAction.TYPE, ContextMenuAction);

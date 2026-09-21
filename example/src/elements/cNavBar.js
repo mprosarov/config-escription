@@ -45,7 +45,13 @@ class NavBar {
                         break; 
                     case CheckBoxGroup.TYPE:
                         PageBuilder.create(this.buttonsBlock, item);
-                        break;         
+                        break;
+                    case DateRange.TYPE:
+                        PageBuilder.create(this.buttonsBlock, item);
+                        break;
+                    case Select.TYPE:
+                        PageBuilder.create(this.buttonsBlock, item);
+                        break;
                     case Header.TYPE:
                         PageBuilder.create(this.titleBlock, item);
                         break;

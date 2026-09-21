@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "default": "radio-group",
+      "title": "Тип компонента",
+      "readonly": true
+    },
+    "name": {
+      "type": "string",
+      "default": "radio-name-tab",
+      "title": "Имя родительского таба(возможно уйдет)"
+    },
+    "inline": {
+      "type": "boolean",
+      "title": "Отображение по горизонтали"
+    },
+    "items": {
+      "type": "array",
+      "title": "Элементы",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "ID"
+          },
+          "label": {
+            "type": "string",
+            "title": "Лэйбл"
+          },
+
+          "status": {
+            "type": "string",
+            "title": "Активность элемента",
+            "enum": ["disabled", "unabled"]
+          },
+          "checked": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      }
+    }
+  }
+}

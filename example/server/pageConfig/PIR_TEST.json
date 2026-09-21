@@ -1,0 +1,1114 @@
+{
+  "_nameConfig": "sname_PIR",
+  "dataSources": [
+    {
+      "type": "dataSource",
+      "id": "id_ds_1",
+      "query": "select {dateFrom} {dateTo} {department}",
+      "_treeNodeName": "id_ds_1"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_2",
+      "query": "select {dateFrom} {dateTo} {department}",
+      "_treeNodeName": "id_ds_2"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_3",
+      "query": "select {dateFrom} {dateTo}",
+      "_treeNodeName": "id_ds_3"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_4",
+      "query": "select {department}",
+      "_treeNodeName": "id_ds_4"
+    },
+    {
+      "type": "dataSource",
+      "id": "id_ds_5",
+      "query": "select 1",
+      "_treeNodeName": "id_ds_5"
+    }
+  ],
+  "pageParams": [
+    {
+      "type": "param",
+      "name": "dateFrom",
+      "init": {
+        "valueType": "date",
+        "value": ""
+      },
+      "_treeNodeName": "dateFrom"
+    },
+    {
+      "type": "param",
+      "name": "dateTo",
+      "init": {
+        "valueType": "date",
+        "value": ""
+      },
+      "_treeNodeName": "dateTo"
+    },
+    {
+      "type": "param",
+      "name`": "department",
+      "init": {
+        "valueType": "raw",
+        "value": ""
+      },
+      "_treeNodeName": "department"
+    }
+  ],
+  "navbar": {
+    "titlePosition": "right",
+    "menuPosition": "top",
+    "type": "navbar",
+    "label": "Панель навигации",
+    "_treeNodeName": "navbar",
+    "items": [
+      {
+        "type": "dateRange",
+        "paramNameFrom": "dateFrom",
+        "paramNameTo": "dateTo",
+        "labelFrom": "С",
+        "labelTo": "ПО",
+        "_treeNodeName": "dateRange"
+      },
+      {
+        "type": "select",
+        "paramName": "department",
+        "label": "Подразделение",
+        "labelPosition": "left",
+        "options": [
+          {
+            "name": "Все подразделения",
+            "value": "",
+            "selected": "selected"
+          },
+          {
+            "name": "Подразделение 1",
+            "value": "dept_1",
+            "selected": ""
+          },
+          {
+            "name": "Подразделение 2",
+            "value": "dept_2",
+            "selected": ""
+          },
+          {
+            "name": "Подразделение 3",
+            "value": "dept_3",
+            "selected": ""
+          }
+        ],
+        "_treeNodeName": "select"
+      },
+      {
+        "type": "button",
+        "icon": "arrow-clockwise",
+        "actions": {
+          "type": "baseAction",
+          "items": [
+            {
+              "action": "resetAction",
+              "trigger": "click"
+            }
+          ]
+        },
+        "_treeNodeName": "button"
+      },
+      {
+        "type": "button",
+        "icon": "floppy",
+        "text": "Сохранить",
+        "actions": {
+          "type": "baseAction",
+          "items": [
+            {
+              "action": "saveAction",
+              "trigger": "click"
+            }
+          ]
+        },
+        "_treeNodeName": "button"
+      },
+      {
+        "type": "button",
+        "icon": "x-circle",
+        "text": "Отмена",
+        "actions": {
+          "type": "baseAction",
+          "items": [
+            {
+              "action": "undoAction",
+              "trigger": "click"
+            }
+          ]
+        },
+        "_treeNodeName": "button"
+      },
+      {
+        "type": "button",
+        "icon": "bookmark-plus",
+        "actions": {
+          "type": "baseAction",
+          "items": [
+            {
+              "action": "saveUserConfigAction",
+              "trigger": "click"
+            }
+          ]
+        },
+        "_treeNodeName": "button"
+      },
+      {
+        "type": "button",
+        "icon": "bookmark-check",
+        "actions": {
+          "type": "baseAction",
+          "items": [
+            {
+              "action": "loadUserConfigAction",
+              "trigger": "click"
+            }
+          ]
+        },
+        "_treeNodeName": "button"
+      }
+    ]
+  },
+  "sidebars": [],
+  "page": [
+    {
+      "type": "tabs",
+      "_treeNodeName": "tabs",
+      "items": [
+        {
+          "type": "tab",
+          "tab_name": "Плановые показатели",
+          "_treeNodeName": "tab",
+          "items": [
+            {
+              "type": "table-tabulator",
+              "id": "table_1",
+              "datasourse": "id_ds_1",
+              "name": "Плановые показатели",
+              "indexCols": {
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "5": 5,
+                "6": 6,
+                "7": 7,
+                "8": 8,
+                "9": 9,
+                "10": 10,
+                "idconfig": 1
+              },
+              "tdata": {
+                "data": [
+                  {
+                    "2": 1,
+                    "3": 1,
+                    "4": 1,
+                    "5": 1,
+                    "6": 1,
+                    "7": 1,
+                    "8": 1,
+                    "9": 1,
+                    "10": 1,
+                    "idconfig": "check_list"
+                  },
+                  {
+                    "2": 2,
+                    "3": 2,
+                    "4": 2,
+                    "5": 2,
+                    "6": 2,
+                    "7": 2,
+                    "8": 2,
+                    "9": 2,
+                    "10": 2,
+                    "idconfig": "oef"
+                  },
+                  {
+                    "2": 3,
+                    "3": 3,
+                    "4": 3,
+                    "5": 3,
+                    "6": 3,
+                    "7": 3,
+                    "8": 3,
+                    "9": 3,
+                    "10": 3,
+                    "idconfig": "calculation"
+                  }
+                ],
+                "layout": "fitColumns",
+                "resizableRows": true,
+                "columnHeaderVertAlign": "middle",
+                "selectableRows": 1,
+                "renderHorizontal": "virtual",
+                "columns": [
+                  {
+                    "title": "№ п/п",
+                    "hozAlign": "center",
+                    "field": "idconfig"
+                  },
+                  {
+                    "title": "Вид транспортно-заготовительных затрат",
+                    "hozAlign": "center",
+                    "field": "2"
+                  },
+                  {
+                    "title": "Отчетный период/период,предшествующий планируемому(год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "3"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "4"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "5"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "6"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Планируемый период(n-ый год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "7"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "8"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "9"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "10"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "toolbar": {
+                "items": [
+                  {
+                    "text": "Редактирование",
+                    "icon": "pencil-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "editModalAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Добавление строки",
+                    "icon": "plus-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorAddAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Удаление строки",
+                    "icon": "trash3",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorDeleteAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Фильтрация",
+                    "icon": "filter",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorFilterAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Операция",
+                    "icon": "caret-right-square"
+                  }
+                ]
+              },
+              "_treeNodeName": "table_1"
+            }
+          ]
+        },
+        {
+          "type": "tab",
+          "tab_name": "Фактические данные",
+          "_treeNodeName": "tab",
+          "items": [
+            {
+              "type": "table-tabulator",
+              "id": "table_2",
+              "datasourse": "id_ds_2",
+              "name": "Фактические данные",
+              "indexCols": {
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "5": 5,
+                "6": 6,
+                "7": 7,
+                "8": 8,
+                "9": 9,
+                "10": 10,
+                "idconfig": 1
+              },
+              "tdata": {
+                "data": [
+                  {
+                    "2": 1,
+                    "3": 1,
+                    "4": 1,
+                    "5": 1,
+                    "6": 1,
+                    "7": 1,
+                    "8": 1,
+                    "9": 1,
+                    "10": 1,
+                    "idconfig": "check_list"
+                  },
+                  {
+                    "2": 2,
+                    "3": 2,
+                    "4": 2,
+                    "5": 2,
+                    "6": 2,
+                    "7": 2,
+                    "8": 2,
+                    "9": 2,
+                    "10": 2,
+                    "idconfig": "oef"
+                  },
+                  {
+                    "2": 3,
+                    "3": 3,
+                    "4": 3,
+                    "5": 3,
+                    "6": 3,
+                    "7": 3,
+                    "8": 3,
+                    "9": 3,
+                    "10": 3,
+                    "idconfig": "calculation"
+                  }
+                ],
+                "layout": "fitColumns",
+                "resizableRows": true,
+                "columnHeaderVertAlign": "middle",
+                "selectableRows": 1,
+                "renderHorizontal": "virtual",
+                "columns": [
+                  {
+                    "title": "№ п/п",
+                    "hozAlign": "center",
+                    "field": "idconfig"
+                  },
+                  {
+                    "title": "Вид транспортно-заготовительных затрат",
+                    "hozAlign": "center",
+                    "field": "2"
+                  },
+                  {
+                    "title": "Отчетный период/период,предшествующий планируемому(год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "3"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "4"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "5"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "6"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Планируемый период(n-ый год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "7"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "8"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "9"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "10"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "toolbar": {
+                "items": [
+                  {
+                    "text": "Редактирование",
+                    "icon": "pencil-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "editModalAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Добавление строки",
+                    "icon": "plus-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorAddAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Удаление строки",
+                    "icon": "trash3",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorDeleteAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Фильтрация",
+                    "icon": "filter",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorFilterAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Операция",
+                    "icon": "caret-right-square"
+                  }
+                ]
+              },
+              "_treeNodeName": "table_2"
+            }
+          ]
+        },
+        {
+          "type": "tab",
+          "tab_name": "Аналитика",
+          "_treeNodeName": "tab",
+          "items": [
+            {
+              "type": "table-tabulator",
+              "id": "table_3",
+              "datasourse": "id_ds_3",
+              "name": "Аналитика",
+              "indexCols": {
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "5": 5,
+                "6": 6,
+                "7": 7,
+                "8": 8,
+                "9": 9,
+                "10": 10,
+                "idconfig": 1
+              },
+              "tdata": {
+                "data": [
+                  {
+                    "2": 1,
+                    "3": 1,
+                    "4": 1,
+                    "5": 1,
+                    "6": 1,
+                    "7": 1,
+                    "8": 1,
+                    "9": 1,
+                    "10": 1,
+                    "idconfig": "check_list"
+                  },
+                  {
+                    "2": 2,
+                    "3": 2,
+                    "4": 2,
+                    "5": 2,
+                    "6": 2,
+                    "7": 2,
+                    "8": 2,
+                    "9": 2,
+                    "10": 2,
+                    "idconfig": "oef"
+                  },
+                  {
+                    "2": 3,
+                    "3": 3,
+                    "4": 3,
+                    "5": 3,
+                    "6": 3,
+                    "7": 3,
+                    "8": 3,
+                    "9": 3,
+                    "10": 3,
+                    "idconfig": "calculation"
+                  }
+                ],
+                "layout": "fitColumns",
+                "resizableRows": true,
+                "columnHeaderVertAlign": "middle",
+                "selectableRows": 1,
+                "renderHorizontal": "virtual",
+                "columns": [
+                  {
+                    "title": "№ п/п",
+                    "hozAlign": "center",
+                    "field": "idconfig"
+                  },
+                  {
+                    "title": "Вид транспортно-заготовительных затрат",
+                    "hozAlign": "center",
+                    "field": "2"
+                  },
+                  {
+                    "title": "Отчетный период/период,предшествующий планируемому(год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "3"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "4"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "5"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "6"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Планируемый период(n-ый год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "7"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "8"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "9"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "10"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "toolbar": {
+                "items": [
+                  {
+                    "text": "Редактирование",
+                    "icon": "pencil-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "editModalAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Добавление строки",
+                    "icon": "plus-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorAddAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Удаление строки",
+                    "icon": "trash3",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorDeleteAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Фильтрация",
+                    "icon": "filter",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorFilterAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Операция",
+                    "icon": "caret-right-square"
+                  }
+                ]
+              },
+              "_treeNodeName": "table_3"
+            }
+          ]
+        },
+        {
+          "type": "tab",
+          "tab_name": "Отчеты",
+          "_treeNodeName": "tab",
+          "items": [
+            {
+              "type": "table-tabulator",
+              "id": "table_4",
+              "datasourse": "id_ds_4",
+              "name": "Отчеты",
+              "indexCols": {
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "5": 5,
+                "6": 6,
+                "7": 7,
+                "8": 8,
+                "9": 9,
+                "10": 10,
+                "idconfig": 1
+              },
+              "tdata": {
+                "data": [
+                  {
+                    "2": 1,
+                    "3": 1,
+                    "4": 1,
+                    "5": 1,
+                    "6": 1,
+                    "7": 1,
+                    "8": 1,
+                    "9": 1,
+                    "10": 1,
+                    "idconfig": "check_list"
+                  },
+                  {
+                    "2": 2,
+                    "3": 2,
+                    "4": 2,
+                    "5": 2,
+                    "6": 2,
+                    "7": 2,
+                    "8": 2,
+                    "9": 2,
+                    "10": 2,
+                    "idconfig": "oef"
+                  },
+                  {
+                    "2": 3,
+                    "3": 3,
+                    "4": 3,
+                    "5": 3,
+                    "6": 3,
+                    "7": 3,
+                    "8": 3,
+                    "9": 3,
+                    "10": 3,
+                    "idconfig": "calculation"
+                  }
+                ],
+                "layout": "fitColumns",
+                "resizableRows": true,
+                "columnHeaderVertAlign": "middle",
+                "selectableRows": 1,
+                "renderHorizontal": "virtual",
+                "columns": [
+                  {
+                    "title": "№ п/п",
+                    "hozAlign": "center",
+                    "field": "idconfig"
+                  },
+                  {
+                    "title": "Вид транспортно-заготовительных затрат",
+                    "hozAlign": "center",
+                    "field": "2"
+                  },
+                  {
+                    "title": "Отчетный период/период,предшествующий планируемому(год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "3"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "4"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "5"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "6"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Планируемый период(n-ый год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "7"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "8"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "9"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "10"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "toolbar": {
+                "items": [
+                  {
+                    "text": "Редактирование",
+                    "icon": "pencil-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "editModalAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Добавление строки",
+                    "icon": "plus-square",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorAddAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Удаление строки",
+                    "icon": "trash3",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorDeleteAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Фильтрация",
+                    "icon": "filter",
+                    "actions": {
+                      "type": "baseAction",
+                      "items": [
+                        {
+                          "action": "tabulatorFilterAction",
+                          "trigger": "click"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "Операция",
+                    "icon": "caret-right-square"
+                  }
+                ]
+              },
+              "_treeNodeName": "table_4"
+            }
+          ]
+        },
+        {
+          "type": "tab",
+          "tab_name": "Справочники",
+          "_treeNodeName": "tab",
+          "items": [
+            {
+              "type": "table-tabulator",
+              "id": "table_5",
+              "datasourse": "id_ds_5",
+              "name": "Справочники",
+              "indexCols": {
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "5": 5,
+                "6": 6,
+                "7": 7,
+                "8": 8,
+                "9": 9,
+                "10": 10,
+                "idconfig": 1
+              },
+              "tdata": {
+                "data": [
+                  {
+                    "2": 1,
+                    "3": 1,
+                    "4": 1,
+                    "5": 1,
+                    "6": 1,
+                    "7": 1,
+                    "8": 1,
+                    "9": 1,
+                    "10": 1,
+                    "idconfig": "check_list"
+                  },
+                  {
+                    "2": 2,
+                    "3": 2,
+                    "4": 2,
+                    "5": 2,
+                    "6": 2,
+                    "7": 2,
+                    "8": 2,
+                    "9": 2,
+                    "10": 2,
+                    "idconfig": "oef"
+                  },
+                  {
+                    "2": 3,
+                    "3": 3,
+                    "4": 3,
+                    "5": 3,
+                    "6": 3,
+                    "7": 3,
+                    "8": 3,
+                    "9": 3,
+                    "10": 3,
+                    "idconfig": "calculation"
+                  }
+                ],
+                "layout": "fitColumns",
+                "resizableRows": true,
+                "columnHeaderVertAlign": "middle",
+                "selectableRows": 1,
+                "renderHorizontal": "virtual",
+                "columns": [
+                  {
+                    "title": "№ п/п",
+                    "hozAlign": "center",
+                    "field": "idconfig"
+                  },
+                  {
+                    "title": "Вид транспортно-заготовительных затрат",
+                    "hozAlign": "center",
+                    "field": "2"
+                  },
+                  {
+                    "title": "Отчетный период/период,предшествующий планируемому(год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "3"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "4"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "5"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "6"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Планируемый период(n-ый год____)",
+                    "columns": [
+                      {
+                        "title": "Всего транспортно-заготовительных затрат",
+                        "field": "7"
+                      },
+                      {
+                        "title": "из транспортно-заготовительных затрат на:",
+                        "columns": [
+                          {
+                            "title": "сырье и материалы",
+                            "field": "8"
+                          },
+                          {
+                            "title": "покупные полуфабрикаты",
+                            "field": "9"
+                          },
+                          {
+                            "title": "покупные комплектующие изделия",
+                            "field": "10"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "_treeNodeName": "table_5"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "type": "modal",
+      "id": "mainModal",
+      "title": "Модальное окно",
+      "_treeNodeName": "mainModal"
+    }
+  ]
+}

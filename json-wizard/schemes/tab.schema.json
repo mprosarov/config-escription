@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "default": "tab",
+      "title": "Тип компонента",
+      "readonly": true
+    },
+    "tab_name": { "type": "string" }
+  },
+  "required": ["tab_name", "type"]
+}

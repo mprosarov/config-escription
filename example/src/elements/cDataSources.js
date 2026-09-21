@@ -8,13 +8,17 @@ class DataSources {
     this.create();
   }
   create() {
-    let arrQueryParams = Array.from(
-      new Set(
-        this.config.query.match(/\{.+?\}/g).map(function (x) {
-          return x.slice(1, -1);
-        })
-      )
-    );
+    let matches = this.config.query.match(/\{.+?\}/g);
+    let arrQueryParams = [];
+    if (matches) {
+      arrQueryParams = Array.from(
+        new Set(
+          matches.map(function (x) {
+            return x.slice(1, -1);
+          })
+        )
+      );
+    }
 
     console.log("datasources set to array: ", arrQueryParams);
 
@@ -36,16 +40,30 @@ class DataSources {
   }
   fetchQuery(query) {
   //  console.log("fetchFIC", query);
-    let test = [];
-    for (let i = 0; i < 10; i++) {
-      test.push({
+    let test = {
+      "metadata": [
+          {"colname": "idconfig","coltype": "string","colindex": 0},
+          {"colname": "2","coltype": "date","colindex": 1},
+          {"colname": "3","coltype": "date","colindex": 2},
+          {"colname": "4","coltype": "date","colindex": 3},
+          {"colname": "5","coltype": "date","colindex": 4},
+          {"colname": "6","coltype": "string","colindex": 5},
+          {"colname": "7","coltype": "numeric","colindex": 6},
+          {"colname": "8","coltype": "date","colindex": 7},
+          {"colname": "9","coltype": "date","colindex": 8},
+          {"colname": "10","coltype": "date","colindex": 9},
+      ],
+      "resultset": []
+    };
+    for (let i = 0; i < 20; i++) {
+      test.resultset.push({
         idconfig: i%3==0?"calculation":i%2==0?"oef":"check_list",
         2: Date.now(),
         3: Date.now(),
         4: Date.now(),
         5: Date.now(),
-        6: Date.now(),
-        7: Date.now(),
+        6: `Сейчас: ${Date.now()}`,
+        7: 4 * i,
         8: Date.now(),
         9: Date.now(),
         10: Date.now(),
@@ -69,8 +87,8 @@ class DataSources {
     // return json.resultset;
   //---------------------------------------------  
     return test;
-    
   }
+
   execute() {
 
     console.log('Execute log this.params: ', this.params);
@@ -85,12 +103,20 @@ class DataSources {
     // Отслыем запрос на сервер и оповещаем подписчиков
     let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
 
+    console.log("EXECUTE result: ", result);
     console.log("datasource subscribes:", this.subscribes);
 
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });
-    //   console.log(query)
+
+    // Логируем загрузку данных
+    var rowCount = result && result.resultset ? result.resultset.length : 0;
+    ActionLogger.log('dataLoad', 'Загрузка данных: ' + (this.config.id || 'unknown') + ' (' + rowCount + ' строк)', {
+      datasourceId: this.config.id || 'unknown',
+      rowCount: rowCount,
+      query: query
+    });
   }
   addSubscribe(obj) {
     if (!this.subscribes.includes(obj)) {
