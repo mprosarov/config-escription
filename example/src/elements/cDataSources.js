@@ -40,7 +40,10 @@ class DataSources {
   }
   fetchQuery(query) {
   //  console.log("fetchFIC", query);
-    let test = {
+  //------------------------------------------
+    let URL = "";
+    if (location.href.indexOf("file") >= 0) {
+          let test = {
       "metadata": [
           {"colname": "idconfig","coltype": "string","colindex": 0},
           {"colname": "2","coltype": "date","colindex": 1},
@@ -69,30 +72,23 @@ class DataSources {
         10: Date.now(),
       });
     }
-
-  //------------------------------------------
-    // let URL = "";
-    // if (location.href.indexOf("file") >= 0) {
-    //   URL = "http://localhost:3000/config";
-    // } else {
-    //   URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
-    // }
-    // var resp = fetch(`${URL}/doquery`,{
-    //     method: "POST",
-    //     headers: { Accept:"text/plain","Content-Type": "text/plain" },
-    //     body: query
-    //   })
-    // let respText = resp.text();
-    // let json = JSON.parse(respText);
-    // return json.resultset;
-  //---------------------------------------------  
     return test;
+    } else {
+      URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+    }
+    var resp = fetch(`${URL}/doquery`,{
+        method: "POST",
+        headers: { Accept:"text/plain","Content-Type": "text/plain" },
+        body: query
+      })
+    let respText = resp.text();
+    let json = JSON.parse(respText);
+    return json.resultset;
+  //---------------------------------------------  
+    
   }
 
   execute() {
-
-    console.log('Execute log this.params: ', this.params);
-
     for (let i = 0; i < this.params.length; i++) {
       this.params[i]["value"] = PageBuilder.getParamValue(this.params[i]["param"]);
     }
@@ -102,10 +98,6 @@ class DataSources {
     }
     // Отслыем запрос на сервер и оповещаем подписчиков
     let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
-
-    console.log("EXECUTE result: ", result);
-    console.log("datasource subscribes:", this.subscribes);
-
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });

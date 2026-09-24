@@ -48,13 +48,6 @@ const PageBuilder = (function(){
         break;
     }
   }
-  //реагируем на изменение переключалок
-  window.addEventListener("change", (e) => {
-    //исключаем формы в модальном окне кнопок таблицы
-    if (e.target.closest('form')) return;
-    // Игнорируем изменения внутри форм (например, форма редактирования в модальном окне)
-    updateParam(e.target, e.target.dataset["param"], e.target.getAttribute("type"));
-  });
 
   //получаем датасорс
   function getDS(name) {
@@ -83,32 +76,14 @@ const PageBuilder = (function(){
     return find.getValue();
   }
   //обновляем значения параметров при переключении чекбоксов и селектов
-  function updateParam(el, name, type) {
-
-    //console.log("el, name, type: ", el, name, type);
-    //console.log(name, " ", type);
-
+  function updateParam(name, newValue) {
     var p = getParam(name);
-    var value;
-    switch (type) {
-      case "checkbox":
-        el.checked ? (value = 1) : (value = 0);
-        break;
-      case "select":
-        value = el.value;
-        break;
-      case "date":
-        value = el.value;
-        break;
+    if(!p){
+      console.warn(`Параметр с именем ${name} не найден`);
+      return;
     }
-    p.setParamValue(value);
-
-    // Логируем изменение параметра
-    ActionLogger.log('paramChange', 'Изменение параметра: ' + name + ' = ' + value, {
-      name: name,
-      value: value,
-      type: type
-    });
+    p.setParamValue(newValue);
+    //console.table(p)
   }
   //Добавление компонента в общий список
   function addComponent(type, component) {

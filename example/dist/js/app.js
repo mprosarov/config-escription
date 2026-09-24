@@ -51,13 +51,6 @@ const PageBuilder = (function(){
         break;
     }
   }
-  //реагируем на изменение переключалок
-  window.addEventListener("change", (e) => {
-    //исключаем формы в модальном окне кнопок таблицы
-    if (e.target.closest('form')) return;
-    // Игнорируем изменения внутри форм (например, форма редактирования в модальном окне)
-    updateParam(e.target, e.target.dataset["param"], e.target.getAttribute("type"));
-  });
 
   //получаем датасорс
   function getDS(name) {
@@ -86,32 +79,14 @@ const PageBuilder = (function(){
     return find.getValue();
   }
   //обновляем значения параметров при переключении чекбоксов и селектов
-  function updateParam(el, name, type) {
-
-    //console.log("el, name, type: ", el, name, type);
-    //console.log(name, " ", type);
-
+  function updateParam(name, newValue) {
     var p = getParam(name);
-    var value;
-    switch (type) {
-      case "checkbox":
-        el.checked ? (value = 1) : (value = 0);
-        break;
-      case "select":
-        value = el.value;
-        break;
-      case "date":
-        value = el.value;
-        break;
+    if(!p){
+      console.warn(`Параметр с именем ${name} не найден`);
+      return;
     }
-    p.setParamValue(value);
-
-    // Логируем изменение параметра
-    ActionLogger.log('paramChange', 'Изменение параметра: ' + name + ' = ' + value, {
-      name: name,
-      value: value,
-      type: type
-    });
+    p.setParamValue(newValue);
+    //console.table(p)
   }
   //Добавление компонента в общий список
   function addComponent(type, component) {
@@ -418,6 +393,9 @@ class BaseElement {
   _redirectToURL(configAction, resultParams = []) {
     //TODO: Реализовать редирект по url
     console.log('ПЕРЕАДРЕСАЦИЯ ПО УРЛ', configAction.url);
+  }
+updateParam(name, newValue) {
+  PageBuilder.updateParam(name, newValue)
   }
 }
 // У конечного пункта могут быть варианты действий (переход на страницу или что-то другое)
@@ -1080,18 +1058,10 @@ class TableTabulator extends BaseElement {
     }
 
     updatedDS(data) {
-      console.log('TABLETABULATOR data', data);
-      console.log('TABLETABULATOR this.config', this.config);
-      console.log('TABLETABULATOR this.config.indexCols', this.config.indexCols);
-      console.log('TABLETABULATOR data.resultset', data.resultset);
-
-      console.log("tabulator this tableobj: ", this.tableObj);
       const self = this;
       if (!this.tableObj.initialized){
         this.tableObj.on("tableBuilt", function () {
           this.setData(data.resultset);
-
-          console.log("UpdatedDS MetaData: ", this.metadata);
           this.metadata = data.metadata;
 
           // НОВОЕ РЕШЕНИЕ: после загрузки данных применяем flex-выравнивание (один раз)
@@ -1311,6 +1281,9 @@ class Select extends BaseElement {
         ${this.config.label}
         </label></div>`
     );
+    dom.querySelector("select").addEventListener('change', e => {
+      super.updateParam(this.config.paramName,e.target.value)
+     })
     BaseElement.applyCss(dom, this.config);
   }
 }
@@ -1395,7 +1368,10 @@ class DataSources {
   }
   fetchQuery(query) {
   //  console.log("fetchFIC", query);
-    let test = {
+  //------------------------------------------
+    let URL = "";
+    if (location.href.indexOf("file") >= 0) {
+          let test = {
       "metadata": [
           {"colname": "idconfig","coltype": "string","colindex": 0},
           {"colname": "2","coltype": "date","colindex": 1},
@@ -1424,30 +1400,23 @@ class DataSources {
         10: Date.now(),
       });
     }
-
-  //------------------------------------------
-    // let URL = "";
-    // if (location.href.indexOf("file") >= 0) {
-    //   URL = "http://localhost:3000/config";
-    // } else {
-    //   URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
-    // }
-    // var resp = fetch(`${URL}/doquery`,{
-    //     method: "POST",
-    //     headers: { Accept:"text/plain","Content-Type": "text/plain" },
-    //     body: query
-    //   })
-    // let respText = resp.text();
-    // let json = JSON.parse(respText);
-    // return json.resultset;
-  //---------------------------------------------  
     return test;
+    } else {
+      URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+    }
+    var resp = fetch(`${URL}/doquery`,{
+        method: "POST",
+        headers: { Accept:"text/plain","Content-Type": "text/plain" },
+        body: query
+      })
+    let respText = resp.text();
+    let json = JSON.parse(respText);
+    return json.resultset;
+  //---------------------------------------------  
+    
   }
 
   execute() {
-
-    console.log('Execute log this.params: ', this.params);
-
     for (let i = 0; i < this.params.length; i++) {
       this.params[i]["value"] = PageBuilder.getParamValue(this.params[i]["param"]);
     }
@@ -1457,10 +1426,6 @@ class DataSources {
     }
     // Отслыем запрос на сервер и оповещаем подписчиков
     let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
-
-    console.log("EXECUTE result: ", result);
-    console.log("datasource subscribes:", this.subscribes);
-
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });
@@ -3561,6 +3526,13 @@ class DateRange extends BaseElement {
                data-param="${this.config.paramNameTo}" value="${today}">
       </div>`;
     this.parentElement.insertAdjacentHTML("beforeend", html);
+    this.parentElement.lastElementChild.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', (e)=>{
+        const paramName= e.target.dataset['param'];
+        super.updateParam(paramName,e.target.value)
+      })
+
+    })
     BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
   }
 }

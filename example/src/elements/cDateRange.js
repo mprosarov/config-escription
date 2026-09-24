@@ -18,6 +18,13 @@ class DateRange extends BaseElement {
                data-param="${this.config.paramNameTo}" value="${today}">
       </div>`;
     this.parentElement.insertAdjacentHTML("beforeend", html);
+    this.parentElement.lastElementChild.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', (e)=>{
+        const paramName= e.target.dataset['param'];
+        super.updateParam(paramName,e.target.value)
+      })
+
+    })
     BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
   }
 }

@@ -330,18 +330,10 @@ class TableTabulator extends BaseElement {
     }
 
     updatedDS(data) {
-      console.log('TABLETABULATOR data', data);
-      console.log('TABLETABULATOR this.config', this.config);
-      console.log('TABLETABULATOR this.config.indexCols', this.config.indexCols);
-      console.log('TABLETABULATOR data.resultset', data.resultset);
-
-      console.log("tabulator this tableobj: ", this.tableObj);
       const self = this;
       if (!this.tableObj.initialized){
         this.tableObj.on("tableBuilt", function () {
           this.setData(data.resultset);
-
-          console.log("UpdatedDS MetaData: ", this.metadata);
           this.metadata = data.metadata;
 
           // НОВОЕ РЕШЕНИЕ: после загрузки данных применяем flex-выравнивание (один раз)

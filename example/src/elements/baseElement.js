@@ -135,4 +135,7 @@ class BaseElement {
     //TODO: Реализовать редирект по url
     console.log('ПЕРЕАДРЕСАЦИЯ ПО УРЛ', configAction.url);
   }
+updateParam(name, newValue) {
+  PageBuilder.updateParam(name, newValue)
+  }
 }

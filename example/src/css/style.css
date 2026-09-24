@@ -255,6 +255,7 @@ body {
    высоту заголовка, что триггерит fitColumns. */
 .tabulator-col.tabulator-col-leaf .tabulator-col-content {
     /* flex: 1 — удалено для предотвращения конфликтов с fitColumns */
+    flex: 1 !important;
     position: relative;
 }
 

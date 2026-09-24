@@ -392,8 +392,11 @@ body {
     /* height: 100% — удалено для предотвращения конфликтов с fitColumns */
 }
 
-/* Растягиваем .tabulator-col-content на всю высоту колонки (flex: 1 в flex-контейнере .tabulator-col) */
+/* Растягиваем .tabulator-col-content на всю высоту колонки */
+/* ВАЖНО: flex: 1 убран, так как он заставляет Tabulator пересчитывать
+   высоту заголовка, что триггерит fitColumns. */
 .tabulator-col.tabulator-col-leaf .tabulator-col-content {
+    /* flex: 1 — удалено для предотвращения конфликтов с fitColumns */
     flex: 1 !important;
     position: relative;
 }

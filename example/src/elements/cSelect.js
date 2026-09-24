@@ -31,6 +31,9 @@ class Select extends BaseElement {
         ${this.config.label}
         </label></div>`
     );
+    dom.querySelector("select").addEventListener('change', e => {
+      super.updateParam(this.config.paramName,e.target.value)
+     })
     BaseElement.applyCss(dom, this.config);
   }
 }
