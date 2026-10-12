@@ -35,7 +35,7 @@
   "pageParams": [
     {
       "type": "param",
-      "name": "dateFrom",
+      "id": "dateFrom",
       "init": {
         "valueType": "date",
         "value": ""
@@ -44,7 +44,7 @@
     },
     {
       "type": "param",
-      "name": "dateTo",
+      "id": "dateTo",
       "init": {
         "valueType": "date",
         "value": ""
@@ -53,7 +53,7 @@
     },
     {
       "type": "param",
-      "name": "department",
+      "id": "department",
       "init": {
         "valueType": "raw",
         "value": ""
@@ -181,6 +181,14 @@
   },
   "sidebars": [],
   "page": [
+    {
+      "type": "logPanel",
+      "id": "logPanel1",
+      "title": "Лог действий",
+      "maxHeight": "90vh",
+      "showClearButton": true,
+      "position": "right"
+    },
     {
       "type": "tabs",
       "_treeNodeName": "tabs",

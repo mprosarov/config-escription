@@ -59,6 +59,7 @@ const PageBuilder = (function(){
   }
   //Получаем объект параметра
   function getParam(name) {
+
     let find = pageParams.find((param) => param.getName() === name);
 
     //console.log("getParam find: ", find);
@@ -108,7 +109,7 @@ const PageBuilder = (function(){
     getParams.set("config", configName);
     // добавляем переданные параметры в GEt параметры
     params.forEach((param) => {
-      getParams.set(param.name, param.value);
+      getParams.set(param.id, param.value);
     });
     // Меняем текущий адрес страницы
     window.history.pushState({}, configName, `?${getParams.toString()}`);

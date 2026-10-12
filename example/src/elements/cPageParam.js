@@ -34,11 +34,11 @@ class PageParam {
             else this.paramValue = 0;
             return;
         }
-        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.name}"`);
+        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.id}"`);
     };
     //возвращает имя компонента(свойство name из конфигурации)
     getName(){
-        return this.config.name;
+        return this.config.id;
     };
     //возвращает текущее значение параметра
     getValue(){
@@ -53,7 +53,7 @@ class PageParam {
     setParamValue(value){
         this.paramValue = value;
         console.log("PAGEPARAM setParamValue check");
-        this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))
+        this.subscribers.forEach(item => item.paramChanged(this.config.id,this.paramValue))
     }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);

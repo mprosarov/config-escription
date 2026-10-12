@@ -62,6 +62,7 @@ const PageBuilder = (function(){
   }
   //Получаем объект параметра
   function getParam(name) {
+
     let find = pageParams.find((param) => param.getName() === name);
 
     //console.log("getParam find: ", find);
@@ -111,7 +112,7 @@ const PageBuilder = (function(){
     getParams.set("config", configName);
     // добавляем переданные параметры в GEt параметры
     params.forEach((param) => {
-      getParams.set(param.name, param.value);
+      getParams.set(param.id, param.value);
     });
     // Меняем текущий адрес страницы
     window.history.pushState({}, configName, `?${getParams.toString()}`);
@@ -1347,7 +1348,7 @@ class DataSources {
         )
       );
     }
-
+  
     console.log("datasources set to array: ", arrQueryParams);
 
     for (let i = 0; i < arrQueryParams.length; i++) {
@@ -1481,11 +1482,11 @@ class PageParam {
             else this.paramValue = 0;
             return;
         }
-        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.name}"`);
+        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.id}"`);
     };
     //возвращает имя компонента(свойство name из конфигурации)
     getName(){
-        return this.config.name;
+        return this.config.id;
     };
     //возвращает текущее значение параметра
     getValue(){
@@ -1500,7 +1501,7 @@ class PageParam {
     setParamValue(value){
         this.paramValue = value;
         console.log("PAGEPARAM setParamValue check");
-        this.subscribers.forEach(item => item.paramChanged(this.config.name,this.paramValue))
+        this.subscribers.forEach(item => item.paramChanged(this.config.id,this.paramValue))
     }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);
