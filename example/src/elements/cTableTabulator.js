@@ -166,7 +166,7 @@ class TableTabulator extends BaseElement {
 
     create(){
       
-      const ds = PageBuilder.getDS(this.config.datasourse);
+      const ds = PageBuilder.getDS(this.config.datasource);
       const config = this.config;
       const parentElement = this.parentElement;
       //let isEdit = config.actions?.items.some(item => item.action == 'tabulatorEditAction') ?? false;

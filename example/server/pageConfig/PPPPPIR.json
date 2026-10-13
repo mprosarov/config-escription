@@ -81,6 +81,9 @@
         "paramName": "department",
         "label": "Подразделение",
         "labelPosition": "left",
+        "datasource": "id_ds_4",
+        "dsValueField":"idconfig",
+        "dsTextField":"7",
         "options": [
           {
             "name": "Все подразделения",
@@ -181,7 +184,7 @@
   },
   "sidebars": [],
   "page": [
-    {
+        {
       "type": "logPanel",
       "id": "logPanel1",
       "title": "Лог действий",
@@ -189,6 +192,7 @@
       "showClearButton": true,
       "position": "right"
     },
+
     {
       "type": "tabs",
       "_treeNodeName": "tabs",
@@ -201,7 +205,7 @@
             {
               "type": "table-tabulator",
               "id": "table_1",
-              "datasourse": "id_ds_1",
+              "datasource": "id_ds_1",
               "name": "Плановые показатели",
               "indexCols": {
                 "2": 2,
@@ -396,7 +400,7 @@
             {
               "type": "table-tabulator",
               "id": "table_2",
-              "datasourse": "id_ds_2",
+              "datasource": "id_ds_2",
               "name": "Фактические данные",
               "indexCols": {
                 "2": 2,
@@ -591,7 +595,7 @@
             {
               "type": "table-tabulator",
               "id": "table_3",
-              "datasourse": "id_ds_3",
+              "datasource": "id_ds_3",
               "name": "Аналитика",
               "indexCols": {
                 "2": 2,
@@ -786,7 +790,7 @@
             {
               "type": "table-tabulator",
               "id": "table_4",
-              "datasourse": "id_ds_4",
+              "datasource": "id_ds_4",
               "name": "Отчеты",
               "indexCols": {
                 "2": 2,
@@ -981,7 +985,7 @@
             {
               "type": "table-tabulator",
               "id": "table_5",
-              "datasourse": "id_ds_5",
+              "datasource": "id_ds_5",
               "name": "Справочники",
               "indexCols": {
                 "2": 2,

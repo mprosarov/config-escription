@@ -197,8 +197,8 @@ const PageBuilder = (function(){
     }
     if (config["dataSources"]) {
       config["dataSources"].forEach((item) => {
-        var datasourse = PageBuilder.create(null, item);
-        DS.push(datasourse);
+        var datasource = PageBuilder.create(null, item);
+        DS.push(datasource);
       });
       //console.log("DS:", DS);
     }

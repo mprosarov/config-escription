@@ -1,25 +1,25 @@
 class Select extends BaseElement {
   static TYPE = "select";
+  content = null;
   constructor(parentElement, config) {
     super(parentElement, config);
     this.create();
   }
+
   create() {
-    let content = "";
-    for (let i = 0; i < this.config.options.length; i++) {
-      let item = this.config.options[i];
-      content += `<option value=${item.value} ${
-        item.selected ? "selected" : ""
-      }>${item.name}</option>`;
+    if (this.config.datasource && this.config.datasource.length > 1) {
+      const ds = PageBuilder.getDS(this.config.datasource);
+      const data = ds.fetchQuery();
+      this.createOptions(data.resultset, this.config.dsValueField, this.config.dsTextField);
+    } else {
+      this.createOptions(this.config.options, "value", "name");
     }
     this.parentElement.insertAdjacentHTML(
       "beforeend",
       `<div class="input-group input-group-sm">
-        <select type="${this.config.type}" data-param="${
-        this.config.paramName
-      }"  class="form-select form-select-sm" aria-label=".form-select-sm" ${
-        this.config.status ? this.config.status : "unabled"
-      }>${content}</select>`
+        <select type="${this.config.type}" data-param="${this.config.paramName}"  
+        class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status : "unabled"
+      }>${this.content}</select>`
     );
     let position = "";
     if (this.config.labelPosition == "left") position = "afterbegin";
@@ -32,9 +32,16 @@ class Select extends BaseElement {
         </label></div>`
     );
     dom.querySelector("select").addEventListener('change', e => {
-      super.updateParam(this.config.paramName,e.target.value)
-     })
+      super.updateParam(this.config.paramName, e.target.value)
+    })
     BaseElement.applyCss(dom, this.config);
+  }
+  createOptions(data, value, text) {
+    // TODO: значение по умолчанию ?????
+    let content = data.map(item => (
+      `<option value=${item[value]}>${item[text]}</option>`)
+    ).join("");
+    this.content = content;
   }
 }
 PageBuilder.addComponent(Select.TYPE, Select);

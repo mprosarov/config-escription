@@ -71,7 +71,7 @@
                     {
                         "id" : "table-tabulator_id_10form",
                         "type": "table-tabulator",
-                        "datasourse": "id_ds_10form",
+                        "datasource": "id_ds_10form",
                         "name" : "Форма 10",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -99,7 +99,7 @@
                     {
                         "id" : "table-tabulator_id_11form",
                         "name" : "Форма 11",
-                        "datasourse": "id_ds_11form",
+                        "datasource": "id_ds_11form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -126,7 +126,7 @@
                     {
                         "id" : "table-tabulator_id_12form",
                         "name" : "Форма 12",
-                        "datasourse": "id_ds_12form",
+                        "datasource": "id_ds_12form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -153,7 +153,7 @@
                     {
                         "id" : "table-tabulator_id_22form",
                         "name" : "Форма 22",
-                        "datasourse": "id_ds_22form",
+                        "datasource": "id_ds_22form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],
@@ -181,7 +181,7 @@
                     {
                         "id" : "table-tabulator_id_23form",
                         "name": "Форма 23",
-                        "datasourse": "id_ds_23form",
+                        "datasource": "id_ds_23form",
                         "type": "table-tabulator",
                         "tdata" : {
                             "data": [{},{},{}],

@@ -567,7 +567,7 @@
                 {
                   "type": "table-tabulator",
                   "id": "table-tabulator_id_8d",
-                  "datasourse": "id_ds_1",
+                  "datasource": "id_ds_1",
 
                   "actions": {
                       "type": "baseAction",
