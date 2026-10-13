@@ -10,14 +10,14 @@ class Select extends BaseElement {
     if (this.config.datasource && this.config.datasource.length > 1) {
       const ds = PageBuilder.getDS(this.config.datasource);
       const data = ds.fetchQuery();
-      this.createOptions(data.resultset, this.config.dsValueField, this.config.dsTextField);
+      this.content = this.createOptions(data.resultset, this.config.dsValueField, this.config.dsTextField);
     } else {
-      this.createOptions(this.config.options, "value", "name");
+      this.content = this.createOptions(this.config.options, "value", "name");
     }
     this.parentElement.insertAdjacentHTML(
       "beforeend",
       `<div class="input-group input-group-sm">
-        <select type="${this.config.type}" data-param="${this.config.paramName}"  
+        <select type="${this.config.type}"
         class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status : "unabled"
       }>${this.content}</select>`
     );
@@ -38,10 +38,11 @@ class Select extends BaseElement {
   }
   createOptions(data, value, text) {
     // TODO: значение по умолчанию ?????
+    // переадресация?
     let content = data.map(item => (
       `<option value=${item[value]}>${item[text]}</option>`)
     ).join("");
-    this.content = content;
+    return content
   }
 }
 PageBuilder.addComponent(Select.TYPE, Select);
