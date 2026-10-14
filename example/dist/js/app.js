@@ -1257,11 +1257,15 @@ class Select extends BaseElement {
     this.create();
   }
 
-  create() {
+  async create() {
     if (this.config.datasource && this.config.datasource.length > 1) {
       const ds = PageBuilder.getDS(this.config.datasource);
-      const data = ds.fetchQuery();
-      this.content = this.createOptions(data.resultset, this.config.dsValueField, this.config.dsTextField);
+      const data = await ds.fetchQuery();
+      this.content = this.createOptions(
+        data.resultset,
+        this.config.dsValueField,
+        this.config.dsTextField,
+      );
     } else {
       this.content = this.createOptions(this.config.options, "value", "name");
     }
@@ -1269,8 +1273,9 @@ class Select extends BaseElement {
       "beforeend",
       `<div class="input-group input-group-sm">
         <select type="${this.config.type}"
-        class="form-select form-select-sm" aria-label=".form-select-sm" ${this.config.status ? this.config.status : "unabled"
-      }>${this.content}</select>`
+        class="form-select form-select-sm" aria-label=".form-select-sm" ${
+          this.config.status ? this.config.status : "unabled"
+        }>${this.content}</select>`,
     );
     let position = "";
     if (this.config.labelPosition == "left") position = "afterbegin";
@@ -1280,20 +1285,20 @@ class Select extends BaseElement {
       position,
       `<label class="input-group-text">
         ${this.config.label}
-        </label></div>`
+        </label></div>`,
     );
-    dom.querySelector("select").addEventListener('change', e => {
-      super.updateParam(this.config.paramName, e.target.value)
-    })
+    dom.querySelector("select").addEventListener("change", (e) => {
+      super.updateParam(this.config.paramName, e.target.value);
+    });
     BaseElement.applyCss(dom, this.config);
   }
   createOptions(data, value, text) {
     // TODO: значение по умолчанию ?????
     // переадресация?
-    let content = data.map(item => (
-      `<option value=${item[value]}>${item[text]}</option>`)
-    ).join("");
-    return content
+    let content = data
+      .map((item) => `<option value=${item[value]}>${item[text]}</option>`)
+      .join("");
+    return content;
   }
 }
 PageBuilder.addComponent(Select.TYPE, Select);
@@ -1352,11 +1357,11 @@ class DataSources {
         new Set(
           matches.map(function (x) {
             return x.slice(1, -1);
-          })
-        )
+          }),
+        ),
       );
     }
-  
+
     console.log("datasources set to array: ", arrQueryParams);
 
     for (let i = 0; i < arrQueryParams.length; i++) {
@@ -1365,7 +1370,7 @@ class DataSources {
         value: "",
       };
 
-      this.params.push( );
+      this.params.push();
       // Подписываемся на изменение параметра
       var p = PageBuilder.getParam(objParam.param); // находим объект пареметра
       if (!p) console.error("Нет параметра");
@@ -1375,77 +1380,91 @@ class DataSources {
   paramChanged(name, value) {
     this.execute();
   }
-  fetchQuery(query) {
-  //  console.log("fetchFIC", query);
-  //------------------------------------------
+  async fetchQuery(query) {
     let URL = "";
     if (location.href.indexOf("file") >= 0) {
-          let test = {
-      "metadata": [
-          {"colname": "idconfig","coltype": "string","colindex": 0},
-          {"colname": "2","coltype": "date","colindex": 1},
-          {"colname": "3","coltype": "date","colindex": 2},
-          {"colname": "4","coltype": "date","colindex": 3},
-          {"colname": "5","coltype": "date","colindex": 4},
-          {"colname": "6","coltype": "string","colindex": 5},
-          {"colname": "7","coltype": "numeric","colindex": 6},
-          {"colname": "8","coltype": "date","colindex": 7},
-          {"colname": "9","coltype": "date","colindex": 8},
-          {"colname": "10","coltype": "date","colindex": 9},
-      ],
-      "resultset": []
-    };
-    for (let i = 0; i < 20; i++) {
-      test.resultset.push({
-        idconfig: i%3==0?"calculation":i%2==0?"oef":"check_list",
-        2: Date.now(),
-        3: Date.now(),
-        4: Date.now(),
-        5: Date.now(),
-        6: `Сейчас: ${Date.now()}`,
-        7: 4 * i,
-        8: Date.now(),
-        9: Date.now(),
-        10: Date.now(),
-      });
-    }
-    return test;
+      let test = {
+        metadata: [
+          { colname: "idconfig", coltype: "string", colindex: 0 },
+          { colname: "2", coltype: "date", colindex: 1 },
+          { colname: "3", coltype: "date", colindex: 2 },
+          { colname: "4", coltype: "date", colindex: 3 },
+          { colname: "5", coltype: "date", colindex: 4 },
+          { colname: "6", coltype: "string", colindex: 5 },
+          { colname: "7", coltype: "numeric", colindex: 6 },
+          { colname: "8", coltype: "date", colindex: 7 },
+          { colname: "9", coltype: "date", colindex: 8 },
+          { colname: "10", coltype: "date", colindex: 9 },
+        ],
+        resultset: [],
+      };
+      for (let i = 0; i < 20; i++) {
+        test.resultset.push({
+          idconfig:
+            i % 3 == 0 ? "calculation" : i % 2 == 0 ? "oef" : "check_list",
+          2: Date.now(),
+          3: Date.now(),
+          4: Date.now(),
+          5: Date.now(),
+          6: `Сейчас: ${Date.now()}`,
+          7: 4 * i,
+          8: Date.now(),
+          9: Date.now(),
+          10: Date.now(),
+        });
+      }
+      return test;
     } else {
       URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
     }
-    var resp = fetch(`${URL}/doquery`,{
+    try {
+      const resp = await fetch(`${URL}/doquery`, {
         method: "POST",
-        headers: { Accept:"text/plain","Content-Type": "text/plain" },
-        body: query
-      })
-    let respText = resp.text();
-    let json = JSON.parse(respText);
-    return json.resultset;
-  //---------------------------------------------  
-    
+        headers: { Accept: "text/plain", "Content-Type": "text/plain" },
+        body: query,
+      });
+      let respText = await resp.text();
+      return JSON.parse(respText);
+    } catch (e) {
+      console.warn("Ошибка запроса:", e);
+      return { metadata: [], resultset: [] };
+    }
   }
 
-  execute() {
+  async execute() {
     for (let i = 0; i < this.params.length; i++) {
-      this.params[i]["value"] = PageBuilder.getParamValue(this.params[i]["param"]);
+      this.params[i]["value"] = PageBuilder.getParamValue(
+        this.params[i]["param"],
+      );
     }
     let query = this.config.query;
     for (let i = 0; i < this.params.length; i++) {
-      query = query.replaceAll(`{${this.params[i].param}}`, this.params[i].value);
+      query = query.replaceAll(
+        `{${this.params[i].param}}`,
+        this.params[i].value,
+      );
     }
     // Отслыем запрос на сервер и оповещаем подписчиков
-    let result = this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
+    let result = await this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });
 
     // Логируем загрузку данных
     var rowCount = result && result.resultset ? result.resultset.length : 0;
-    ActionLogger.log('dataLoad', 'Загрузка данных: ' + (this.config.id || 'unknown') + ' (' + rowCount + ' строк)', {
-      datasourceId: this.config.id || 'unknown',
-      rowCount: rowCount,
-      query: query
-    });
+    ActionLogger.log(
+      "dataLoad",
+      "Загрузка данных: " +
+        (this.config.id || "unknown") +
+        " (" +
+        rowCount +
+        " строк)",
+      {
+        datasourceId: this.config.id || "unknown",
+        rowCount: rowCount,
+        query: query,
+      },
+    );
   }
   addSubscribe(obj) {
     if (!this.subscribes.includes(obj)) {
