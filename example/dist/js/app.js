@@ -1,13 +1,13 @@
 //=========================================
 //           pageBuilder.js
 //=========================================
-const PageBuilder = (function(){
+const PageBuilder = (function () {
   //   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
   // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
 
   let URL = "";
 
-  console.log("location.href: ", location.href)
+  console.log("location.href: ", location.href);
 
   if (location.href.indexOf("file") >= 0) {
     URL = "http://localhost:3000/config";
@@ -22,7 +22,6 @@ const PageBuilder = (function(){
     clearState();
     // инициализируем зановo страницу
     initPage(); // глобальная функция для инициализации страницы( в templates.html)
-
   });
   let navbar = null;
   let domPage = null;
@@ -31,21 +30,18 @@ const PageBuilder = (function(){
   var pageParams = [];
   var DS = [];
   var createdComponents = [];
-  
-  function clearState(){
+
+  function clearState() {
     DS = [];
     pageParams = [];
-   // window.history.replaceState({}, null, 'url')
-
+    // window.history.replaceState({}, null, 'url')
   }
   //ЭКШЕНЫ
   function performAnAction(name, obj, tableID) {
     //name - вид действия
     //id - идентификатор таблицы, если требуется для экшена
     //obj - объект действия
-    console.warn(name);
-    console.warn(obj);
-    console.warn(tableID);
+
     switch (name) {
       case "redirect":
         break;
@@ -55,58 +51,41 @@ const PageBuilder = (function(){
   //получаем датасорс
   function getDS(name) {
     let find = DS.find((ds) => ds.config.id === name);
-
-    //console.log("ds sourse find: ", find);
-
     return find;
   }
   //Получаем объект параметра
   function getParam(name) {
-
     let find = pageParams.find((param) => param.getName() === name);
-
-    //console.log("getParam find: ", find);
-
-    if (!find) throw new Error("Параметр не удалось получить.Нет такого параметра");
+    if (!find)
+      throw new Error("Параметр не удалось получить.Нет такого параметра");
     return find;
   }
   //Получаем значение параметра
   function getParamValue(name) {
     let find = pageParams.find((param) => param.getName() === name);
-
-    //console.log("getParamValue find: ", find);
-
-    if (!find) throw new Error("Значение не удалось получить.Нет такого параметра");
+    if (!find)
+      throw new Error("Значение не удалось получить.Нет такого параметра");
     return find.getValue();
   }
   //обновляем значения параметров при переключении чекбоксов и селектов
   function updateParam(name, newValue) {
     var p = getParam(name);
-    if(!p){
+    if (!p) {
       console.warn(`Параметр с именем ${name} не найден`);
       return;
     }
     p.setParamValue(newValue);
-    //console.table(p)
   }
   //Добавление компонента в общий список
   function addComponent(type, component) {
-
-    //console.log('addComponent params: ', type, component)
-
     if (components[type]) {
       throw new Error(`Компонент с таким типом уже существует. type=${type}`);
     }
     components[type] = component;
   }
   function loadWithParams(configName, params) {
-
-    //console.log("loadWithParams params: ", configName, params)
-
     // получаем все текущие GET параметры страницы
     let getParams = new URLSearchParams();
-
-    //console.log("new URLSearchParams: ", getParams);
 
     // добавляем имя конфигурации в GEt параметры, чтобы при перезагрузке страницы(F5) - загрузилась нужная конфигурация
     getParams.set("config", configName);
@@ -120,7 +99,6 @@ const PageBuilder = (function(){
   }
   // Загрузить json конфигурацию страницы с сервера по имени файла
   async function loadPageConfig(configName, params = []) {
-
     //console.log("configName loadPageConfig: ", configName);
     //console.log("params loadPageConfig: ", params);
 
@@ -135,24 +113,24 @@ const PageBuilder = (function(){
           <div class="dot"></div>
           <div class="dot"></div>
           <div class="dot"></div>
-      </section>`
+      </section>`,
     );
     let loader = document.body.querySelector(".loader-container");
     try {
-      console.log("${URL}?name=${configName}: ", `${URL}?name=${configName}`)
       let response = await fetch(`${URL}?name=${configName}`);
       let config = await response.json();
-      console.log('-------> fetch config: ', config);
       //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
       //   let result = await response.json();
       //   let config = result.result;
 
       // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
       if (response.status !== 200) {
-        throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
+        throw new Error(
+          `Ошибка при загрузке файла: ${configName}. ${config.error}`,
+        );
       }
       // создаем страницу по загруженной конфигурации
-      createdComponents = []
+      createdComponents = [];
       createPage(config);
       // удаляем лоадер
       loader.remove();
@@ -162,18 +140,17 @@ const PageBuilder = (function(){
       createdComponents = [];
 
       // Логируем ошибку загрузки конфигурации
-      ActionLogger.log('error', 'Ошибка загрузки конфигурации: ' + configName, {
+      ActionLogger.log("error", "Ошибка загрузки конфигурации: " + configName, {
         configName: configName,
-        errorMessage: error.message
+        errorMessage: error.message,
       });
     }
   }
   function create(parentElement, config) {
-    //console.log("parentElement create: ", parentElement);
-    //console.log("config create: ", config);
-
     if (!components[config.type]) {
-      throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
+      throw new Error(
+        `Компонента с таким типом не существует. type=${config.type}`,
+      );
     }
     return new components[config.type](parentElement, config);
   }
@@ -183,36 +160,30 @@ const PageBuilder = (function(){
   }
   // создать страницу по конфигурации
   function createPage(config) {
-    
     //console.log("createPage config", config);
 
     if (config["pageParams"]) {
       config.pageParams.forEach((item) => {
         var param = new PageParam(`null`, item);
-        console.log("-----> param createPage: ", param);
-
         pageParams.push(param);
       });
-
-      //console.log("createPage pageParams: ", pageParams);
-
-      //  console.log(pageParams)
     }
     if (config["dataSources"]) {
       config["dataSources"].forEach((item) => {
         var datasource = PageBuilder.create(null, item);
         DS.push(datasource);
       });
-      //console.log("DS:", DS);
     }
     if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
-    document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="app-page"></div>',
+    );
     domPage = document.body.lastElementChild;
     if (config["page"]) {
       config.page.forEach((item) => {
         //PageBuilder.create(domPage, item);
-        createdComponents.push(PageBuilder.create(domPage, item))
-
+        createdComponents.push(PageBuilder.create(domPage, item));
       });
     }
     if (config["sidebars"]) {
@@ -221,8 +192,6 @@ const PageBuilder = (function(){
       });
     }
     if (config["modals"]) {
-      //console.log("!!!if modal config: ", config["modal"])
-
       config["modals"].forEach((item) => {
         PageBuilder.create(document.body, item);
       });
@@ -231,12 +200,13 @@ const PageBuilder = (function(){
     DS.forEach((item) => {
       item.execute();
     });
-
   }
   //Очистить страницу
   function clear() {
     // проходим по всем элементам на странице и удаляем их
-    let nodes = [...document.body.children].filter((node) => node.nodeName !== "SCRIPT");
+    let nodes = [...document.body.children].filter(
+      (node) => node.nodeName !== "SCRIPT",
+    );
     nodes.forEach((node) => node.parentElement.removeChild(node));
   }
   return {
@@ -251,10 +221,9 @@ const PageBuilder = (function(){
     createMainNavBar,
     loadPageConfig,
     loadWithParams,
-    clearState
+    clearState,
   };
 })();
-console.log("PAGEBUILDER RETURN: ", PageBuilder)
 /*=========================================
              cMenu.js
 =========================================*/
@@ -493,24 +462,22 @@ class Menu {
 }
 PageBuilder.addComponent(Menu.TYPE, Menu);
 class NavBar {
-    static TYPE = 'navbar';
-    menuBlock = null;
-    buttonsBlock = null;
-    titleBlock = null;
-    constructor (parentElement, config) {
-        
-        console.log("parent Element NavBar: ", parentElement);
-        console.log("config NavBar: ", config);
-
-        this.parentElement = parentElement;
-        this.config = config;
-        this.create();
-    }
-    create() {
-        // Если указана позиция left, заголовок будет слева иначе всегда справа
-        let positionTitle = (this.config['titlePosition'] == 'left' ? '-reverse' : '');
-        let positionMenu = (this.config['menuPosition'] == 'bottom' ? '-reverse' : '');
-        let navbarHTML = `<nav class="navbar navbar-expand-sm navbar-light bg-light navbar-light shadow">
+  static TYPE = "navbar";
+  menuBlock = null;
+  buttonsBlock = null;
+  titleBlock = null;
+  constructor(parentElement, config) {
+    this.parentElement = parentElement;
+    this.config = config;
+    this.create();
+  }
+  create() {
+    // Если указана позиция left, заголовок будет слева иначе всегда справа
+    let positionTitle =
+      this.config["titlePosition"] == "left" ? "-reverse" : "";
+    let positionMenu =
+      this.config["menuPosition"] == "bottom" ? "-reverse" : "";
+    let navbarHTML = `<nav class="navbar navbar-expand-sm navbar-light bg-light navbar-light shadow">
                             <div class="container-fluid flex-row${positionTitle}">
                                 <div class="collapse navbar-collapse">
                                     <div style="display:flex;align-items: start;flex-direction:column${positionMenu}">
@@ -521,75 +488,85 @@ class NavBar {
                                 <div data-title class="navbar-brand"></div>
                             </div>
                         </nav>`;
-        this.parentElement.insertAdjacentHTML('beforeend', navbarHTML);
-        this.menuBlock = this.parentElement.lastElementChild.querySelector("[data-menu]");
-        this.buttonsBlock = this.parentElement.lastElementChild.querySelector("[data-buttons]");
-        this.titleBlock = this.parentElement.lastElementChild.querySelector("[data-title]");
-        if(this.config.items && this.config.items.length) {
-            this.config.items.forEach(item => {
-                switch (item.type) {
-                    case Menu.TYPE:
-                        PageBuilder.create(this.menuBlock, item);
-                        break;
-                    case Button.TYPE:
-                        PageBuilder.create(this.buttonsBlock, item);
-                        break;
-                    case ButtonGroup.TYPE:
-                        PageBuilder.create(this.buttonsBlock, item);
-                        break; 
-                    case CheckBoxGroup.TYPE:
-                        PageBuilder.create(this.buttonsBlock, item);
-                        break;
-                    case DateRange.TYPE:
-                        PageBuilder.create(this.buttonsBlock, item);
-                        break;
-                    case Select.TYPE:
-                        PageBuilder.create(this.buttonsBlock, item);
-                        break;
-                    case Header.TYPE:
-                        PageBuilder.create(this.titleBlock, item);
-                        break;
-                    default:
-                        console.warn(`Неизвестный тип компонента: ${item.type}`);
-                        break;
-                }
-            });
+    this.parentElement.insertAdjacentHTML("beforeend", navbarHTML);
+    this.menuBlock =
+      this.parentElement.lastElementChild.querySelector("[data-menu]");
+    this.buttonsBlock =
+      this.parentElement.lastElementChild.querySelector("[data-buttons]");
+    this.titleBlock =
+      this.parentElement.lastElementChild.querySelector("[data-title]");
+    if (this.config.items && this.config.items.length) {
+      this.config.items.forEach((item) => {
+        switch (item.type) {
+          case Menu.TYPE:
+            PageBuilder.create(this.menuBlock, item);
+            break;
+          case Button.TYPE:
+            PageBuilder.create(this.buttonsBlock, item);
+            break;
+          case ButtonGroup.TYPE:
+            PageBuilder.create(this.buttonsBlock, item);
+            break;
+          case CheckBoxGroup.TYPE:
+            PageBuilder.create(this.buttonsBlock, item);
+            break;
+          case DateRange.TYPE:
+            PageBuilder.create(this.buttonsBlock, item);
+            break;
+          case Select.TYPE:
+            PageBuilder.create(this.buttonsBlock, item);
+            break;
+          case Header.TYPE:
+            PageBuilder.create(this.titleBlock, item);
+            break;
+          default:
+            console.warn(`Неизвестный тип компонента: ${item.type}`);
+            break;
         }
-   }
+      });
+    }
+  }
 }
 PageBuilder.addComponent(NavBar.TYPE, NavBar);
 class Button extends BaseElement {
-    static TYPE = 'button';
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        this.create();
+  static TYPE = "button";
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    this.create();
+  }
+  create() {
+    let icon = "";
+    let text = "";
+    if (this.config.icon) {
+      icon = `<i class="bi bi-${this.config.icon}${this.config.text ? " me-2" : ""}"></i>`;
     }
-    create() {
-        let icon = '';
-        let text = '';
-        if(this.config.icon){
-            icon = `<i class="bi bi-${this.config.icon}${(this.config.text)?' me-2':''}"></i>`;
-        }
-        if(this.config.text){
-            text = this.config.text;
-        }
-        this.parentElement.insertAdjacentHTML("beforeend", `<button style="width: fit-content;" class="btn btn-outline-secondary btn-sm" ${this.config.status}>${icon}${text}</button>`);
-        let dom = this.parentElement.lastElementChild;
-        BaseElement.applyCss(dom, this.config);
-
-        // Сохраняем ссылку на DOM элемент
-        this.buttonElement = dom;
-
-        console.log("Button config: ", this.config)
-
-        // Если есть actions, создаем BaseAction для кнопки (так же как в TableTabulator)
-        if (this.config.actions) {
-            console.log("Button has actions, creating via ActionRegistry:", this.config.actions);
-            
-            // Создаем экшены через ActionRegistry (аналогично TableTabulator)
-            ActionRegistry.createFromConfig(this.parentElement, this.config.actions, this.buttonElement);
-        }
+    if (this.config.text) {
+      text = this.config.text;
     }
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      `<button style="width: fit-content;" class="btn btn-outline-secondary btn-sm" ${this.config.status}>${icon}${text}</button>`,
+    );
+    let dom = this.parentElement.lastElementChild;
+    BaseElement.applyCss(dom, this.config);
+
+    // Сохраняем ссылку на DOM элемент
+    this.buttonElement = dom;
+    // Если есть actions, создаем BaseAction для кнопки (так же как в TableTabulator)
+    if (this.config.actions) {
+      // console.log(
+      //   "Button has actions, creating via ActionRegistry:",
+      //   this.config.actions,
+      // );
+
+      // Создаем экшены через ActionRegistry (аналогично TableTabulator)
+      ActionRegistry.createFromConfig(
+        this.parentElement,
+        this.config.actions,
+        this.buttonElement,
+      );
+    }
+  }
 }
 PageBuilder.addComponent(Button.TYPE, Button);
 class ButtonGroup extends BaseElement {
@@ -602,13 +579,9 @@ class ButtonGroup extends BaseElement {
    * TODO: дописать проверку на id с добавлением дефолтного значения
    */
   create() {
-    
     let content = "";
     let result = "";
     const groupId = this.config.id || `btngroup_${Date.now()}`;
-
-    console.log("ButtonGroup config: ", this.config);
-    console.log("ButtonGroup parentElement", this.parentElement);
 
     for (let i = 0; i < this.config.elements.length; i++) {
       let icon = "";
@@ -622,12 +595,9 @@ class ButtonGroup extends BaseElement {
     }
 
     //Костыль для кнопок у таблицы
-    console.log("isTable-menu: ", this.config["table-menu"]);
     if (this.config["table-menu"])
       result = `<div class="input-group-table">${content}</div>`;
-    else 
-      result = `<div class="input-group" >${content}</div>`;
-    console.log("After result", result)
+    else result = `<div class="input-group" >${content}</div>`;
 
     //result = `<div class="input-group">${content}</div>`;
     this.parentElement.insertAdjacentHTML("beforeend", result);
@@ -636,17 +606,25 @@ class ButtonGroup extends BaseElement {
 
     //после создания DOM, добавляем actions для каждой кнопки
     for (let i = 0; i < this.config.elements.length; i++) {
-        const elementConfig = this.config.elements[i];
-        const buttonId = elementConfig.id || `${groupId}_btn${i}`;
-        const buttonElement = document.getElementById(buttonId);
+      const elementConfig = this.config.elements[i];
+      const buttonId = elementConfig.id || `${groupId}_btn${i}`;
+      const buttonElement = document.getElementById(buttonId);
 
-        if (buttonElement && elementConfig.actions) {
-          console.log("Creating BaseAction for button:", buttonId, elementConfig.actions);
-          
-          // Создаем BaseAction для кнопки 
-          ActionRegistry.createFromConfig(this.parentElement, elementConfig.actions, buttonElement);
-        }
+      if (buttonElement && elementConfig.actions) {
+        console.log(
+          "Creating BaseAction for button:",
+          buttonId,
+          elementConfig.actions,
+        );
+
+        // Создаем BaseAction для кнопки
+        ActionRegistry.createFromConfig(
+          this.parentElement,
+          elementConfig.actions,
+          buttonElement,
+        );
       }
+    }
   }
 }
 PageBuilder.addComponent(ButtonGroup.TYPE, ButtonGroup);
@@ -700,21 +678,20 @@ class CheckBoxGroup extends BaseElement {
   create() {
     this.parentElement.insertAdjacentHTML(
       "beforeend",
-      `<div class="form-group ${this.config.inline ? "flex" : ""}"></div>`
+      `<div class="form-group ${this.config.inline ? "flex" : ""}"></div>`,
     );
     let block = this.parentElement.lastElementChild;
     let content = "";
-
-    for (let i = 0; i < this.config.elements.length; i++) {
-      let item = this.config.elements[i];
+    const data = this.config.elements;
+    for (let i = 0; i < data.length; i++) {
+      let item = data[i];
+      const value = PageBuilder.getParamValue(item.paramName);
       content += `<div class="form-check ${item.role ? "form-switch" : ""} ">
                           <input class="form-check-input"  role="${
                             item.role ? "form-switch" : ""
-                          }" data-param='${
-        item.paramName
-      }' type='checkbox' value="${item.checked ? "1" : "0"}" id="${item.id}" ${
-        item.status
-      } ${item.checked ? "checked" : ""}>
+                          }" data-param = "${item.paramName}" type='checkbox' value="${value}" id="${item.id}" ${
+                            item.status
+                          } ${value == 1 ? "checked" : ""}>
                           <label class="form-check-label" for=${item.id}>
                             ${item.label}
                           </label>
@@ -722,6 +699,14 @@ class CheckBoxGroup extends BaseElement {
     }
 
     block.insertAdjacentHTML("beforeend", content);
+    // Событие изменения значения
+    block.querySelectorAll("input").forEach((checkbox) => {
+      checkbox.addEventListener("change", (e) => {
+        console.log(e);
+        let p = e.target.dataset.param;
+        super.updateParam(p, e.target.value);
+      });
+    });
     BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
     return block;
   }
@@ -1101,60 +1086,66 @@ PageBuilder.addComponent(TableTabulator.TYPE, TableTabulator);
 */
 
 class Tabs extends BaseElement {
-    static TYPE = "tabs";
-    static idCounter = 0; // Статическое свойство для хранения счетчика
-    constructor(parentElement, config) {
-        super(parentElement, config);
-        Tabs.idCounter++;// Увеличиваем счетчик на 1 при создании нового экземпляра
-        this.create();
-    }
+  static TYPE = "tabs";
+  static idCounter = 0; // Статическое свойство для хранения счетчика
+  constructor(parentElement, config) {
+    super(parentElement, config);
+    Tabs.idCounter++; // Увеличиваем счетчик на 1 при создании нового экземпляра
+    this.create();
+  }
 
-    create() {
-        let globalID = Tabs.idCounter;
-        let contentTab, contentUL;
-        this.parentElement.insertAdjacentHTML("beforeend", '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>'); // убери тут id="myTab"
-        let tabBox = this.parentElement.lastElementChild;
-        let tabs = this.config.items;
+  create() {
+    let globalID = Tabs.idCounter;
+    let contentTab, contentUL;
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      '<ul class="nav nav-tabs" id="myTab" role="tablist"></ul>',
+    ); // убери тут id="myTab"
+    let tabBox = this.parentElement.lastElementChild;
+    let tabs = this.config.items;
 
-        console.log("Tabs config: ", this.config);
-        console.log("Tabs parentElement: ", this.parentElement);
-
-        for (let i=0; i<tabs.length; i++) {
-            contentTab = `<li class="nav-item" role="presentation">
+    for (let i = 0; i < tabs.length; i++) {
+      contentTab = `<li class="nav-item" role="presentation">
                                 <button class="nav-link" id="tab-${globalID}-${i}" data-bs-toggle="tab" data-bs-target="#tab-${globalID}-${i}-pane" type="button" role="tab" aria-controls="tab-${globalID}-${i}-pane" aria-selected="false">${tabs[i]["tab_name"]}</button>
                             </li>`;
-            tabBox.insertAdjacentHTML("beforeend", contentTab);
-        }
-        tabBox.firstElementChild.querySelector("button").click();
-        this.parentElement.insertAdjacentHTML("beforeend", '<div class="tab-content"></div>');
-
-        let tab = this.parentElement.lastElementChild;
-        for (let i=0; i<tabs.length; i++) {
-            if (i==0) contentUL = `<div class="tab-pane fade show active" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
-            else contentUL = `<div class="tab-pane fade" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
-            
-            tab.insertAdjacentHTML("beforeend", contentUL);
-            for (let j = 0; j < tabs[i].items.length; j++)
-                PageBuilder.create(tab.lastElementChild,tabs[i].items[j]);
-        }
-
-        // Решение визуальной проблемы отрисовки таблицы без размеров при переключении вкладок
-        // Обрабатываем событие показа вкладки Bootstrap
-        tabBox.addEventListener('shown.bs.tab', (event) => {
-            const targetId = event.target.getAttribute('data-bs-target');
-            const targetPane = document.querySelector(targetId);
-            if (!targetPane) return;
-
-            // Находим все Tabulator внутри показанной панели и перерисовываем их
-            const tabulatorElements = targetPane.querySelectorAll('[tabulator-layout]');
-            tabulatorElements.forEach((el) => {
-                const tables = Tabulator.findTable(`#${el.id}`);
-                if (tables && tables.length > 0) {
-                    tables[0].redraw(true);
-                }
-            });
-        });
+      tabBox.insertAdjacentHTML("beforeend", contentTab);
     }
+    tabBox.firstElementChild.querySelector("button").click();
+    this.parentElement.insertAdjacentHTML(
+      "beforeend",
+      '<div class="tab-content"></div>',
+    );
+
+    let tab = this.parentElement.lastElementChild;
+    for (let i = 0; i < tabs.length; i++) {
+      if (i == 0)
+        contentUL = `<div class="tab-pane fade show active" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
+      else
+        contentUL = `<div class="tab-pane fade" id="tab-${globalID}-${i}-pane" role="tabpanel" aria-labelledby="tab-${globalID}-${i}" tabindex="0"></div>`;
+
+      tab.insertAdjacentHTML("beforeend", contentUL);
+      for (let j = 0; j < tabs[i].items.length; j++)
+        PageBuilder.create(tab.lastElementChild, tabs[i].items[j]);
+    }
+
+    // Решение визуальной проблемы отрисовки таблицы без размеров при переключении вкладок
+    // Обрабатываем событие показа вкладки Bootstrap
+    tabBox.addEventListener("shown.bs.tab", (event) => {
+      const targetId = event.target.getAttribute("data-bs-target");
+      const targetPane = document.querySelector(targetId);
+      if (!targetPane) return;
+
+      // Находим все Tabulator внутри показанной панели и перерисовываем их
+      const tabulatorElements =
+        targetPane.querySelectorAll("[tabulator-layout]");
+      tabulatorElements.forEach((el) => {
+        const tables = Tabulator.findTable(`#${el.id}`);
+        if (tables && tables.length > 0) {
+          tables[0].redraw(true);
+        }
+      });
+    });
+  }
 }
 
 PageBuilder.addComponent(Tabs.TYPE, Tabs);
@@ -1287,14 +1278,26 @@ class Select extends BaseElement {
         ${this.config.label}
         </label></div>`,
     );
+
+    // Значение по умолчанию
+    // TODO: дописать с учетом переадресации
+    const value = PageBuilder.getParamValue(this.config.paramName);
+    const option = dom.querySelector(`option[value='${value}']`);
+    if (option) {
+      dom.querySelector("select").value = value;
+    } else {
+      console.warn("Опция не найдена:", value);
+    }
+
+    // Событие изменения значения
     dom.querySelector("select").addEventListener("change", (e) => {
       super.updateParam(this.config.paramName, e.target.value);
     });
+
     BaseElement.applyCss(dom, this.config);
   }
+
   createOptions(data, value, text) {
-    // TODO: значение по умолчанию ?????
-    // переадресация?
     let content = data
       .map((item) => `<option value=${item[value]}>${item[text]}</option>`)
       .join("");
@@ -1362,8 +1365,6 @@ class DataSources {
       );
     }
 
-    console.log("datasources set to array: ", arrQueryParams);
-
     for (let i = 0; i < arrQueryParams.length; i++) {
       let objParam = {
         param: arrQueryParams[i],
@@ -1402,7 +1403,7 @@ class DataSources {
         test.resultset.push({
           idconfig:
             i % 3 == 0 ? "calculation" : i % 2 == 0 ? "oef" : "check_list",
-          2: Date.now(),
+          2: 100 * i,
           3: Date.now(),
           4: Date.now(),
           5: Date.now(),
@@ -1423,11 +1424,13 @@ class DataSources {
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },
         body: query,
       });
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}: ${response.statusText}`);
+      }
       let respText = await resp.text();
       return JSON.parse(respText);
     } catch (e) {
-      console.warn("Ошибка запроса:", e);
-      return { metadata: [], resultset: [] };
+      throw new Error("Не удалось выполнить запрос");
     }
   }
 
@@ -1444,8 +1447,8 @@ class DataSources {
         this.params[i].value,
       );
     }
-    // Отслыем запрос на сервер и оповещаем подписчиков
-    let result = await this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
+    // Отсылаем запрос на сервер и оповещаем подписчиков
+    let result = await this.fetchQuery(query);
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });
@@ -1474,62 +1477,66 @@ class DataSources {
 }
 PageBuilder.addComponent(DataSources.TYPE, DataSources);
 class PageParam {
-    static TYPE = "param";
-    paramValue;
-    subscribers = []
-    constructor (parentElement, config) {
-        this.config = config;
-        this.create();
+  static TYPE = "param";
+  paramValue;
+  subscribers = [];
+  constructor(parentElement, config) {
+    this.config = config;
+    this.create();
+  }
+  create() {
+    //Инициализация
+    let type = this.config.init.valueType;
+    //raw - "сырое значение", параметр д.б проинициализирован значением из поля value
+    if (type == "raw") {
+      this.paramValue = this.config.init.value;
+      return;
     }
-    create() {
-        //Инициализация
-        let type = this.config.init.valueType;
-        //raw - "сырое значение", параметр д.б проинициализирован значением из поля value
-        if(type == 'raw'){
-            this.paramValue = this.config.init.value;
-            return
-        }
-        //get - параметр д.б проинициализирован значением GET-параметра, имя которого указано в поле value
-        if(type == 'get'){
-            let redirectUrlParams = new URL(window.location.href);
-            let urlParams = new URLSearchParams(redirectUrlParams.search);
-            urlParams.get(this.getName());
-            return
-        }
-        //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.
-        if(type == 'date'){
-            if(this.config.init.value) this.paramValue = this.config.init.value;
-            else this.paramValue = new Date().toLocaleDateString();
-            return
-        }
+    //get - параметр д.б проинициализирован значением GET-параметра, имя которого указано в поле value
+    if (type == "get") {
+      let redirectUrlParams = new URL(window.location.href);
+      let urlParams = new URLSearchParams(redirectUrlParams.search);
+      urlParams.get(this.getName());
+      return;
+    }
+    //date - параметр д.б проинициализирован текущей датой, если поле value отсутствует.
+    if (type == "date") {
+      if (this.config.init.value) this.paramValue = this.config.init.value;
+      else this.paramValue = new Date().toLocaleDateString();
+      return;
+    }
 
-        // TODO: Добавить или проверить инициализацию параметра с valureType = "number" (см. доки);
-        if(type == 'number'){
-            if(this.config.init.value) this.paramValue = this.config.init.value;
-            else this.paramValue = 0;
-            return;
-        }
-        throw new Error(`Некорректное значение поля valueType в конфигурации параметра: "${this.config.id}"`);
-    };
-    //возвращает имя компонента(свойство name из конфигурации)
-    getName(){
-        return this.config.id;
-    };
-    //возвращает текущее значение параметра
-    getValue(){
-        return this.paramValue;
-    };
-    //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента
-    addSubscribe(obj){
-        this.subscribers.push(obj);
-    };
-    //записывает переданное значение в свойство paramValue и вызывает
-    //у всех подписчиков событие обновления параметра.
-    setParamValue(value){
-        this.paramValue = value;
-        console.log("PAGEPARAM setParamValue check");
-        this.subscribers.forEach(item => item.paramChanged(this.config.id,this.paramValue))
+    // TODO: Добавить или проверить инициализацию параметра с valureType = "number" (см. доки);
+    if (type == "number") {
+      if (this.config.init.value) this.paramValue = this.config.init.value;
+      else this.paramValue = 0;
+      return;
     }
+    throw new Error(
+      `Некорректное значение поля valueType в конфигурации параметра: "${this.config.id}"`,
+    );
+  }
+  //возвращает имя компонента(свойство name из конфигурации)
+  getName() {
+    return this.config.id;
+  }
+  //возвращает текущее значение параметра
+  getValue() {
+    return this.paramValue;
+  }
+  //добавляет переданный экземпляр объекта в массив "подписчиков" на изменение значения компонента
+  addSubscribe(obj) {
+    this.subscribers.push(obj);
+  }
+  //записывает переданное значение в свойство paramValue и вызывает
+  //у всех подписчиков событие обновления параметра.
+  setParamValue(value) {
+    this.paramValue = value;
+    this.subscribers.forEach((item) =>
+      item.paramChanged(this.config.id, this.paramValue),
+    );
+    console.warn(`PARAM - ${this.config.id}, VALUE - ${this.paramValue}`);
+  }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);
 /**
@@ -2300,7 +2307,7 @@ ActionRegistry.register(EditAction.TYPE, EditAction);
  */
 
 class AddAction extends TableAction {
-  static TYPE = 'tabulatorAddAction';
+  static TYPE = "tabulatorAddAction";
 
   constructor(parentElement, config, target) {
     super(parentElement, config, target);
@@ -2308,7 +2315,7 @@ class AddAction extends TableAction {
   }
 
   init() {
-    const trigger = this.config.trigger || 'click';
+    const trigger = this.config.trigger || "click";
 
     if (this.target && this.target.addEventListener) {
       this.target.addEventListener(trigger, (e) => {
@@ -2317,7 +2324,7 @@ class AddAction extends TableAction {
         this.openAddModal();
       });
     } else {
-      console.warn('AddAction: target не является DOM элементом');
+      console.warn("AddAction: target не является DOM элементом");
     }
   }
 
@@ -2333,12 +2340,12 @@ class AddAction extends TableAction {
     // 3. Найти модальное окно — через ModalHelper
     const modal = ModalHelper.findModal();
     if (!modal) {
-      console.error('AddAction: модальное окно не найдено');
+      console.error("AddAction: модальное окно не найдено");
       return;
     }
 
     // 4. Заполнить и открыть модальное окно
-    modal.setTitle('Добавление строки');
+    modal.setTitle("Добавление строки");
     modal.setContent(formHtml);
     modal.setFooter(`
       <button type="submit" class="btn btn-success btn-sm" id="add-save-btn" form="add-form">Добавить</button>
@@ -2368,12 +2375,12 @@ class AddAction extends TableAction {
     let html = '<form class="edit-form" id="add-form">';
 
     for (let col of columns) {
-      const sampleValue = sampleRow ? sampleRow[col.field] : '';
+      const sampleValue = sampleRow ? sampleRow[col.field] : "";
       const fieldType = HtmlUtils.determineFieldType(col, sampleValue);
       html += this.createFieldHtml(col, fieldType);
     }
 
-    html += '</form>';
+    html += "</form>";
     return html;
   }
 
@@ -2385,19 +2392,19 @@ class AddAction extends TableAction {
     const fieldId = `add-field-${columnDef.field}`;
     const name = columnDef.field;
 
-    let inputHtml = '';
+    let inputHtml = "";
 
     switch (fieldType) {
-      case 'textarea':
+      case "textarea":
         inputHtml = `<textarea class="edit-form-textarea" id="${fieldId}" name="${name}"></textarea>`;
         break;
-      case 'number':
+      case "number":
         inputHtml = `<input type="number" class="edit-form-input" id="${fieldId}" name="${name}" value="">`;
         break;
-      case 'date':
+      case "date":
         inputHtml = `<input type="date" class="edit-form-input" id="${fieldId}" name="${name}" value="">`;
         break;
-      case 'select':
+      case "select":
         inputHtml = this.createSelectHtml(columnDef, fieldId, name);
         break;
       default:
@@ -2418,49 +2425,46 @@ class AddAction extends TableAction {
     for (let opt of options) {
       html += `<option value="${opt.value}">${opt.label || opt.value}</option>`;
     }
-    html += '</select>';
+    html += "</select>";
     return html;
   }
 
   // ==================== ОБРАБОТЧИКИ ====================
 
   setupFormHandler(columns, modal) {
-    const form = document.getElementById('add-form');
+    const form = document.getElementById("add-form");
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
       this.addRow(columns, modal);
     });
   }
 
   setupCancelHandler(modal) {
-    const cancelBtn = document.getElementById('add-cancel-btn');
+    const cancelBtn = document.getElementById("add-cancel-btn");
     if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => modal.close());
+      cancelBtn.addEventListener("click", () => modal.close());
     }
   }
 
   // ==================== ДОБАВЛЕНИЕ СТРОКИ ====================
 
   addRow(columns, modal) {
-    const form = document.getElementById('add-form');
+    const form = document.getElementById("add-form");
     if (!form) return;
 
     const formData = new FormData(form);
     const newRowData = Object.fromEntries(formData.entries());
 
     this.table.addData([newRowData], true);
-
-    console.log('AddAction: строка добавлена', newRowData);
-
     modal.close();
 
     // Логируем добавление строки
-    var tableId = this.table.element ? this.table.element.id : 'unknown';
-    ActionLogger.log('add', 'Добавление строки: ' + tableId, {
+    var tableId = this.table.element ? this.table.element.id : "unknown";
+    ActionLogger.log("add", "Добавление строки: " + tableId, {
       tableId: tableId,
-      newRow: newRowData
+      newRow: newRowData,
     });
   }
 }
@@ -2481,7 +2485,7 @@ ActionRegistry.register(AddAction.TYPE, AddAction);
  */
 
 class DeleteAction extends TableAction {
-  static TYPE = 'tabulatorDeleteAction';
+  static TYPE = "tabulatorDeleteAction";
 
   constructor(parentElement, config, target) {
     super(parentElement, config, target);
@@ -2489,7 +2493,7 @@ class DeleteAction extends TableAction {
   }
 
   init() {
-    const trigger = this.config.trigger || 'click';
+    const trigger = this.config.trigger || "click";
 
     if (this.target && this.target.addEventListener) {
       this.target.addEventListener(trigger, (e) => {
@@ -2498,7 +2502,7 @@ class DeleteAction extends TableAction {
         this.deleteSelectedRow();
       });
     } else {
-      console.warn('DeleteAction: target не является DOM элементом');
+      console.warn("DeleteAction: target не является DOM элементом");
     }
   }
 
@@ -2508,7 +2512,7 @@ class DeleteAction extends TableAction {
     // 1. Получить выбранную строку
     const selectedRows = this.table.getSelectedRows();
     if (!selectedRows || selectedRows.length === 0) {
-      alert('Выберите строку для удаления');
+      alert("Выберите строку для удаления");
       return;
     }
 
@@ -2516,20 +2520,17 @@ class DeleteAction extends TableAction {
     const rowData = selectedData[0];
 
     // 2. Подтверждение удаления
-    if (!confirm('Вы уверены, что хотите удалить выбранную строку?')) {
+    if (!confirm("Вы уверены, что хотите удалить выбранную строку?")) {
       return;
     }
 
     // 3. Удаляем строку
     selectedRows[0].delete();
-
-    console.log('DeleteAction: строка удалена', rowData);
-
     // Логируем удаление строки
-    var tableId = this.table.element ? this.table.element.id : 'unknown';
-    ActionLogger.log('delete', 'Удаление строки: ' + tableId, {
+    var tableId = this.table.element ? this.table.element.id : "unknown";
+    ActionLogger.log("delete", "Удаление строки: " + tableId, {
       tableId: tableId,
-      deletedRow: rowData
+      deletedRow: rowData,
     });
   }
 }
@@ -2912,21 +2913,21 @@ class FilterAction extends TableAction {
 PageBuilder.addComponent(FilterAction.TYPE, FilterAction);
 ActionRegistry.register(FilterAction.TYPE, FilterAction);
 class ContextMenuAction extends BaseAction {
-    static TYPE = "contextMenuAction";
-    
-    constructor(parentElement, config, target) {
-        super(parentElement, config, target);
-        
-        // Загружаем CSS для контекстного меню
-        this.loadStyles();
-        this.create();
-    }
+  static TYPE = "contextMenuAction";
 
-    loadStyles() {
-        if (!document.getElementById('context-menu-styles')) {
-            const style = document.createElement('style');
-            style.id = 'context-menu-styles';
-            style.textContent = `
+  constructor(parentElement, config, target) {
+    super(parentElement, config, target);
+
+    // Загружаем CSS для контекстного меню
+    this.loadStyles();
+    this.create();
+  }
+
+  loadStyles() {
+    if (!document.getElementById("context-menu-styles")) {
+      const style = document.createElement("style");
+      style.id = "context-menu-styles";
+      style.textContent = `
                 .custom-context-menu {
                     position: fixed;
                     background: white;
@@ -2967,148 +2968,146 @@ class ContextMenuAction extends BaseAction {
                     text-align: center;
                 }
             `;
-            document.head.appendChild(style);
-        }
+      document.head.appendChild(style);
     }
+  }
 
-    create() {
-        console.log("ContextMenuAction started with config:", this.config);
+  create() {
+    const menuConfig = this.getMenuConfig();
+    this.setupTriggers(menuConfig);
+  }
 
-        const menuConfig = this.getMenuConfig();
-        this.setupTriggers(menuConfig);
+  getMenuConfig() {
+    //берем конфиг из this.config или используем дефолтный
+    const defaultConfig = {
+      items: [
+        {
+          label: "Строка 1",
+          icon: "pencil",
+          action: "testAction1",
+        },
+        {
+          label: "Строка 2",
+          icon: "arrow-up",
+          action: "testAction2",
+        },
+      ],
+    };
+
+    //будет ли конфиг в меню? Обсудить
+    return this.config.menu || defaultConfig;
+  }
+
+  setupTriggers(menuConfig) {
+    const trigger = this.config.trigger || "rightClick";
+
+    switch (trigger) {
+      case "rightClick":
+        this.setupRightClickTrigger(menuConfig);
+        break;
+      case "click":
+        console.log("setup triggers click");
+        break;
+      default:
+        console.warn(`Неизвестный триггер: ${trigger}`);
     }
+  }
 
-    getMenuConfig() {
-        //берем конфиг из this.config или используем дефолтный
-        const defaultConfig = {
-            items: [
-                {
-                    label: 'Строка 1',
-                    icon: 'pencil',
-                    action: 'testAction1',
-                },
-                {
-                    label: 'Строка 2',
-                    icon: 'arrow-up',
-                    action: 'testAction2'
-                }
-            ]
-        };
-        
-        //будет ли конфиг в меню? Обсудить
-        return this.config.menu || defaultConfig;
+  setupRightClickTrigger(menuConfig) {
+    if (this.parentElement) {
+      this.parentElement.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        this.showMenu(e, null, menuConfig);
+      });
     }
+  }
 
-    setupTriggers(menuConfig) {
-        const trigger = this.config.trigger || 'rightClick';
-        
-        switch(trigger) {
-            case 'rightClick':
-                this.setupRightClickTrigger(menuConfig);
-                break;
-            case 'click':
-                console.log("setup triggers click")
-                break;
-            default:
-                console.warn(`Неизвестный триггер: ${trigger}`);
-        }
-    }
+  showMenu(e, row, menuConfig) {
+    const menu = this.createMenu(menuConfig.items, row);
 
-    setupRightClickTrigger(menuConfig) {
-        if (this.parentElement) {
-            this.parentElement.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                this.showMenu(e, null, menuConfig);
-            });
-        }
-    }
+    this.positionMenu(menu, e);
+    document.body.appendChild(menu);
 
-    showMenu(e, row, menuConfig) {
-        const menu = this.createMenu(menuConfig.items, row);
+    this.setupMenuClose(menu);
+  }
 
-        this.positionMenu(menu, e);
-        document.body.appendChild(menu);
-        
-        this.setupMenuClose(menu);
-    }
+  createMenu(items, contextData) {
+    const menu = document.createElement("div");
+    menu.className = "custom-context-menu";
 
-    createMenu(items, contextData) {
-        const menu = document.createElement('div');
-        menu.className = 'custom-context-menu';
-        
-        items.forEach(itemConfig => {
-          const item = this.createMenuItem(itemConfig, contextData);
-          menu.appendChild(item);
-        });
-        
-        return menu;
-    }
+    items.forEach((itemConfig) => {
+      const item = this.createMenuItem(itemConfig, contextData);
+      menu.appendChild(item);
+    });
 
-    createMenuItem(config, contextData) {
-        const item = document.createElement('div');
-        item.className = `context-menu-item ${config.className || ''}`;
+    return menu;
+  }
 
-        item.innerHTML = `
+  createMenuItem(config, contextData) {
+    const item = document.createElement("div");
+    item.className = `context-menu-item ${config.className || ""}`;
+
+    item.innerHTML = `
             <span>${config.label}</span>
-            ${config.shortcut ? `<span style="margin-left: auto; opacity: 0.6;">${config.shortcut}</span>` : ''}
+            ${config.shortcut ? `<span style="margin-left: auto; opacity: 0.6;">${config.shortcut}</span>` : ""}
         `;
-        
-        if (!config.disabled) {
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.executeAction(config.action, contextData, config);
-            });
-        }
-        
-        return item;
+
+    if (!config.disabled) {
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.executeAction(config.action, contextData, config);
+      });
     }
 
-    positionMenu(menu, event) {
-        console.log("positionMenu menu:", menu)
-        console.log("positionMenu event:", event)
+    return item;
+  }
 
-        const x = event.pageX;
-        const y = event.pageY;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        const menuWidth = menu.offsetWidth;
-        const menuHeight = menu.offsetHeight;
-        
-        //корректируем позицию, чтобы меню не выходило за границы окна
-        let left = x;
-        let top = y;
-        
-        if (x + menuWidth > windowWidth) {
-            left = windowWidth - menuWidth - 10;
-        }
-        
-        if (y + menuHeight > windowHeight) {
-            top = windowHeight - menuHeight - 10;
-        }
-        
-        menu.style.left = `${left}px`;
-        menu.style.top = `${top}px`;
+  positionMenu(menu, event) {
+    console.log("positionMenu menu:", menu);
+    console.log("positionMenu event:", event);
+
+    const x = event.pageX;
+    const y = event.pageY;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const menuWidth = menu.offsetWidth;
+    const menuHeight = menu.offsetHeight;
+
+    //корректируем позицию, чтобы меню не выходило за границы окна
+    let left = x;
+    let top = y;
+
+    if (x + menuWidth > windowWidth) {
+      left = windowWidth - menuWidth - 10;
     }
 
-    setupMenuClose(menu) {
-      console.log("setupMenuClose: ", menu)
-        const closeMenu = () => {
-            if (menu && menu.parentNode) {
-                menu.parentNode.removeChild(menu);
-            }
-            document.removeEventListener('click', closeMenu);
-        };
-        
-        document.addEventListener('click', closeMenu);
-        
-        menu.addEventListener('remove', () => {
-            document.removeEventListener('click', closeMenu);
-        });
+    if (y + menuHeight > windowHeight) {
+      top = windowHeight - menuHeight - 10;
     }
 
-    executeAction(action, contextData, config) {
-      console.log(`Выполняется действие: ${action}`, contextData);
-    }
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+  }
+
+  setupMenuClose(menu) {
+    console.log("setupMenuClose: ", menu);
+    const closeMenu = () => {
+      if (menu && menu.parentNode) {
+        menu.parentNode.removeChild(menu);
+      }
+      document.removeEventListener("click", closeMenu);
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    menu.addEventListener("remove", () => {
+      document.removeEventListener("click", closeMenu);
+    });
+  }
+
+  executeAction(action, contextData, config) {
+    console.log(`Выполняется действие: ${action}`, contextData);
+  }
 }
 
 PageBuilder.addComponent(ContextMenuAction.TYPE, ContextMenuAction);

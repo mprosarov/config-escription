@@ -13,7 +13,7 @@
  */
 
 class AddAction extends TableAction {
-  static TYPE = 'tabulatorAddAction';
+  static TYPE = "tabulatorAddAction";
 
   constructor(parentElement, config, target) {
     super(parentElement, config, target);
@@ -21,7 +21,7 @@ class AddAction extends TableAction {
   }
 
   init() {
-    const trigger = this.config.trigger || 'click';
+    const trigger = this.config.trigger || "click";
 
     if (this.target && this.target.addEventListener) {
       this.target.addEventListener(trigger, (e) => {
@@ -30,7 +30,7 @@ class AddAction extends TableAction {
         this.openAddModal();
       });
     } else {
-      console.warn('AddAction: target не является DOM элементом');
+      console.warn("AddAction: target не является DOM элементом");
     }
   }
 
@@ -46,12 +46,12 @@ class AddAction extends TableAction {
     // 3. Найти модальное окно — через ModalHelper
     const modal = ModalHelper.findModal();
     if (!modal) {
-      console.error('AddAction: модальное окно не найдено');
+      console.error("AddAction: модальное окно не найдено");
       return;
     }
 
     // 4. Заполнить и открыть модальное окно
-    modal.setTitle('Добавление строки');
+    modal.setTitle("Добавление строки");
     modal.setContent(formHtml);
     modal.setFooter(`
       <button type="submit" class="btn btn-success btn-sm" id="add-save-btn" form="add-form">Добавить</button>
@@ -81,12 +81,12 @@ class AddAction extends TableAction {
     let html = '<form class="edit-form" id="add-form">';
 
     for (let col of columns) {
-      const sampleValue = sampleRow ? sampleRow[col.field] : '';
+      const sampleValue = sampleRow ? sampleRow[col.field] : "";
       const fieldType = HtmlUtils.determineFieldType(col, sampleValue);
       html += this.createFieldHtml(col, fieldType);
     }
 
-    html += '</form>';
+    html += "</form>";
     return html;
   }
 
@@ -98,19 +98,19 @@ class AddAction extends TableAction {
     const fieldId = `add-field-${columnDef.field}`;
     const name = columnDef.field;
 
-    let inputHtml = '';
+    let inputHtml = "";
 
     switch (fieldType) {
-      case 'textarea':
+      case "textarea":
         inputHtml = `<textarea class="edit-form-textarea" id="${fieldId}" name="${name}"></textarea>`;
         break;
-      case 'number':
+      case "number":
         inputHtml = `<input type="number" class="edit-form-input" id="${fieldId}" name="${name}" value="">`;
         break;
-      case 'date':
+      case "date":
         inputHtml = `<input type="date" class="edit-form-input" id="${fieldId}" name="${name}" value="">`;
         break;
-      case 'select':
+      case "select":
         inputHtml = this.createSelectHtml(columnDef, fieldId, name);
         break;
       default:
@@ -131,49 +131,46 @@ class AddAction extends TableAction {
     for (let opt of options) {
       html += `<option value="${opt.value}">${opt.label || opt.value}</option>`;
     }
-    html += '</select>';
+    html += "</select>";
     return html;
   }
 
   // ==================== ОБРАБОТЧИКИ ====================
 
   setupFormHandler(columns, modal) {
-    const form = document.getElementById('add-form');
+    const form = document.getElementById("add-form");
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
       this.addRow(columns, modal);
     });
   }
 
   setupCancelHandler(modal) {
-    const cancelBtn = document.getElementById('add-cancel-btn');
+    const cancelBtn = document.getElementById("add-cancel-btn");
     if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => modal.close());
+      cancelBtn.addEventListener("click", () => modal.close());
     }
   }
 
   // ==================== ДОБАВЛЕНИЕ СТРОКИ ====================
 
   addRow(columns, modal) {
-    const form = document.getElementById('add-form');
+    const form = document.getElementById("add-form");
     if (!form) return;
 
     const formData = new FormData(form);
     const newRowData = Object.fromEntries(formData.entries());
 
     this.table.addData([newRowData], true);
-
-    console.log('AddAction: строка добавлена', newRowData);
-
     modal.close();
 
     // Логируем добавление строки
-    var tableId = this.table.element ? this.table.element.id : 'unknown';
-    ActionLogger.log('add', 'Добавление строки: ' + tableId, {
+    var tableId = this.table.element ? this.table.element.id : "unknown";
+    ActionLogger.log("add", "Добавление строки: " + tableId, {
       tableId: tableId,
-      newRow: newRowData
+      newRow: newRowData,
     });
   }
 }

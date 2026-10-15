@@ -56,7 +56,7 @@
       "id": "department",
       "init": {
         "valueType": "raw",
-        "value": ""
+        "value": "20"
       },
       "_treeNodeName": "department"
     }
@@ -82,28 +82,25 @@
         "label": "Подразделение",
         "labelPosition": "left",
         "datasource": "id_ds_4",
-        "dsValueField":"idconfig",
-        "dsTextField":"7",
+        "dsValueField": "7",
+        "dsTextField": "2",
+        "status": "unabled",
         "options": [
           {
             "name": "Все подразделения",
-            "value": "",
-            "selected": ""
+            "value": "dept_1"
           },
           {
             "name": "Подразделение 1",
-            "value": "dept_1",
-            "selected": ""
+            "value": "20"
           },
           {
             "name": "Подразделение 2",
-            "value": "dept_2",
-            "selected": "selected"
+            "value": "dept_2"
           },
           {
             "name": "Подразделение 3",
-            "value": "dept_3",
-            "selected": ""
+            "value": "dept_3"
           }
         ],
         "_treeNodeName": "select"
@@ -184,7 +181,7 @@
   },
   "sidebars": [],
   "page": [
-        {
+    {
       "type": "logPanel",
       "id": "logPanel1",
       "title": "Лог действий",

@@ -1,19 +1,19 @@
 class ContextMenuAction extends BaseAction {
-    static TYPE = "contextMenuAction";
-    
-    constructor(parentElement, config, target) {
-        super(parentElement, config, target);
-        
-        // Загружаем CSS для контекстного меню
-        this.loadStyles();
-        this.create();
-    }
+  static TYPE = "contextMenuAction";
 
-    loadStyles() {
-        if (!document.getElementById('context-menu-styles')) {
-            const style = document.createElement('style');
-            style.id = 'context-menu-styles';
-            style.textContent = `
+  constructor(parentElement, config, target) {
+    super(parentElement, config, target);
+
+    // Загружаем CSS для контекстного меню
+    this.loadStyles();
+    this.create();
+  }
+
+  loadStyles() {
+    if (!document.getElementById("context-menu-styles")) {
+      const style = document.createElement("style");
+      style.id = "context-menu-styles";
+      style.textContent = `
                 .custom-context-menu {
                     position: fixed;
                     background: white;
@@ -54,148 +54,146 @@ class ContextMenuAction extends BaseAction {
                     text-align: center;
                 }
             `;
-            document.head.appendChild(style);
-        }
+      document.head.appendChild(style);
     }
+  }
 
-    create() {
-        console.log("ContextMenuAction started with config:", this.config);
+  create() {
+    const menuConfig = this.getMenuConfig();
+    this.setupTriggers(menuConfig);
+  }
 
-        const menuConfig = this.getMenuConfig();
-        this.setupTriggers(menuConfig);
+  getMenuConfig() {
+    //берем конфиг из this.config или используем дефолтный
+    const defaultConfig = {
+      items: [
+        {
+          label: "Строка 1",
+          icon: "pencil",
+          action: "testAction1",
+        },
+        {
+          label: "Строка 2",
+          icon: "arrow-up",
+          action: "testAction2",
+        },
+      ],
+    };
+
+    //будет ли конфиг в меню? Обсудить
+    return this.config.menu || defaultConfig;
+  }
+
+  setupTriggers(menuConfig) {
+    const trigger = this.config.trigger || "rightClick";
+
+    switch (trigger) {
+      case "rightClick":
+        this.setupRightClickTrigger(menuConfig);
+        break;
+      case "click":
+        console.log("setup triggers click");
+        break;
+      default:
+        console.warn(`Неизвестный триггер: ${trigger}`);
     }
+  }
 
-    getMenuConfig() {
-        //берем конфиг из this.config или используем дефолтный
-        const defaultConfig = {
-            items: [
-                {
-                    label: 'Строка 1',
-                    icon: 'pencil',
-                    action: 'testAction1',
-                },
-                {
-                    label: 'Строка 2',
-                    icon: 'arrow-up',
-                    action: 'testAction2'
-                }
-            ]
-        };
-        
-        //будет ли конфиг в меню? Обсудить
-        return this.config.menu || defaultConfig;
+  setupRightClickTrigger(menuConfig) {
+    if (this.parentElement) {
+      this.parentElement.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        this.showMenu(e, null, menuConfig);
+      });
     }
+  }
 
-    setupTriggers(menuConfig) {
-        const trigger = this.config.trigger || 'rightClick';
-        
-        switch(trigger) {
-            case 'rightClick':
-                this.setupRightClickTrigger(menuConfig);
-                break;
-            case 'click':
-                console.log("setup triggers click")
-                break;
-            default:
-                console.warn(`Неизвестный триггер: ${trigger}`);
-        }
-    }
+  showMenu(e, row, menuConfig) {
+    const menu = this.createMenu(menuConfig.items, row);
 
-    setupRightClickTrigger(menuConfig) {
-        if (this.parentElement) {
-            this.parentElement.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                this.showMenu(e, null, menuConfig);
-            });
-        }
-    }
+    this.positionMenu(menu, e);
+    document.body.appendChild(menu);
 
-    showMenu(e, row, menuConfig) {
-        const menu = this.createMenu(menuConfig.items, row);
+    this.setupMenuClose(menu);
+  }
 
-        this.positionMenu(menu, e);
-        document.body.appendChild(menu);
-        
-        this.setupMenuClose(menu);
-    }
+  createMenu(items, contextData) {
+    const menu = document.createElement("div");
+    menu.className = "custom-context-menu";
 
-    createMenu(items, contextData) {
-        const menu = document.createElement('div');
-        menu.className = 'custom-context-menu';
-        
-        items.forEach(itemConfig => {
-          const item = this.createMenuItem(itemConfig, contextData);
-          menu.appendChild(item);
-        });
-        
-        return menu;
-    }
+    items.forEach((itemConfig) => {
+      const item = this.createMenuItem(itemConfig, contextData);
+      menu.appendChild(item);
+    });
 
-    createMenuItem(config, contextData) {
-        const item = document.createElement('div');
-        item.className = `context-menu-item ${config.className || ''}`;
+    return menu;
+  }
 
-        item.innerHTML = `
+  createMenuItem(config, contextData) {
+    const item = document.createElement("div");
+    item.className = `context-menu-item ${config.className || ""}`;
+
+    item.innerHTML = `
             <span>${config.label}</span>
-            ${config.shortcut ? `<span style="margin-left: auto; opacity: 0.6;">${config.shortcut}</span>` : ''}
+            ${config.shortcut ? `<span style="margin-left: auto; opacity: 0.6;">${config.shortcut}</span>` : ""}
         `;
-        
-        if (!config.disabled) {
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.executeAction(config.action, contextData, config);
-            });
-        }
-        
-        return item;
+
+    if (!config.disabled) {
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.executeAction(config.action, contextData, config);
+      });
     }
 
-    positionMenu(menu, event) {
-        console.log("positionMenu menu:", menu)
-        console.log("positionMenu event:", event)
+    return item;
+  }
 
-        const x = event.pageX;
-        const y = event.pageY;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        const menuWidth = menu.offsetWidth;
-        const menuHeight = menu.offsetHeight;
-        
-        //корректируем позицию, чтобы меню не выходило за границы окна
-        let left = x;
-        let top = y;
-        
-        if (x + menuWidth > windowWidth) {
-            left = windowWidth - menuWidth - 10;
-        }
-        
-        if (y + menuHeight > windowHeight) {
-            top = windowHeight - menuHeight - 10;
-        }
-        
-        menu.style.left = `${left}px`;
-        menu.style.top = `${top}px`;
+  positionMenu(menu, event) {
+    console.log("positionMenu menu:", menu);
+    console.log("positionMenu event:", event);
+
+    const x = event.pageX;
+    const y = event.pageY;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const menuWidth = menu.offsetWidth;
+    const menuHeight = menu.offsetHeight;
+
+    //корректируем позицию, чтобы меню не выходило за границы окна
+    let left = x;
+    let top = y;
+
+    if (x + menuWidth > windowWidth) {
+      left = windowWidth - menuWidth - 10;
     }
 
-    setupMenuClose(menu) {
-      console.log("setupMenuClose: ", menu)
-        const closeMenu = () => {
-            if (menu && menu.parentNode) {
-                menu.parentNode.removeChild(menu);
-            }
-            document.removeEventListener('click', closeMenu);
-        };
-        
-        document.addEventListener('click', closeMenu);
-        
-        menu.addEventListener('remove', () => {
-            document.removeEventListener('click', closeMenu);
-        });
+    if (y + menuHeight > windowHeight) {
+      top = windowHeight - menuHeight - 10;
     }
 
-    executeAction(action, contextData, config) {
-      console.log(`Выполняется действие: ${action}`, contextData);
-    }
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+  }
+
+  setupMenuClose(menu) {
+    console.log("setupMenuClose: ", menu);
+    const closeMenu = () => {
+      if (menu && menu.parentNode) {
+        menu.parentNode.removeChild(menu);
+      }
+      document.removeEventListener("click", closeMenu);
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    menu.addEventListener("remove", () => {
+      document.removeEventListener("click", closeMenu);
+    });
+  }
+
+  executeAction(action, contextData, config) {
+    console.log(`Выполняется действие: ${action}`, contextData);
+  }
 }
 
 PageBuilder.addComponent(ContextMenuAction.TYPE, ContextMenuAction);

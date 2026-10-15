@@ -36,14 +36,26 @@ class Select extends BaseElement {
         ${this.config.label}
         </label></div>`,
     );
+
+    // Значение по умолчанию
+    // TODO: дописать с учетом переадресации
+    const value = PageBuilder.getParamValue(this.config.paramName);
+    const option = dom.querySelector(`option[value='${value}']`);
+    if (option) {
+      dom.querySelector("select").value = value;
+    } else {
+      console.warn("Опция не найдена:", value);
+    }
+
+    // Событие изменения значения
     dom.querySelector("select").addEventListener("change", (e) => {
       super.updateParam(this.config.paramName, e.target.value);
     });
+
     BaseElement.applyCss(dom, this.config);
   }
+
   createOptions(data, value, text) {
-    // TODO: значение по умолчанию ?????
-    // переадресация?
     let content = data
       .map((item) => `<option value=${item[value]}>${item[text]}</option>`)
       .join("");

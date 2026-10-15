@@ -1,38 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru" data-mdb-theme="dark">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/app.css">
-  <title>Отчет</title>
-
-</head>
-<body>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/app.css" />
+    <title>Отчет</title>
+  </head>
+  <body></body>
 </html>
 
 <script src="js/vendors.js"></script>
 <script src="js/app.js"></script>
 <script>
-
-// Тут какой-то запрос кофигурации с сервера
-// Например: let config = await fetch("/config");
-function initPage(params) {
-  //let configName = getUrlParamByName('config') || 'PPPPPIR';
-  let configName = getUrlParamByName('config') || 'index';
-
-  console.log("configName: ", configName);
-  console.log("getUrlParamByName('config'): ", getUrlParamByName('config'));
-
-  PageBuilder.loadPageConfig(configName);
-}
-function getUrlParamByName(name, url = window.location.search) {
-  let searchParams = new URLSearchParams(url);
-  let urlConfigName = searchParams.get("config");
-  if(urlConfigName === null) return null;
-  return urlConfigName === undefined ? '' : urlConfigName;
-}
-initPage();
+  // Тут какой-то запрос кофигурации с сервера
+  // Например: let config = await fetch("/config");
+  function initPage(params) {
+    //let configName = getUrlParamByName('config') || 'PPPPPIR';
+    let configName = getUrlParamByName("config") || "index";
+    PageBuilder.loadPageConfig(configName);
+  }
+  function getUrlParamByName(name, url = window.location.search) {
+    let searchParams = new URLSearchParams(url);
+    let urlConfigName = searchParams.get("config");
+    if (urlConfigName === null) return null;
+    return urlConfigName === undefined ? "" : urlConfigName;
+  }
+  initPage();
 </script>

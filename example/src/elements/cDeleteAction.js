@@ -12,7 +12,7 @@
  */
 
 class DeleteAction extends TableAction {
-  static TYPE = 'tabulatorDeleteAction';
+  static TYPE = "tabulatorDeleteAction";
 
   constructor(parentElement, config, target) {
     super(parentElement, config, target);
@@ -20,7 +20,7 @@ class DeleteAction extends TableAction {
   }
 
   init() {
-    const trigger = this.config.trigger || 'click';
+    const trigger = this.config.trigger || "click";
 
     if (this.target && this.target.addEventListener) {
       this.target.addEventListener(trigger, (e) => {
@@ -29,7 +29,7 @@ class DeleteAction extends TableAction {
         this.deleteSelectedRow();
       });
     } else {
-      console.warn('DeleteAction: target не является DOM элементом');
+      console.warn("DeleteAction: target не является DOM элементом");
     }
   }
 
@@ -39,7 +39,7 @@ class DeleteAction extends TableAction {
     // 1. Получить выбранную строку
     const selectedRows = this.table.getSelectedRows();
     if (!selectedRows || selectedRows.length === 0) {
-      alert('Выберите строку для удаления');
+      alert("Выберите строку для удаления");
       return;
     }
 
@@ -47,20 +47,17 @@ class DeleteAction extends TableAction {
     const rowData = selectedData[0];
 
     // 2. Подтверждение удаления
-    if (!confirm('Вы уверены, что хотите удалить выбранную строку?')) {
+    if (!confirm("Вы уверены, что хотите удалить выбранную строку?")) {
       return;
     }
 
     // 3. Удаляем строку
     selectedRows[0].delete();
-
-    console.log('DeleteAction: строка удалена', rowData);
-
     // Логируем удаление строки
-    var tableId = this.table.element ? this.table.element.id : 'unknown';
-    ActionLogger.log('delete', 'Удаление строки: ' + tableId, {
+    var tableId = this.table.element ? this.table.element.id : "unknown";
+    ActionLogger.log("delete", "Удаление строки: " + tableId, {
       tableId: tableId,
-      deletedRow: rowData
+      deletedRow: rowData,
     });
   }
 }

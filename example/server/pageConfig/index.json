@@ -1,12 +1,9 @@
-
-
 {
-
   "dataSources": [
     {
       "type": "dataSource",
       "id": "id_ds_1",
-      "query": "select {pTest} {pTest2} {pTest} {pTest2} {dateFrom} {dateTo} {department}"
+      "query": "select {pTest} {pChb_1} {pTest2} {pChb_2}{pTest} {pTest2} {dateFrom} {dateTo} {department}"
     },
     {
       "type": "dataSource",
@@ -17,47 +14,63 @@
   "pageParams": [
     {
       "type": "param",
-      "name": "pTest",
-      "init":{
+      "id": "pTest",
+      "init": {
         "valueType": "raw",
         "value": "ololol"
       }
     },
     {
       "type": "param",
-      "name": "pTest2",
-      "init":{
+      "id": "pChb_1",
+      "init": {
+        "valueType": "raw",
+        "value": "1"
+      }
+    },
+    {
+      "type": "param",
+      "id": "pChb_2",
+      "init": {
+        "valueType": "raw",
+        "value": "0"
+      }
+    },
+    {
+      "type": "param",
+      "id": "pTest2",
+      "init": {
         "valueType": "number",
         "value": 22222
       }
     },
     {
       "type": "param",
-      "name": "pTestSelect_1",
-      "init":{
+      "id": "pTestSelect_1",
+      "init": {
         "valueType": "number",
         "value": ""
       }
     },
     {
       "type": "param",
-      "name": "pTest3",
-      "init":{
+      "id": "pTest3",
+      "init": {
         "valueType": "number",
         "value": 333333
       }
     },
     {
       "type": "param",
-      "name": "pTestSelect_2",
-      "init":{
+      "id": "pTestSelect_2",
+      "init": {
         "valueType": "raw",
         "value": ""
       }
     },
     {
       "type": "param",
-      "name": "dateFrom",
+      "id": "dateFrom",
       "init": {
         "valueType": "date",
         "value": ""
@@ -65,7 +78,7 @@
     },
     {
       "type": "param",
-      "name": "dateTo",
+      "id": "dateTo",
       "init": {
         "valueType": "date",
         "value": ""
@@ -73,7 +86,7 @@
     },
     {
       "type": "param",
-      "name": "department",
+      "id": "department",
       "init": {
         "valueType": "raw",
         "value": ""
@@ -103,13 +116,11 @@
                     "action": "redirect",
                     "config": "main_oef",
                     "newtab": true
-
                   },
                   {
                     "title": "Тест",
                     "action": "redirect",
-                    "url":"https://www.wildberries.ru/"
-
+                    "url": "https://www.wildberries.ru/"
                   },
                   {
                     "title": "Юристы",
@@ -125,7 +136,6 @@
                         "title": "ОЭФ",
                         "action": "redirect",
                         "newtab": true
-
                       },
                       {
                         "config": "check_list",
@@ -192,45 +202,62 @@
           }
         ]
       },
-        {
-          "type": "checkbox",
-          "inline": "inline",
-          "elements": [
-            {
-              "label": "текст_1",
-              "id": "chb_1",
-              "checked": "checked",
-              "status": "disabled",
-              "value": ""
-            },
-            {
-              "label": "текст_2",
-              "id": "chb_21",
-              "checked": "",
-              "status": "unabled",
-              "value": ""
-            }
-          ]
-        },
-        {
-          "type": "dateRange",
-          "paramNameFrom": "dateFrom",
-          "paramNameTo": "dateTo",
-          "labelFrom": "С",
-          "labelTo": "ПО"
-        },
-        {
-          "type": "select",
-          "paramName": "department",
-          "label": "Подразделение",
-          "labelPosition": "left",
-          "options": [
-            { "name": "Все подразделения", "value": "", "selected": "selected" },
-            { "name": "Подразделение 1", "value": "dept_1", "selected": "" },
-            { "name": "Подразделение 2", "value": "dept_2", "selected": "" },
-            { "name": "Подразделение 3", "value": "dept_3", "selected": "" }
-          ]
-        }
+      {
+        "type": "checkbox",
+        "inline": "inline",
+        "elements": [
+          {
+            "label": "текст_1",
+            "id": "chb_1",
+            "paramName": "pChb_1",
+            "status": "unabled",
+            "value": ""
+          },
+          {
+            "label": "текст_2",
+            "id": "chb_21",
+            "paramName": "pChb_2",
+            "status": "unabled",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "type": "dateRange",
+        "paramNameFrom": "dateFrom",
+        "paramNameTo": "dateTo",
+        "labelFrom": "С",
+        "labelTo": "ПО"
+      },
+      {
+        "type": "select",
+        "paramName": "department",
+        "label": "Подразделение",
+        "labelPosition": "left",
+        "datasource": "id_ds_1",
+        "dsValueField": "7",
+        "dsTextField": "2",
+        "status": "unabled",
+        "options": [
+          {
+            "name": "Все подразделения",
+            "value": "dept_1"
+          },
+          {
+            "name": "Подразделение 1",
+            "value": "20"
+          },
+          {
+            "name": "Подразделение 2",
+            "value": "dept_2"
+          },
+          {
+            "name": "Подразделение 3",
+            "value": "dept_3"
+          }
+        ],
+        "_treeNodeName": "select"
+      }
     ]
   },
   "sidebars": [
@@ -404,7 +431,7 @@
                   "checked": "checked",
                   "status": "unabled",
                   "value": "",
-                  "role":"switch"
+                  "role": "switch"
                 },
                 {
                   "id": "id_2",
@@ -468,7 +495,7 @@
               "type": "button",
               "icon": "printer",
               "text": "Кнопка",
-              "status":"disabled"
+              "status": "disabled"
             }
           ]
         },
@@ -503,15 +530,14 @@
                 {
                   "label": "текст_1",
                   "id": "chb_1",
-                  "checked": "checked",
+                  "paramName": "pChb_1",
                   "status": "disabled",
                   "value": ""
-
                 },
                 {
                   "label": "текст_2",
                   "id": "chb_21",
-                  "checked": "",
+                  "paramName": "pChb_2",
                   "status": "unabled",
                   "value": ""
                 }
@@ -570,45 +596,42 @@
                   "datasource": "id_ds_1",
 
                   "actions": {
-                      "type": "baseAction",
-                      "items": [
-                        {
-                          "action": "tabulatorEditAction",
-                          "trigger": "click",
-                          "target": {
-                            "columns": ["idconfig", "2", "3", "6"],
-                            "condition": {}
-                          }
-                        },
-                        {
-                          "action": "contextMenuAction",
-                          "trigger": "doubleClick",
-                          "target": "parentElement"
+                    "type": "baseAction",
+                    "items": [
+                      {
+                        "action": "tabulatorEditAction",
+                        "trigger": "click",
+                        "target": {
+                          "columns": ["idconfig", "2", "3", "6"],
+                          "condition": {}
                         }
-                      ]
+                      },
+                      {
+                        "action": "contextMenuAction",
+                        "trigger": "doubleClick",
+                        "target": "parentElement"
+                      }
+                    ]
                   },
 
-                  "action":[
-
+                  "action": [
                     {
                       "name": "redirect",
                       "event": "rowDblClick",
 
                       "newtab": false,
-                      "params":{
-                        "tableParams":  [
+                      "params": {
+                        "tableParams": [
                           {
-                            "field":"2",
+                            "field": "2",
                             "pName": "pTest"
                           },
                           {
-                            "field":"3",
+                            "field": "3",
                             "pName": "pTest2"
                           }
                         ],
-                        "pageParams": [
-                          "pTest3"
-                        ]
+                        "pageParams": ["pTest3"]
                       }
                     }
                   ],
@@ -637,7 +660,7 @@
                         "7": 1,
                         "8": 1,
                         "9": 1,
-                        "10":1
+                        "10": 1
                       },
                       {
                         "idconfig": "oef",
@@ -649,7 +672,7 @@
                         "7": 2,
                         "8": 2,
                         "9": 2,
-                        "10":2
+                        "10": 2
                       },
                       {
                         "idconfig": "calculation",
@@ -661,7 +684,7 @@
                         "7": 3,
                         "8": 3,
                         "9": 3,
-                        "10":3
+                        "10": 3
                       }
                     ],
                     "layout": "fitColumns",
@@ -823,7 +846,7 @@
                       "type": "select",
                       "label": "текст_селекта_2",
                       "labelPosition": "right",
-                      "paramName":"pTestSelect_2",
+                      "paramName": "pTestSelect_2",
                       "options": [
                         {
                           "name": "имя_1",
@@ -919,5 +942,4 @@
       "title": "Модальное окно"
     }
   ]
-
 }

@@ -8,13 +8,9 @@ class ButtonGroup extends BaseElement {
    * TODO: дописать проверку на id с добавлением дефолтного значения
    */
   create() {
-    
     let content = "";
     let result = "";
     const groupId = this.config.id || `btngroup_${Date.now()}`;
-
-    console.log("ButtonGroup config: ", this.config);
-    console.log("ButtonGroup parentElement", this.parentElement);
 
     for (let i = 0; i < this.config.elements.length; i++) {
       let icon = "";
@@ -28,12 +24,9 @@ class ButtonGroup extends BaseElement {
     }
 
     //Костыль для кнопок у таблицы
-    console.log("isTable-menu: ", this.config["table-menu"]);
     if (this.config["table-menu"])
       result = `<div class="input-group-table">${content}</div>`;
-    else 
-      result = `<div class="input-group" >${content}</div>`;
-    console.log("After result", result)
+    else result = `<div class="input-group" >${content}</div>`;
 
     //result = `<div class="input-group">${content}</div>`;
     this.parentElement.insertAdjacentHTML("beforeend", result);
@@ -42,17 +35,25 @@ class ButtonGroup extends BaseElement {
 
     //после создания DOM, добавляем actions для каждой кнопки
     for (let i = 0; i < this.config.elements.length; i++) {
-        const elementConfig = this.config.elements[i];
-        const buttonId = elementConfig.id || `${groupId}_btn${i}`;
-        const buttonElement = document.getElementById(buttonId);
+      const elementConfig = this.config.elements[i];
+      const buttonId = elementConfig.id || `${groupId}_btn${i}`;
+      const buttonElement = document.getElementById(buttonId);
 
-        if (buttonElement && elementConfig.actions) {
-          console.log("Creating BaseAction for button:", buttonId, elementConfig.actions);
-          
-          // Создаем BaseAction для кнопки 
-          ActionRegistry.createFromConfig(this.parentElement, elementConfig.actions, buttonElement);
-        }
+      if (buttonElement && elementConfig.actions) {
+        console.log(
+          "Creating BaseAction for button:",
+          buttonId,
+          elementConfig.actions,
+        );
+
+        // Создаем BaseAction для кнопки
+        ActionRegistry.createFromConfig(
+          this.parentElement,
+          elementConfig.actions,
+          buttonElement,
+        );
       }
+    }
   }
 }
 PageBuilder.addComponent(ButtonGroup.TYPE, ButtonGroup);

@@ -20,8 +20,6 @@ class DataSources {
       );
     }
 
-    console.log("datasources set to array: ", arrQueryParams);
-
     for (let i = 0; i < arrQueryParams.length; i++) {
       let objParam = {
         param: arrQueryParams[i],
@@ -60,7 +58,7 @@ class DataSources {
         test.resultset.push({
           idconfig:
             i % 3 == 0 ? "calculation" : i % 2 == 0 ? "oef" : "check_list",
-          2: Date.now(),
+          2: 100 * i,
           3: Date.now(),
           4: Date.now(),
           5: Date.now(),
@@ -81,11 +79,13 @@ class DataSources {
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },
         body: query,
       });
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}: ${response.statusText}`);
+      }
       let respText = await resp.text();
       return JSON.parse(respText);
     } catch (e) {
-      console.warn("Ошибка запроса:", e);
-      return { metadata: [], resultset: [] };
+      throw new Error("Не удалось выполнить запрос");
     }
   }
 
@@ -102,8 +102,8 @@ class DataSources {
         this.params[i].value,
       );
     }
-    // Отслыем запрос на сервер и оповещаем подписчиков
-    let result = await this.fetchQuery(query); // TODO: запрос на сервер - заменить на fetch
+    // Отсылаем запрос на сервер и оповещаем подписчиков
+    let result = await this.fetchQuery(query);
     this.subscribes.forEach((item) => {
       item.updatedDS(result);
     });
