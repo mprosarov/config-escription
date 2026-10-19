@@ -686,10 +686,12 @@ class CheckBoxGroup extends BaseElement {
     for (let i = 0; i < data.length; i++) {
       let item = data[i];
       const value = PageBuilder.getParamValue(item.paramName);
-      content += `<div class="form-check ${item.role ? "form-switch" : ""} ">
+      content += `<div class="form-check ${item.role && item.role == "switch" ? "form-switch" : ""} ">
                           <input class="form-check-input"  role="${
-                            item.role ? "form-switch" : ""
-                          }" data-param = "${item.paramName}" type='checkbox' value="${value}" id="${item.id}" ${
+                            item.role && item.role == "switch"
+                              ? "form-switch"
+                              : ""
+                          }" data-param = "${item.paramName}" type='checkbox' id="${item.id}" ${
                             item.status
                           } ${value == 1 ? "checked" : ""}>
                           <label class="form-check-label" for=${item.id}>
@@ -702,9 +704,8 @@ class CheckBoxGroup extends BaseElement {
     // Событие изменения значения
     block.querySelectorAll("input").forEach((checkbox) => {
       checkbox.addEventListener("change", (e) => {
-        console.log(e);
         let p = e.target.dataset.param;
-        super.updateParam(p, e.target.value);
+        super.updateParam(p, e.target.checked ? 1 : 0);
       });
     });
     BaseElement.applyCss(this.parentElement.lastElementChild, this.config);

@@ -468,7 +468,6 @@ sidebars: [
           id: string,
           label: string,
           status: string,
-          checked: boolean
       }
   ```
 
@@ -528,22 +527,21 @@ sidebars: [
      {
          id: string,
          label: string,
-         checked: boolean
          status: "disabled",
          value: string,
-         action: string
+         action: string,
+         role: string
      }
   ```
 
   - `id`(string). Уникальный идентификатом элемента
   - `label`(string). Лэйбл для эелемента
-  - `checked`(boolean). Состояние элемента
-    - `true` - элемент выбран
-    - `false`(по умолчанию, если свойство отсутствует) - элемент не выбран
+  - `role`(string). Необязательное. Переключение вида на свич
+  - `paramName`(string). Имя параметра
   - `status`(string). Активность кнопки
     - `disabled` - кнопка не активна
     - `unabled` - кнопка активна
-  - `value`(string). Значение элемента при взаимодействии с ним
+  - `value`(string). Значение элемента при взаимодействии с ним(скорее всего уйдет, значение привязано к параметру)
   - `action`(string). Действие, выполняемое при взаимодействии с элементом
 
   ```
@@ -555,16 +553,15 @@ sidebars: [
               {
                   label: "текст_1",
                   id: "chb_1",
-                  checked: "checked",
+                  paramName: "pChb_1",
                   status: "disabled",
-                  value: string
+                  "role": "switch"
               },
               {
                   label: "текст_2",
                   id: "chb_2",
-                  checked: "",
+                  paramName: "pChb_1",
                   status: "unabled",
-                  value: 2
               }
           ]
       }

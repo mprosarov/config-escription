@@ -25,7 +25,7 @@
       "id": "pChb_1",
       "init": {
         "valueType": "raw",
-        "value": "1"
+        "value": "0"
       }
     },
     {
@@ -33,7 +33,7 @@
       "id": "pChb_2",
       "init": {
         "valueType": "raw",
-        "value": "0"
+        "value": "1"
       }
     },
     {
@@ -431,7 +431,7 @@
                   "checked": "checked",
                   "status": "unabled",
                   "value": "",
-                  "role": "switch"
+                  "role": "checkbox"
                 },
                 {
                   "id": "id_2",
