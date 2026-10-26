@@ -27,6 +27,7 @@ const PageBuilder = (function () {
   var pageParams = [];
   var DS = [];
   var createdComponents = [];
+  let mainConfig = null;
 
   function clearState() {
     DS = [];
@@ -44,7 +45,9 @@ const PageBuilder = (function () {
         break;
     }
   }
-
+  function getPageConfig() {
+    return mainConfig;
+  }
   //получаем датасорс
   function getDS(name) {
     let find = DS.find((ds) => ds.config.id === name);
@@ -128,6 +131,7 @@ const PageBuilder = (function () {
       }
       // создаем страницу по загруженной конфигурации
       createdComponents = [];
+      mainConfig = config;
       createPage(config);
       // удаляем лоадер
       loader.remove();
@@ -205,11 +209,13 @@ const PageBuilder = (function () {
       (node) => node.nodeName !== "SCRIPT",
     );
     nodes.forEach((node) => node.parentElement.removeChild(node));
+    mainConfig = null;
   }
   return {
     addComponent,
     updateParam,
     performAnAction,
+    getPageConfig,
     getDS,
     getParam,
     getParamValue,

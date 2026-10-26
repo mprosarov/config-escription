@@ -30,6 +30,7 @@ const PageBuilder = (function () {
   var pageParams = [];
   var DS = [];
   var createdComponents = [];
+  let mainConfig = null;
 
   function clearState() {
     DS = [];
@@ -47,7 +48,9 @@ const PageBuilder = (function () {
         break;
     }
   }
-
+  function getPageConfig() {
+    return mainConfig;
+  }
   //получаем датасорс
   function getDS(name) {
     let find = DS.find((ds) => ds.config.id === name);
@@ -131,6 +134,7 @@ const PageBuilder = (function () {
       }
       // создаем страницу по загруженной конфигурации
       createdComponents = [];
+      mainConfig = config;
       createPage(config);
       // удаляем лоадер
       loader.remove();
@@ -208,11 +212,13 @@ const PageBuilder = (function () {
       (node) => node.nodeName !== "SCRIPT",
     );
     nodes.forEach((node) => node.parentElement.removeChild(node));
+    mainConfig = null;
   }
   return {
     addComponent,
     updateParam,
     performAnAction,
+    getPageConfig,
     getDS,
     getParam,
     getParamValue,
@@ -3543,24 +3549,32 @@ class DateRange extends BaseElement {
   }
 
   create() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
+    // Значение по умолчанию
+    // TODO: дописать с учетом переадресации
+    const valParamNameFrom = PageBuilder.getParamValue(
+      this.config.paramNameFrom,
+    );
+    const valParamNameTo = PageBuilder.getParamValue(this.config.paramNameTo);
     const html = `
       <div class="date-range-container input-group input-group-sm">
-        <label class="input-group-text">${this.config.labelFrom || 'С'}</label>
+        <label class="input-group-text">${this.config.labelFrom || "С"}</label>
         <input type="date" class="form-control form-control-sm" 
-               data-param="${this.config.paramNameFrom}" value="${today}">
-        <label class="input-group-text">${this.config.labelTo || 'ПО'}</label>
+               data-param="${this.config.paramNameFrom}" value="${valParamNameFrom ? valParamNameFrom : today}">
+        <label class="input-group-text">${this.config.labelTo || "ПО"}</label>
         <input type="date" class="form-control form-control-sm" 
-               data-param="${this.config.paramNameTo}" value="${today}">
+               data-param="${this.config.paramNameTo}" value="${valParamNameTo ? valParamNameTo : today}">
       </div>`;
     this.parentElement.insertAdjacentHTML("beforeend", html);
-    this.parentElement.lastElementChild.querySelectorAll('input').forEach(input => {
-      input.addEventListener('change', (e)=>{
-        const paramName= e.target.dataset['param'];
-        super.updateParam(paramName,e.target.value)
-      })
 
-    })
+    this.parentElement.lastElementChild
+      .querySelectorAll("input")
+      .forEach((input) => {
+        input.addEventListener("change", (e) => {
+          const paramName = e.target.dataset["param"];
+          super.updateParam(paramName, e.target.value);
+        });
+      });
     BaseElement.applyCss(this.parentElement.lastElementChild, this.config);
   }
 }
@@ -3678,63 +3692,71 @@ class UndoAction extends BaseAction {
 PageBuilder.addComponent(UndoAction.TYPE, UndoAction);
 ActionRegistry.register(UndoAction.TYPE, UndoAction);
 class SaveUserConfigAction extends BaseAction {
-    static TYPE = 'saveUserConfigAction';
-    
-    constructor(parentElement, config, target) {
-        super(parentElement, config, target);
-        this.init();
-    }
-    
-    init() {
-        const trigger = this.config.trigger || 'click';
-        this.target.addEventListener(trigger, (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.execute();
-        });
-    }
-    
-    execute() {
-        let configName = new URLSearchParams(window.location.search).get('config') || 'index';
-        
-        // 1. Собираем значения всех pageParams через data-атрибуты в DOM
-        let params = {};
-        let paramElements = document.querySelectorAll('[data-param]');
-        paramElements.forEach(el => {
-            params[el.dataset.param] = el.value;
-        });
-        
-        // 2. Собираем фильтры и данные таблиц
-        let tables = {};
-        let tableContainers = document.querySelectorAll('.table-tabulator-content > div[id]');
-        tableContainers.forEach(container => {
-            if (container.id) {
-                let tables_arr = Tabulator.findTable('#' + container.id);
-                if (tables_arr && tables_arr.length > 0) {
-                    let table = tables_arr[0];
-                    tables[container.id] = {
-                        data: table.getData(),
-                        filters: table.getFilters()
-                    };
-                }
-            }
-        });
-        
-        let userConfig = { params, tables, savedAt: new Date().toISOString() };
-        
-        // Сохраняем в localStorage браузера (временное решение)
-        // В будущем: POST на сервер /saveUserConfig
-        window.localStorage.setItem(`userConfig_${configName}`, JSON.stringify(userConfig));
-        
-        console.log('SaveUserConfigAction: конфигурация сохранена:', userConfig);
-        alert('Конфигурация пользователя сохранена');
+  static TYPE = "saveUserConfigAction";
 
-        // Логируем сохранение конфигурации пользователя
-        ActionLogger.log('saveUserConfig', 'Сохранение конфигурации пользователя', {
-            configName: configName,
-            userConfig: userConfig
-        });
+  constructor(parentElement, config, target) {
+    super(parentElement, config, target);
+    this.init();
+  }
+
+  init() {
+    const trigger = this.config.trigger || "click";
+    this.target.addEventListener(trigger, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.execute();
+    });
+  }
+
+  findTablesRecursive(type, config) {
+    const walk = (node) => {
+      if (node === null || node === undefined) return;
+      if (Array.isArray(node)) {
+        node.forEach(walk);
+        return;
+      }
+      if (typeof node === "object") {
+        if (node.type === type) {
+          let table = Tabulator.findTable("#" + node.id)[0];
+          node.tdata.columns = table.getColumnLayout();
+        }
+        for (const key in node) {
+          walk(node[key]);
+        }
+      }
+    };
+    walk(config);
+    return config;
+  }
+
+  execute() {
+    let configName =
+      new URLSearchParams(window.location.search).get("config") || "index";
+    let config = PageBuilder.getPageConfig();
+    for (const p of config.pageParams) {
+      let val = PageBuilder.getParamValue(p.id);
+      val ? (p.init.value = val) : null;
     }
+    config = this.findTablesRecursive("table-tabulator", config);
+
+    // TODO: table.getFilters()
+
+    // // Сохраняем в localStorage браузера (временное решение)
+    // // В будущем: POST на сервер /saveUserConfig
+    // window.localStorage.setItem(
+    //   `userConfig_${configName}`,
+    //   JSON.stringify(userConfig),
+    // );
+
+    // console.log("SaveUserConfigAction: конфигурация сохранена:", userConfig);
+    alert("Конфигурация пользователя сохранена");
+
+    // Логируем сохранение конфигурации пользователя
+    ActionLogger.log("saveUserConfig", "Сохранение конфигурации пользователя", {
+      configName: configName,
+      userConfig: config,
+    });
+  }
 }
 PageBuilder.addComponent(SaveUserConfigAction.TYPE, SaveUserConfigAction);
 ActionRegistry.register(SaveUserConfigAction.TYPE, SaveUserConfigAction);
