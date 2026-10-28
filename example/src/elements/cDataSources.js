@@ -71,7 +71,7 @@ class DataSources {
       }
       return test;
     } else {
-      URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+      URL = "http://base-s-sia-01.vniief.local/rest/krb";
     }
     try {
       const resp = await fetch(`${URL}/doquery`, {

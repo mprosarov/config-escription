@@ -1423,7 +1423,7 @@ class DataSources {
       }
       return test;
     } else {
-      URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+      URL = "http://base-s-sia-01.vniief.local/rest/krb";
     }
     try {
       const resp = await fetch(`${URL}/doquery`, {
@@ -3709,6 +3709,7 @@ class SaveUserConfigAction extends BaseAction {
   }
 
   findTablesRecursive(type, config) {
+    let tables = [];
     const walk = (node) => {
       if (node === null || node === undefined) return;
       if (Array.isArray(node)) {
@@ -3719,6 +3720,11 @@ class SaveUserConfigAction extends BaseAction {
         if (node.type === type) {
           let table = Tabulator.findTable("#" + node.id)[0];
           node.tdata.columns = table.getColumnLayout();
+          tables.push({
+            id: node.id,
+            headers: table.getColumnLayout(),
+            filters: table.getFilters(),
+          });
         }
         for (const key in node) {
           walk(node[key]);
@@ -3726,35 +3732,64 @@ class SaveUserConfigAction extends BaseAction {
       }
     };
     walk(config);
-    return config;
+    return tables;
   }
 
-  execute() {
-    let configName =
+  async execute() {
+    const configName =
       new URLSearchParams(window.location.search).get("config") || "index";
-    let config = PageBuilder.getPageConfig();
+
+    const config = PageBuilder.getPageConfig();
+    const params = {};
     for (const p of config.pageParams) {
-      let val = PageBuilder.getParamValue(p.id);
-      val ? (p.init.value = val) : null;
+      params[p.id] = PageBuilder.getParamValue(p.id);
     }
-    config = this.findTablesRecursive("table-tabulator", config);
+    const tables = this.findTablesRecursive("table-tabulator", config);
+    const userConfig = { params, tables, savedAt: new Date().toISOString() };
 
-    // TODO: table.getFilters()
+    const API_URL = `${window.location.href}/rest/krb`;
+    // заглушка, которую нужно заменить на авторизацию реального пользака
+    const getUserName = () => {
+      return window.currentUser || "anonymous";
+    };
+    try {
+      const url =
+        `${API_URL}/saveuserinterfaceconfig` +
+        `?scode=${encodeURIComponent(configName)}` +
+        `&susername=${encodeURIComponent(getUserName())}`;
 
-    // // Сохраняем в localStorage браузера (временное решение)
-    // // В будущем: POST на сервер /saveUserConfig
-    // window.localStorage.setItem(
-    //   `userConfig_${configName}`,
-    //   JSON.stringify(userConfig),
-    // );
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { Accept: "text/plain", "Content-Type": "text/plain" },
+        body: JSON.stringify(userConfig),
+        // credentials: "include",       //  может понадобиться
+      });
 
-    // console.log("SaveUserConfigAction: конфигурация сохранена:", userConfig);
-    alert("Конфигурация пользователя сохранена");
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+      }
+      const respText = await resp.text();
+      console.log("SaveUserConfigAction: сервер сохранил:", respText);
 
-    // Логируем сохранение конфигурации пользователя
+      // Не знаю, понадобится ли
+      window.localStorage.setItem(
+        `userConfig_${configName}`,
+        JSON.stringify(userConfig),
+      );
+    } catch (e) {
+      console.error("Ошибка сохранения:", e);
+      ActionLogger.log("error", "Ошибка сохранения конфигурации", {
+        configName,
+        errorMessage: e.message,
+      });
+      alert("Не удалось сохранить конфигурацию: " + e.message); // или другой UI-механизм
+      console.warn(userConfig);
+      return;
+    }
+
     ActionLogger.log("saveUserConfig", "Сохранение конфигурации пользователя", {
-      configName: configName,
-      userConfig: config,
+      configName,
+      userConfig,
     });
   }
 }
