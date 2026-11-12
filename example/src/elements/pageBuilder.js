@@ -2,23 +2,24 @@ const PageBuilder = (function () {
   //   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
   // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
 
-  let URL = "";
+  let URL = '';
 
-  console.log("location.href: ", location.href);
+  console.log ('location.href: ', location.href);
 
-  if (location.href.indexOf("file") >= 0) {
-    URL = "http://localhost:3000/config";
+  if (location.href.indexOf ('file') >= 0) {
+    URL = 'http://localhost:3000/config';
   } else {
-    URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+    // URL = "http://base-s-web-01.vniief.local/pentaho/plugin/vnf/api/rest";
+    URL = `${window.location.href}/rest/krb`;
   }
 
   // Подписываемся на событие изменения истории(переход назад)
-  window.addEventListener("popstate", (event) => {
+  window.addEventListener ('popstate', event => {
     //console.log("popstate event:", event)
     //чистим историю
-    clearState();
+    clearState ();
     // инициализируем зановo страницу
-    initPage(); // глобальная функция для инициализации страницы( в templates.html)
+    initPage (); // глобальная функция для инициализации страницы( в templates.html)
   });
   let navbar = null;
   let domPage = null;
@@ -29,189 +30,239 @@ const PageBuilder = (function () {
   var createdComponents = [];
   let mainConfig = null;
 
-  function clearState() {
+  function clearState () {
     DS = [];
     pageParams = [];
     // window.history.replaceState({}, null, 'url')
   }
   //ЭКШЕНЫ
-  function performAnAction(name, obj, tableID) {
+  function performAnAction (name, obj, tableID) {
     //name - вид действия
     //id - идентификатор таблицы, если требуется для экшена
     //obj - объект действия
 
     switch (name) {
-      case "redirect":
+      case 'redirect':
         break;
     }
   }
-  function getPageConfig() {
+
+  function getPageConfig () {
     return mainConfig;
   }
+
+
   //получаем датасорс
-  function getDS(name) {
-    let find = DS.find((ds) => ds.config.id === name);
+  function getDS (name) {
+    let find = DS.find (ds => ds.config.id === name);
     return find;
   }
   //Получаем объект параметра
-  function getParam(name) {
-    let find = pageParams.find((param) => param.getName() === name);
+  function getParam (name) {
+    let find = pageParams.find (param => param.getName () === name);
     if (!find)
-      throw new Error("Параметр не удалось получить.Нет такого параметра");
+      throw new Error ('Параметр не удалось получить.Нет такого параметра');
     return find;
   }
   //Получаем значение параметра
-  function getParamValue(name) {
-    let find = pageParams.find((param) => param.getName() === name);
+  function getParamValue (name) {
+    let find = pageParams.find (param => param.getName () === name);
     if (!find)
-      throw new Error("Значение не удалось получить.Нет такого параметра");
-    return find.getValue();
+      throw new Error ('Значение не удалось получить.Нет такого параметра');
+    return find.getValue ();
   }
   //обновляем значения параметров при переключении чекбоксов и селектов
-  function updateParam(name, newValue) {
-    var p = getParam(name);
+  function updateParam (name, newValue) {
+    var p = getParam (name);
     if (!p) {
-      console.warn(`Параметр с именем ${name} не найден`);
+      console.warn (`Параметр с именем ${name} не найден`);
       return;
     }
-    p.setParamValue(newValue);
+    p.setParamValue (newValue);
   }
   //Добавление компонента в общий список
-  function addComponent(type, component) {
+  function addComponent (type, component) {
     if (components[type]) {
-      throw new Error(`Компонент с таким типом уже существует. type=${type}`);
+      throw new Error (`Компонент с таким типом уже существует. type=${type}`);
     }
     components[type] = component;
   }
-  function loadWithParams(configName, params) {
+  function loadWithParams (configName, params) {
     // получаем все текущие GET параметры страницы
-    let getParams = new URLSearchParams();
+    let getParams = new URLSearchParams ();
 
     // добавляем имя конфигурации в GEt параметры, чтобы при перезагрузке страницы(F5) - загрузилась нужная конфигурация
-    getParams.set("config", configName);
+    getParams.set ('config', configName);
     // добавляем переданные параметры в GEt параметры
-    params.forEach((param) => {
-      getParams.set(param.id, param.value);
+    params.forEach (param => {
+      getParams.set (param.id, param.value);
     });
     // Меняем текущий адрес страницы
-    window.history.pushState({}, configName, `?${getParams.toString()}`);
-    loadPageConfig(configName);
+    window.history.pushState ({}, configName, `?${getParams.toString ()}`);
+    loadPageConfig (configName);
+  }
+  // TODO: заглушка, которую нужно заменить на авторизацию реального пользака  или через /getdomainconfig
+  function getUserName () {
+    return window.currentUser || 'anonymous';
+  }
+
+  async function getUserInterfaceConfig (scode) {
+    const susername = getUserName ().toUpperCase ();
+    const url = `${URL}/getuserinterfaceconfig?scode=${encodeURIComponent (scode)}&susername=${encodeURIComponent (susername)}`;
+    try {
+      const resp = await fetch (url, {
+        method: 'GET',
+        headers: {Accept: 'application/json'},
+      });
+
+      if (!resp.ok) {
+        throw new Error (`HTTP ${resp.status}: ${resp.statusText}`);
+      }
+      const text = await resp.text ();
+      const options = JSON.parse (text)
+      // применяем настройки таблиц и параметров
+      // параметрры
+      for(let param in options.params){
+        updateParam(param,options.params.param)
+      }
+      options.tables.map(table=>{
+        let tableObj = Tabulator.findTable(`#${table.id}`);
+        // настройки шапки таблицы
+        tableObj.setColumns(table.headers)
+        if(table.filters.length>0){
+          for(let i=0;i<table.filters.length; i++ ){ 
+            // устрановка фильтров
+            tableObj.setFilter(table.filters[i]);
+          } 
+        }
+      })
+    } catch (e) {
+      console.error ('Ошибка загрузки конфигурации:', e);
+      return null;
+    }
   }
   // Загрузить json конфигурацию страницы с сервера по имени файла
-  async function loadPageConfig(configName, params = []) {
+  async function loadPageConfig (configName, params = []) {
     //console.log("configName loadPageConfig: ", configName);
     //console.log("params loadPageConfig: ", params);
 
     // очищаем страницу, чтобы построить новую по загруженной конфигурации
-    clear();
+    clear ();
     // лоадер
-    document.body.insertAdjacentHTML(
-      "beforeend",
+    document.body.insertAdjacentHTML (
+      'beforeend',
       `<section class="loader-container">
           <div class="dot"></div>
           <div class="dot"></div>
           <div class="dot"></div>
           <div class="dot"></div>
           <div class="dot"></div>
-      </section>`,
+      </section>`
     );
-    let loader = document.body.querySelector(".loader-container");
+    let loader = document.body.querySelector ('.loader-container');
     try {
-      let response = await fetch(`${URL}?name=${configName}`);
-      let config = await response.json();
+      let response = await fetch (`${URL}?name=${configName}`);
+      let config = await response.json ();
       //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
       //   let result = await response.json();
       //   let config = result.result;
 
       // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
       if (response.status !== 200) {
-        throw new Error(
-          `Ошибка при загрузке файла: ${configName}. ${config.error}`,
+        throw new Error (
+          `Ошибка при загрузке файла: ${configName}. ${config.error}`
         );
       }
       // создаем страницу по загруженной конфигурации
       createdComponents = [];
       mainConfig = config;
-      createPage(config);
+      createPage (config);
+      getUserInterfaceConfig (configName);
       // удаляем лоадер
-      loader.remove();
+      loader.remove ();
     } catch (error) {
       //console.log('catch: ', error)
       loader.innerHTML = `<div class="loader-error">${error.message}</div>`;
       createdComponents = [];
 
       // Логируем ошибку загрузки конфигурации
-      ActionLogger.log("error", "Ошибка загрузки конфигурации: " + configName, {
-        configName: configName,
-        errorMessage: error.message,
-      });
-    }
-  }
-  function create(parentElement, config) {
-    if (!components[config.type]) {
-      throw new Error(
-        `Компонента с таким типом не существует. type=${config.type}`,
+      ActionLogger.log (
+        'error',
+        'Ошибка загрузки конфигурации: ' + configName,
+        {
+          configName: configName,
+          errorMessage: error.message,
+        }
       );
     }
-    return new components[config.type](parentElement, config);
+  }
+  function create (parentElement, config) {
+    if (!components[config.type]) {
+      throw new Error (
+        `Компонента с таким типом не существует. type=${config.type}`
+      );
+    }
+    return new components[config.type] (parentElement, config);
   }
   // Создаем навигационную панель
-  function createMainNavBar(config) {
-    navbar = new NavBar(document.body, config);
+  function createMainNavBar (config) {
+    navbar = new NavBar (document.body, config);
   }
   // создать страницу по конфигурации
-  function createPage(config) {
+  function createPage (config) {
     //console.log("createPage config", config);
 
-    if (config["pageParams"]) {
-      config.pageParams.forEach((item) => {
-        var param = new PageParam(`null`, item);
-        pageParams.push(param);
+    if (config['pageParams']) {
+      config.pageParams.forEach (item => {
+        var param = new PageParam (`null`, item);
+        pageParams.push (param);
       });
     }
-    if (config["dataSources"]) {
-      config["dataSources"].forEach((item) => {
-        var datasource = PageBuilder.create(null, item);
-        DS.push(datasource);
+    if (config['dataSources']) {
+      config['dataSources'].forEach (item => {
+        var datasource = PageBuilder.create (null, item);
+        DS.push (datasource);
       });
     }
-    if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      '<div class="app-page"></div>',
+    if (config['navbar']) PageBuilder.createMainNavBar (config.navbar);
+    document.body.insertAdjacentHTML (
+      'beforeend',
+      '<div class="app-page"></div>'
     );
     domPage = document.body.lastElementChild;
-    if (config["page"]) {
-      config.page.forEach((item) => {
+    if (config['page']) {
+      config.page.forEach (item => {
         //PageBuilder.create(domPage, item);
-        createdComponents.push(PageBuilder.create(domPage, item));
+        createdComponents.push (PageBuilder.create (domPage, item));
       });
     }
-    if (config["sidebars"]) {
-      config["sidebars"].forEach((item) => {
-        PageBuilder.create(document.body, item);
+    if (config['sidebars']) {
+      config['sidebars'].forEach (item => {
+        PageBuilder.create (document.body, item);
       });
     }
-    if (config["modals"]) {
-      config["modals"].forEach((item) => {
-        PageBuilder.create(document.body, item);
+    if (config['modals']) {
+      config['modals'].forEach (item => {
+        PageBuilder.create (document.body, item);
       });
     }
     // Все компоненты отрисованы, выполняем запросы данных
-    DS.forEach((item) => {
-      item.execute();
+    DS.forEach (item => {
+      item.execute ();
     });
   }
   //Очистить страницу
-  function clear() {
+  function clear () {
     // проходим по всем элементам на странице и удаляем их
-    let nodes = [...document.body.children].filter(
-      (node) => node.nodeName !== "SCRIPT",
+    let nodes = [...document.body.children].filter (
+      node => node.nodeName !== 'SCRIPT'
     );
-    nodes.forEach((node) => node.parentElement.removeChild(node));
+    nodes.forEach (node => node.parentElement.removeChild (node));
     mainConfig = null;
   }
   return {
+    getUserName,
+    getUserInterfaceConfig,
     addComponent,
     updateParam,
     performAnAction,
@@ -226,4 +277,4 @@ const PageBuilder = (function () {
     loadWithParams,
     clearState,
   };
-})();
+}) ();

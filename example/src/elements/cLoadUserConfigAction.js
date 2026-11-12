@@ -20,15 +20,16 @@ class LoadUserConfigAction extends BaseAction {
         
         // Загружаем из localStorage браузера (временное решение)
         // В будущем: GET /loadUserConfig?name=...
+        //const saved = PageBuilder.getUserInterfaceConfig(configName);
         let saved = window.localStorage.getItem(`userConfig_${configName}`);
-        
+     //   console.log(saved)
         if (!saved) {
             alert('Сохраненная конфигурация не найдена');
             return;
         }
         
         let userConfig = JSON.parse(saved);
-        
+        console.log(userConfig)
         // 1. Восстанавливаем параметры через DOM
         if (userConfig.params) {
             Object.keys(userConfig.params).forEach(name => {

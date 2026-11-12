@@ -54,16 +54,12 @@ class SaveUserConfigAction extends BaseAction {
     const tables = this.findTablesRecursive("table-tabulator", config);
     const userConfig = { params, tables, savedAt: new Date().toISOString() };
 
-    const API_URL = `${window.location.href}/rest/krb`;
-    // заглушка, которую нужно заменить на авторизацию реального пользака
-    const getUserName = () => {
-      return window.currentUser || "anonymous";
-    };
+    //const API_URL = `${window.location.href}/rest/krb`;
     try {
       const url =
-        `${API_URL}/saveuserinterfaceconfig` +
+        `${URL}/saveuserinterfaceconfig` +
         `?scode=${encodeURIComponent(configName)}` +
-        `&susername=${encodeURIComponent(getUserName())}`;
+        `&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
 
       const resp = await fetch(url, {
         method: "POST",
@@ -85,12 +81,19 @@ class SaveUserConfigAction extends BaseAction {
       );
     } catch (e) {
       console.error("Ошибка сохранения:", e);
+
       ActionLogger.log("error", "Ошибка сохранения конфигурации", {
         configName,
         errorMessage: e.message,
       });
       alert("Не удалось сохранить конфигурацию: " + e.message); // или другой UI-механизм
       console.warn(userConfig);
+      //------TEST----------------
+      window.localStorage.setItem(
+        `userConfig_${configName}`,
+        JSON.stringify(userConfig),
+      );
+      //----------------------
       return;
     }
 

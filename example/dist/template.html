@@ -15,7 +15,6 @@
   // Тут какой-то запрос кофигурации с сервера
   // Например: let config = await fetch("/config");
   function initPage(params) {
-    //let configName = getUrlParamByName('config') || 'PPPPPIR';
     let configName = getUrlParamByName("config") || "index";
     PageBuilder.loadPageConfig(configName);
   }
