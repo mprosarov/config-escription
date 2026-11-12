@@ -125,7 +125,7 @@ const PageBuilder = (function () {
       for(let param in options.params){
         updateParam(param,options.params.param)
       }
-      options.tables.map(table=>{
+      options.tables.forEach(table=>{
         let tableObj = Tabulator.findTable(`#${table.id}`);
         // настройки шапки таблицы
         tableObj.setColumns(table.headers)
