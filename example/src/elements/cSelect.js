@@ -51,7 +51,6 @@ class Select extends BaseElement {
     dom.querySelector("select").addEventListener("change", (e) => {
       super.updateParam(this.config.paramName, e.target.value);
     });
-
     BaseElement.applyCss(dom, this.config);
   }
 

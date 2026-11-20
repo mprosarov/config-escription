@@ -51,56 +51,41 @@ class SaveUserConfigAction extends BaseAction {
     for (const p of config.pageParams) {
       params[p.id] = PageBuilder.getParamValue(p.id);
     }
+    console.warn("params", params);
     const tables = this.findTablesRecursive("table-tabulator", config);
     const userConfig = { params, tables, savedAt: new Date().toISOString() };
 
-    //const API_URL = `${window.location.href}/rest/krb`;
     try {
-      const url =
-        `${URL}/saveuserinterfaceconfig` +
-        `?scode=${encodeURIComponent(configName)}` +
-        `&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
-
+      if (location.href.indexOf("file") >= 0) {
+        URL = "http://localhost:3000/config";
+      } else {
+        URL = `http://base-s-sia-01.local/rest/krb`;
+      }
+      const url = `${URL}/saveuserinterfaceconfig?scode=${encodeURIComponent(configName)}&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
       const resp = await fetch(url, {
         method: "POST",
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },
         body: JSON.stringify(userConfig),
         // credentials: "include",       //  может понадобиться
       });
-
       if (!resp.ok) {
         throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
       }
       const respText = await resp.text();
-      console.log("SaveUserConfigAction: сервер сохранил:", respText);
-
-      // Не знаю, понадобится ли
-      window.localStorage.setItem(
-        `userConfig_${configName}`,
-        JSON.stringify(userConfig),
+      ActionLogger.log(
+        "saveUserConfig",
+        "Сохранение конфигурации пользователя",
+        { configName, userConfig },
       );
     } catch (e) {
       console.error("Ошибка сохранения:", e);
-
       ActionLogger.log("error", "Ошибка сохранения конфигурации", {
         configName,
         errorMessage: e.message,
       });
       alert("Не удалось сохранить конфигурацию: " + e.message); // или другой UI-механизм
-      console.warn(userConfig);
-      //------TEST----------------
-      window.localStorage.setItem(
-        `userConfig_${configName}`,
-        JSON.stringify(userConfig),
-      );
-      //----------------------
       return;
     }
-
-    ActionLogger.log("saveUserConfig", "Сохранение конфигурации пользователя", {
-      configName,
-      userConfig,
-    });
   }
 }
 PageBuilder.addComponent(SaveUserConfigAction.TYPE, SaveUserConfigAction);
