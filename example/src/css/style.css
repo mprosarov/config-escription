@@ -14,13 +14,67 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    margin-top: var(--space-3);
+    margin-top: var(--space-4);
 }
 /***************************************/
 
+/* --- Блоки конфигурации (itemsBlock) ---
+   display:flex «оживляет» классы ориентации из конфига (flex-row/flex-column —
+   утилиты Bootstrap задают только направление, но не display). По умолчанию
+   колонка — блоки без orientation складываются вертикально, как раньше. */
 .itemsBlock {
-    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
+}
+
+/* Row-блоки: колонки в одну строку, на узких экранах переносятся (mobile-first).
+   flex-fill из Bootstrap (flex:1 1 auto !important) перебиваем своим !important
+   с большей специфичностью, чтобы задать базис 260px для переноса. */
+.itemsBlock.flex-row {
+    flex-wrap: wrap;
+}
+
+.itemsBlock.flex-row > .itemsBlock {
+    flex: 1 1 260px !important;
+    min-width: 0;
+}
+
+/* Bootstrap-маржин mb-* у контролов внутри блоков дублировал бы gap */
+.itemsBlock > .mb-3 {
+    margin-bottom: 0 !important;
+}
+
+/* --- Карточная система: блоки верхнего уровня страницы ---
+   Тонкая граница, мягкая тень, крупный паддинг (docs/design-rules.md, «Карточки») */
+.app-page > .itemsBlock,
+.app-page > .tab-content,
+.app-page > .table-tabulator-wrapper {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
+}
+
+.app-page > :last-child {
+    margin-bottom: 0;
+}
+
+/* Заголовок страницы */
+.app-page > .h1,
+.app-page > .h2,
+.app-page > .h3,
+.app-page > .h4,
+.app-page > .h5,
+.app-page > .h6 {
+    margin: 0 0 var(--space-4);
+}
+
+/* Сегментные вкладки страницы: воздух до карточки контента */
+.app-page > .nav-tabs {
+    margin-bottom: var(--space-4);
 }
 
 .btn {
@@ -52,8 +106,7 @@
     font-weight: var(--font-semibold);
 }
 
-.tabulator .tabulator-header .tabulator-col,
-.tabulator-row .tabulator-cell {
+.tabulator .tabulator-header .tabulator-col {
     border-right: 1px solid var(--border-subtle);
 }
 
@@ -62,8 +115,27 @@
     border-top: 1px solid var(--border-subtle);
 }
 
+/* Чистая сетка тела таблицы: без зебры и вертикальных линий, тонкие
+   разделители строк. Специфичность селекторов не ниже, чем у темы
+   semanticui, а файл подключается позже — перекрытие без !important. */
+.tabulator .tabulator-tableholder .tabulator-table {
+    background-color: transparent;
+}
+
+.tabulator-row,
 .tabulator-row.tabulator-row-even {
-    background-color: var(--bg-subtle);
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.tabulator-row .tabulator-cell {
+    border-right: none;
+    padding: var(--space-2) var(--space-3);
+}
+
+.tabulator-row.tabulator-selected,
+.tabulator-row.tabulator-selected.tabulator-row-even {
+    background-color: var(--accent-subtle);
 }
 
 .tabulator-row.tabulator-selectable:hover {
@@ -82,7 +154,7 @@ body {
     position: relative;
     overflow: auto;
     height: calc(100vh - var(--headerHeigth));
-    padding: var(--space-4) var(--space-5);
+    padding: var(--space-5) var(--space-6);
 }
 
 .navbar {

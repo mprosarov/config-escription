@@ -49,10 +49,12 @@
 
     /* --- Поверхности --- */
     --bg-page: #f3f6fa;          /* фон страницы */
-    --bg-surface: #ffffff;       /* карточки, панели, navbar, offcanvas */
+    --bg-surface: #fdfdfe;       /* карточки, панели, navbar, offcanvas (мягкий белый) */
     --bg-subtle: var(--slate-100);   /* вторичные подложки (заголовки таблиц, input-group-text) */
     --bg-hover: #e9eef6;         /* hover-состояния строк/пунктов */
     --bg-active: #dde5ef;        /* active/нажатые состояния */
+    --bg-inset: #e9edf4;         /* «утопленный» контейнер (сегментные вкладки) */
+    --bg-raised: #ffffff;        /* активный элемент над inset-контейнером */
 
     /* --- Границы --- */
     --border-subtle: var(--slate-200);
@@ -91,14 +93,14 @@
     --secondary-hover: #4a596c;
     --secondary-subtle: #eef1f6;
 
-    /* --- Типографика --- */
-    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    /* --- Типографика (правила: основной текст 15–17px, 2–3 размера на экран) --- */
+    --font-sans: Inter, "Inter var", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
-    --text-xs: 0.75rem;     /* 12px */
-    --text-sm: 0.8125rem;   /* 13px */
-    --text-base: 0.875rem;  /* 14px — основной размер делового интерфейса */
-    --text-md: 0.9375rem;   /* 15px */
-    --text-lg: 1.0625rem;   /* 17px */
+    --text-xs: 0.75rem;     /* 12px — метки, временные отметки */
+    --text-sm: 0.875rem;    /* 14px — контролы, таблицы, меню */
+    --text-base: 0.9375rem; /* 15px — основной текст */
+    --text-md: 1rem;        /* 16px */
+    --text-lg: 1.125rem;    /* 18px */
     --text-xl: 1.25rem;     /* 20px */
     --text-2xl: 1.5rem;     /* 24px */
     --text-3xl: 1.875rem;   /* 30px */
@@ -106,7 +108,7 @@
     --font-medium: 500;
     --font-semibold: 600;
     --leading-tight: 1.25;
-    --leading-normal: 1.45;
+    --leading-normal: 1.5;
 
     /* --- Отступы (шкала 4px) --- */
     --space-1: 4px;
@@ -161,6 +163,8 @@
     --bg-subtle: #212b3e;
     --bg-hover: #2a3650;
     --bg-active: #33415e;
+    --bg-inset: #0d1420;
+    --bg-raised: #2a3650;
 
     --border-subtle: #263149;
     --border-default: #34405a;
@@ -226,6 +230,14 @@ h1, h2, h3, h4, h5, h6,
     line-height: var(--leading-tight);
 }
 
+/* Сдержанная продуктовая шкала заголовков (плотнее и мельче дефолтов Bootstrap) */
+h1, .h1 { font-size: var(--text-3xl); letter-spacing: -0.02em; }
+h2, .h2 { font-size: var(--text-2xl); letter-spacing: -0.02em; }
+h3, .h3 { font-size: var(--text-xl); letter-spacing: -0.01em; }
+h4, .h4 { font-size: var(--text-lg); }
+h5, .h5 { font-size: var(--text-md); }
+h6, .h6 { font-size: var(--text-base); }
+
 a {
     color: var(--text-link);
 }
@@ -233,6 +245,17 @@ a {
 ::selection {
     background: var(--accent-subtle);
     color: var(--text-primary);
+}
+
+/* Видимый фокус при навигации с клавиатуры (WCAG 2.4.7).
+   У полей ввода своё focus-кольцо через box-shadow, поэтому они не в списке. */
+a:focus-visible,
+button:focus-visible,
+.nav-link:focus-visible,
+.dropdown-item:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .shadow {
@@ -281,7 +304,7 @@ a {
 }
 
 .btn-sm {
-    padding: 0.3rem 0.7rem;
+    padding: 0.375rem 0.875rem;
     font-size: var(--text-sm);
 }
 
@@ -311,43 +334,64 @@ a {
     color: var(--btn-fg);
 }
 
-/* Контурные варианты (основной вид кнопок в конфигах: btn-outline-*) */
+/* Контурные варианты (основной вид кнопок в конфигах: btn-outline-*).
+   Secondary — «тихая» кнопка (нейтральная рамка, без цветного заполнения),
+   остальные статусы — цветные акценты. */
 .btn-outline-primary   { --btn-fg: var(--accent);    --btn-bg-hover: var(--accent);    --btn-fg-hover: var(--accent-contrast); }
-.btn-outline-secondary { --btn-fg: var(--secondary); --btn-bg-hover: var(--secondary); --btn-fg-hover: #ffffff; }
 .btn-outline-success   { --btn-fg: var(--success);   --btn-bg-hover: var(--success);   --btn-fg-hover: #ffffff; }
 .btn-outline-danger    { --btn-fg: var(--danger);    --btn-bg-hover: var(--danger);    --btn-fg-hover: #ffffff; }
 .btn-outline-warning   { --btn-fg: var(--warning);   --btn-bg-hover: var(--warning);   --btn-fg-hover: #ffffff; }
 .btn-outline-info      { --btn-fg: var(--info);      --btn-bg-hover: var(--info);      --btn-fg-hover: #ffffff; }
 
-.btn-outline-primary, .btn-outline-secondary, .btn-outline-success,
+.btn-outline-primary, .btn-outline-success,
 .btn-outline-danger, .btn-outline-warning, .btn-outline-info {
     color: var(--btn-fg);
     border-color: var(--btn-fg);
     background-color: transparent;
 }
 
-.btn-outline-primary:hover, .btn-outline-secondary:hover, .btn-outline-success:hover,
+.btn-outline-primary:hover, .btn-outline-success:hover,
 .btn-outline-danger:hover, .btn-outline-warning:hover, .btn-outline-info:hover,
-.btn-outline-primary:focus, .btn-outline-secondary:focus, .btn-outline-success:focus,
+.btn-outline-primary:focus, .btn-outline-success:focus,
 .btn-outline-danger:focus, .btn-outline-warning:focus, .btn-outline-info:focus,
-.btn-outline-primary:active, .btn-outline-secondary:active, .btn-outline-success:active,
+.btn-outline-primary:active, .btn-outline-success:active,
 .btn-outline-danger:active, .btn-outline-warning:active, .btn-outline-info:active,
-.btn-outline-primary.active, .btn-outline-secondary.active, .btn-outline-success.active,
+.btn-outline-primary.active, .btn-outline-success.active,
 .btn-outline-danger.active, .btn-outline-warning.active, .btn-outline-info.active {
     background-color: var(--btn-bg-hover);
     border-color: var(--btn-bg-hover);
     color: var(--btn-fg-hover);
 }
 
-/* --- Navbar --- */
+.btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--border-default);
+    background-color: transparent;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active,
+.btn-outline-secondary.active {
+    background-color: var(--bg-hover);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+}
+
+/* --- Navbar: плоская панель, граница снизу вместо тени --- */
 .navbar {
     background-color: var(--bg-surface);
     border-bottom: 1px solid var(--border-subtle);
-    padding: var(--space-3) var(--space-5);
+    padding: var(--space-3) var(--space-6);
 }
 
 .navbar.bg-light {
     background-color: var(--bg-surface) !important;
+}
+
+/* Класс shadow приходит из разметки cNavBar — убираем тень (правила: без лишних теней) */
+.navbar.shadow {
+    box-shadow: none !important;
 }
 
 /* Вложенный navbar (создаётся компонентом Menu внутри основной панели) */
@@ -418,31 +462,36 @@ a {
     background-color: var(--accent-subtle);
 }
 
-/* Вкладки: современный underline-стиль */
+/* Вкладки: сегментный контрол («утопленный» контейнер + активная пилюля) */
 .nav-tabs {
-    border-bottom: 1px solid var(--border-default);
+    border-bottom: none;
     gap: var(--space-1);
+    background-color: var(--bg-inset);
+    padding: var(--space-1);
+    border-radius: var(--radius-md);
+    width: fit-content;
+    max-width: 100%;
 }
 
 .nav-tabs .nav-link {
     border: none;
-    border-bottom: 2px solid transparent;
-    border-radius: 0;
-    margin-bottom: -1px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0;
     background: transparent;
-    padding: var(--space-2) var(--space-4);
+    color: var(--text-secondary);
+    padding: calc(var(--space-2) - 2px) var(--space-4);
+    white-space: nowrap;
 }
 
 .nav-tabs .nav-link:hover {
     background: transparent;
-    color: var(--accent);
-    border-bottom-color: var(--border-strong);
+    color: var(--text-primary);
 }
 
 .nav-tabs .nav-link.active {
-    background: transparent;
-    color: var(--accent) !important;
-    border-bottom-color: var(--accent);
+    background: var(--bg-raised);
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow-sm);
     font-weight: var(--font-semibold);
 }
 
@@ -548,6 +597,20 @@ a {
     color: var(--text-secondary);
     font-size: var(--text-sm);
     font-weight: var(--font-medium);
+}
+
+/* sm-контролы из конфигов: крупнее дефолтов Bootstrap (правила: удобные поля) */
+.input-group-sm > .form-control,
+.input-group-sm > .form-select,
+.form-control-sm,
+.form-select-sm {
+    font-size: var(--text-sm);
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+}
+
+.input-group-sm > .input-group-text {
+    font-size: var(--text-sm);
 }
 
 /* --- Offcanvas (боковые панели) --- */
