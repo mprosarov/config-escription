@@ -1,69 +1,77 @@
-:root {
-    --headerHeigth: 78px;
-    --offcanvasTopHeigth: 30vh;
-    --offcanvasRightWidth: 400px;
-    --offcanvasLeftWidth: 400px;
-}
-.input-group{
+/* ==========================================================================
+   style.css — структурные стили приложения
+   --------------------------------------------------------------------------
+   Все цвета, отступы, радиусы и тени берутся из токенов темы (css/theme.css).
+   Литеральные значения цветов здесь запрещены — иначе тема не переключится.
+   ========================================================================== */
+
+.input-group {
     width: auto;
 }
 
-/***Плашка с группой кнопок у таблицы***/
-.input-group-table{
+/*** Плашка с группой кнопок у таблицы ***/
+.input-group-table {
     display: flex;
     flex-direction: column;
-    margin-top: 2%;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
 }
 /***************************************/
 
 .itemsBlock {
-    padding: 10px 8px;
-    gap: 10px;   
-}
-.itemsBlock>.row{
-    max-width: auto;
+    padding: var(--space-3);
+    gap: var(--space-3);
 }
 
-.btn{
+.btn {
     min-width: fit-content;
 }
+
 .navbar-nav {
-    gap: 8px;
+    gap: var(--space-1);
 }
-.flex{
+
+.flex {
     display: flex;
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: var(--space-2);
 }
-h5 {
-    text-align: center;
-    margin-top: 2rem;
-    color: steelblue;
+
+/* --- Таблицы Tabulator: цвета через токены темы --- */
+.tabulator {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+}
+
+.tabulator .tabulator-header {
+    background-color: var(--bg-subtle);
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-secondary);
+    font-weight: var(--font-semibold);
 }
 
 .tabulator .tabulator-header .tabulator-col,
 .tabulator-row .tabulator-cell {
-    border-right: 1px solid #ddd;
+    border-right: 1px solid var(--border-subtle);
 }
 
-.tabulator-frozen-rows-holder>:nth-child(1) {
-    background: #f9fafb;
-    border-top: 1px solid #ddd;
+.tabulator-frozen-rows-holder > :nth-child(1) {
+    background: var(--bg-subtle);
+    border-top: 1px solid var(--border-subtle);
 }
 
 .tabulator-row.tabulator-row-even {
-    background-color: #f4faff;
+    background-color: var(--bg-subtle);
 }
 
 .tabulator-row.tabulator-selectable:hover {
-    background: #e2efff !important;
-    color: rgba(0, 0, 0, .87) !important;
+    background: var(--accent-subtle) !important;
+    color: var(--text-primary) !important;
 }
 
-.nav-link {
-    color: #495057;
-}
-
+/* --- Каркас страницы --- */
 body {
     display: flex;
     flex-direction: column;
@@ -74,22 +82,34 @@ body {
     position: relative;
     overflow: auto;
     height: calc(100vh - var(--headerHeigth));
-    padding: 12px 0;
-}
-
-.nav-link.active {
-    color: #0d6efd !important;
+    padding: var(--space-4) var(--space-5);
 }
 
 .navbar {
-    padding: 8px 12px;
     z-index: 1058;
 }
 
-
 /************************LEFT****************************/
-.offcanvas.show>button[data-type="sidebar"] {
-    background-color: rgb(240, 240, 240)
+/* Кнопки-переключатели боковых панелей */
+.offcanvas > button[data-type="sidebar"] {
+    background-color: var(--bg-surface);
+    color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+    transition:
+        color var(--duration-fast) var(--ease),
+        background-color var(--duration-fast) var(--ease),
+        border-color var(--duration-fast) var(--ease);
+}
+
+.offcanvas > button[data-type="sidebar"]:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background-color: var(--accent-subtle);
+}
+
+.offcanvas.show > button[data-type="sidebar"] {
+    background-color: var(--bg-hover);
+    color: var(--text-secondary);
 }
 
 .btn-outline-start {
@@ -99,17 +119,20 @@ body {
     height: 100px;
     left: 100%;
     padding: 0;
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--border-default);
+    border-left: none;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     transform: translateY(-50%);
     top: 50vh;
 }
+
 .btn-outline-start::before {
     font: normal normal normal 14px / 1 FontAwesome;
     content: '\F234';
     font-family: 'bootstrap-icons';
 }
 
-.offcanvas.show>button.btn-outline-start::before {
+.offcanvas.show > button.btn-outline-start::before {
     font: normal normal normal 14px / 1 FontAwesome;
     content: '\F230';
     font-family: 'bootstrap-icons';
@@ -128,7 +151,9 @@ body {
     height: 100px;
     right: 100%;
     padding: 0;
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--border-default);
+    border-right: none;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
     top: 50vh;
     transform: translateY(-50%);
 }
@@ -139,7 +164,7 @@ body {
     font-family: 'bootstrap-icons';
 }
 
-.offcanvas.show>button.btn-outline-end::before {
+.offcanvas.show > button.btn-outline-end::before {
     font: normal normal normal 14px / 1 FontAwesome;
     content: '\F234';
     font-family: 'bootstrap-icons';
@@ -160,7 +185,9 @@ body {
     left: 50vw;
     transform: translateX(-50%);
     padding: 0;
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--border-default);
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 
 .btn-outline-top::before {
@@ -169,7 +196,7 @@ body {
     font-family: 'bootstrap-icons';
 }
 
-.offcanvas.show>button.btn-outline-top::before {
+.offcanvas.show > button.btn-outline-top::before {
     font: normal normal normal 14px / 1 FontAwesome;
     content: '\F238';
     font-family: 'bootstrap-icons';
@@ -185,7 +212,9 @@ body {
     left: 50vw;
     transform: translateX(-50%);
     padding: 0;
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--border-default);
+    border-bottom: none;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
 .btn-outline-bottom::before {
@@ -194,33 +223,29 @@ body {
     font-family: 'bootstrap-icons';
 }
 
-.offcanvas.show>button.btn-outline-bottom::before {
+.offcanvas.show > button.btn-outline-bottom::before {
     font: normal normal normal 14px / 1 FontAwesome;
     content: '\F22C';
     font-family: 'bootstrap-icons';
 }
-.navbar {
-    padding-top: 15px;
-}
-.navbar-expand {
-    padding-bottom: 0;
-}
+
 .offcanvas-top {
     top: var(--headerHeigth);
 }
 
 /*************************Table*****************************/
 
-.table-edit{
-    display: flex;
-    flex-direction: column;
-}
-.table-noedit{
+.table-edit {
     display: flex;
     flex-direction: column;
 }
 
-.table-edit-minwidth{
+.table-noedit {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-edit-minwidth {
     min-width: 90%;
 }
 
@@ -231,6 +256,7 @@ body {
     line-height: 1.2;
     padding: 2px 4px;
 }
+
 .tabulator .tabulator-header .tabulator-col {
     min-height: 40px;
 }
@@ -293,11 +319,11 @@ body {
     display: block;
     text-align: center;
     padding: 4px 2px;
-    border-top: 1px solid #dee2e6;
-    font-weight: bold;
+    border-top: 1px solid var(--border-default);
+    font-weight: var(--font-semibold);
     font-size: 0.9em;
-    color: #495057;
-    background-color: #f8f9fa;
+    color: var(--text-secondary);
+    background-color: var(--bg-subtle);
     box-sizing: border-box;
     line-height: 1.4;
     min-height: 28px;
@@ -306,7 +332,7 @@ body {
 /**********************Flex alignment for nested leaf columns (NEW SOLUTION) ************/
 /* Эти стили активируются классом .tabulator-header-flex-equalized, который
    добавляется на таблицу ОДИН раз после tableBuilt через _applyHeaderFlexAlignment().
-   
+
    В отличие от старого решения (equalizeNestedLeafColumnHeights через JS),
    этот подход использует только CSS flexbox и не требует изменений DOM
    после инициализации, что исключает конфликты с fitColumns. */
@@ -335,128 +361,127 @@ body {
 /**********************Table Toolbar (vertical panel on the right) ************/
 /* Wrapper: contains title + container */
 .table-tabulator-wrapper {
-  width: 100%;
-  padding: 0 12px;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Container: flex row with table content + toolbar */
 .table-tabulator-container {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 0;
-  position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
 }
 
 /* Table content area: takes remaining space */
 .table-tabulator-content {
-  flex: 1;
-  min-width: 0;
-  overflow: auto;
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
 }
 
 /* Vertical toolbar panel on the right */
 .table-tabulator-toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 4px;
-  _background: #f8f9fa;
-  _border-left: 1px solid #dee2e6;
-  border-radius: 0 4px 4px 0;
-  min-width: 44px;
-  width: auto;
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
-  max-height: 100%;
-  overflow-y: auto;
-  flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-2) var(--space-1);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    min-width: 44px;
+    width: auto;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    max-height: 100%;
+    overflow-y: auto;
+    flex-shrink: 0;
 }
 
 /* Individual toolbar button */
 .table-tabulator-toolbar .toolbar-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 6px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 12px;
-  line-height: 1.2;
-  text-align: center;
-  min-width: 36px;
-  white-space: nowrap;
-  color: #495057;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-1);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    cursor: pointer;
+    transition: all var(--duration-base) var(--ease);
+    font-size: var(--text-xs);
+    line-height: 1.2;
+    text-align: center;
+    min-width: 36px;
+    white-space: nowrap;
+    color: var(--text-secondary);
 }
 
 .table-tabulator-toolbar .toolbar-btn:hover {
-  background: #e9ecef;
-  border-color: #ced4da;
+    background: var(--bg-hover);
+    border-color: var(--border-default);
+    color: var(--accent);
 }
 
 .table-tabulator-toolbar .toolbar-btn:active {
-  background: #dee2e6;
+    background: var(--bg-active);
 }
 
 .table-tabulator-toolbar .toolbar-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
-  font-size: 18px;
-  margin-bottom: 2px;
-  display: block;
+    font-size: 18px;
+    margin-bottom: 2px;
+    display: block;
 }
 
 .table-tabulator-toolbar .toolbar-btn .toolbar-btn-text {
-  font-size: 10px;
-  writing-mode: horizontal-tb;
-  display: block;
-  line-height: 1.2;
+    font-size: 10px;
+    writing-mode: horizontal-tb;
+    display: block;
+    line-height: 1.2;
 }
 
 /* Responsive: on narrow screens, toolbar moves below the table */
 @media (max-width: 768px) {
-  .table-tabulator-container {
-    flex-direction: column;
-  }
+    .table-tabulator-container {
+        flex-direction: column;
+    }
 
-  .table-tabulator-toolbar {
-    flex-direction: row;
-    border-left: none;
-    border-top: 1px solid #dee2e6;
-    border-radius: 0 0 4px 4px;
-    position: static;
-    overflow-x: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 6px 4px;
-  }
+    .table-tabulator-toolbar {
+        flex-direction: row;
+        border-left: none;
+        border-top: 1px solid var(--border-default);
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        position: static;
+        overflow-x: auto;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: var(--space-1);
+    }
 
-  .table-tabulator-toolbar .toolbar-btn {
-    flex-direction: row;
-    gap: 4px;
-    padding: 6px 10px;
-  }
+    .table-tabulator-toolbar .toolbar-btn {
+        flex-direction: row;
+        gap: var(--space-1);
+        padding: var(--space-1) var(--space-3);
+    }
 
-  .table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
-    margin-bottom: 0;
-  }
+    .table-tabulator-toolbar .toolbar-btn .toolbar-btn-icon {
+        margin-bottom: 0;
+    }
 }
 
 /* Контейнер для диапазона дат */
 .date-range-container {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
 }
 
 .date-range-container .form-control {

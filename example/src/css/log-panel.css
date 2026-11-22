@@ -14,275 +14,259 @@
  * Если свойство не задано, используется значение по умолчанию.
  *
  * Для растягивания на всю высоту экрана используется position: sticky с top: 0.
+ *
+ * Цвета — только из токенов темы (css/theme.css).
  */
 
 /* ===================== ОСНОВНОЙ КОНТЕЙНЕР ===================== */
 
 .log-panel {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  background: #ffffff;
-  overflow: hidden;
-  font-size: 13px;
-  line-height: 1.4;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  width: 350px;
-  margin-bottom: 12px;
-  position: sticky;
-  top: 0;
-  height: var(--log-panel-max-height, 250px);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    overflow: hidden;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    box-shadow: var(--shadow-sm);
+    width: 350px;
+    margin-bottom: var(--space-3);
+    position: sticky;
+    top: 0;
+    height: var(--log-panel-max-height, 250px);
 }
 
 /* Позиционирование справа (по умолчанию) */
 .log-panel--right {
-  float: right;
-  margin-left: 12px;
+    float: right;
+    margin-left: var(--space-3);
 }
 
 /* Позиционирование слева */
 .log-panel--left {
-  float: left;
-  margin-right: 12px;
+    float: left;
+    margin-right: var(--space-3);
 }
 
 /* ===================== ЗАГОЛОВОК ===================== */
 
 .log-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-  flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
 }
 
 .log-panel-title {
-  font-weight: 600;
-  font-size: 14px;
-  color: #495057;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    font-weight: var(--font-semibold);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
 }
 
 .log-panel-title-icon {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .log-panel-clear-btn {
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 2px 8px;
-  cursor: pointer;
-  font-size: 13px;
-  color: #6c757d;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 2px var(--space-2);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    transition: all var(--duration-base) var(--ease);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
 }
 
 .log-panel-clear-btn:hover {
-  color: #dc3545;
-  background: #fff5f5;
-  border-color: #f5c6cb;
+    color: var(--danger);
+    background: var(--danger-subtle);
+    border-color: var(--danger);
 }
 
 .log-panel-clear-btn:active {
-  background: #f8d7da;
+    background: var(--danger-subtle);
 }
 
 /* ===================== СПИСОК ЗАПИСЕЙ ===================== */
 
 .log-panel-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 4px 0;
-  min-height: 60px;
-}
-
-/* Стилизация скроллбара */
-.log-panel-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.log-panel-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.log-panel-list::-webkit-scrollbar-thumb {
-  background: #ced4da;
-  border-radius: 3px;
-}
-
-.log-panel-list::-webkit-scrollbar-thumb:hover {
-  background: #adb5bd;
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-1) 0;
+    min-height: 60px;
 }
 
 /* ===================== ЗАПИСЬ ЛОГА ===================== */
 
 .log-panel-entry {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 6px 12px;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background 0.15s ease;
-  animation: logEntrySlideIn 0.2s ease-out;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background var(--duration-fast) var(--ease);
+    animation: logEntrySlideIn 0.2s ease-out;
 }
 
 @keyframes logEntrySlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .log-panel-entry:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .log-panel-entry:hover {
-  background: #f8f9fa;
+    background: var(--bg-hover);
 }
 
 /* Иконка типа действия */
 .log-panel-entry-icon {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  font-size: 12px;
-  margin-top: 1px;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    margin-top: 1px;
 }
 
 /* Контент записи */
 .log-panel-entry-content {
-  flex: 1;
-  min-width: 0;
+    flex: 1;
+    min-width: 0;
 }
 
 .log-panel-entry-description {
-  color: #212529;
-  word-break: break-word;
+    color: var(--text-primary);
+    word-break: break-word;
 }
 
 .log-panel-entry-timestamp {
-  font-size: 11px;
-  color: #adb5bd;
-  margin-top: 1px;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: 1px;
 }
 
 /* ===================== ЦВЕТОВЫЕ ИНДИКАТОРЫ ПО ТИПАМ ===================== */
 
 /* Редактирование */
 .log-panel-entry--edit .log-panel-entry-icon {
-  background: #e7f5ff;
-  color: #1971c2;
+    background: var(--info-subtle);
+    color: var(--info);
 }
 
 /* Добавление */
 .log-panel-entry--add .log-panel-entry-icon {
-  background: #ebfbee;
-  color: #2b8a3e;
+    background: var(--success-subtle);
+    color: var(--success);
 }
 
 /* Удаление */
 .log-panel-entry--delete .log-panel-entry-icon {
-  background: #fff5f5;
-  color: #c92a2a;
+    background: var(--danger-subtle);
+    color: var(--danger);
 }
 
 /* Фильтрация */
 .log-panel-entry--filter .log-panel-entry-icon {
-  background: #f3f0ff;
-  color: #7048e8;
+    background: var(--accent-subtle);
+    color: var(--accent);
 }
 
 /* Сохранение */
 .log-panel-entry--save .log-panel-entry-icon,
 .log-panel-entry--saveUserConfig .log-panel-entry-icon {
-  background: #fff3e0;
-  color: #e67700;
+    background: var(--warning-subtle);
+    color: var(--warning);
 }
 
 /* Загрузка конфигурации */
 .log-panel-entry--loadUserConfig .log-panel-entry-icon {
-  background: #e7f5ff;
-  color: #1971c2;
+    background: var(--info-subtle);
+    color: var(--info);
 }
 
 /* Сброс */
 .log-panel-entry--reset .log-panel-entry-icon {
-  background: #fff9db;
-  color: #f08c00;
+    background: var(--warning-subtle);
+    color: var(--warning);
 }
 
 /* Изменение параметра */
 .log-panel-entry--paramChange .log-panel-entry-icon {
-  background: #f8f9fa;
-  color: #495057;
+    background: var(--bg-hover);
+    color: var(--text-secondary);
 }
 
 /* Загрузка данных */
 .log-panel-entry--dataLoad .log-panel-entry-icon {
-  background: #e7f5ff;
-  color: #1971c2;
+    background: var(--info-subtle);
+    color: var(--info);
 }
 
 /* Ошибка */
 .log-panel-entry--error .log-panel-entry-icon {
-  background: #fff5f5;
-  color: #c92a2a;
+    background: var(--danger-subtle);
+    color: var(--danger);
 }
 
 /* Undo */
 .log-panel-entry--undo .log-panel-entry-icon {
-  background: #fff3e0;
-  color: #e67700;
+    background: var(--warning-subtle);
+    color: var(--warning);
 }
 
 /* ===================== ПУСТОЙ ЛОГ ===================== */
 
 .log-panel-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  color: #adb5bd;
-  font-size: 13px;
-  text-align: center;
-  gap: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6) var(--space-4);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    text-align: center;
+    gap: var(--space-1);
 }
 
 .log-panel-empty-icon {
-  font-size: 24px;
-  margin-bottom: 4px;
-  opacity: 0.5;
+    font-size: 24px;
+    margin-bottom: var(--space-1);
+    opacity: 0.5;
 }
 
 /* ===================== АДАПТИВНОСТЬ ===================== */
 
 @media (max-width: 768px) {
-  .log-panel {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-  }
+    .log-panel {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
 
-  .log-panel-entry {
-    padding: 6px 8px;
-  }
+    .log-panel-entry {
+        padding: var(--space-1) var(--space-2);
+    }
 }

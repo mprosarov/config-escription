@@ -1,8 +1,21 @@
 <!doctype html>
-<html lang="ru" data-mdb-theme="dark">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Тема оформления: URL-параметр ?theme=<имя> (сохраняется в localStorage)
+      // или ранее сохранённое значение localStorage['ui-theme'].
+      // Применяется до загрузки CSS, чтобы избежать мигания светлой темы.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var theme = params.get("theme") || localStorage.getItem("ui-theme");
+        if (theme) {
+          document.documentElement.setAttribute("data-theme", theme);
+          localStorage.setItem("ui-theme", theme);
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="css/app.css" />
     <title>Отчет</title>
   </head>

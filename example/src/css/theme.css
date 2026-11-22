@@ -1,0 +1,595 @@
+/* ==========================================================================
+   theme.css — Дизайн-система интерфейса
+   --------------------------------------------------------------------------
+   Файл состоит из трёх слоёв (порядок важен):
+
+   СЛОЙ 1. ТОКЕНЫ ТЕМЫ ПО УМОЛЧАНИЮ (:root)
+     Семантические CSS-переменные: цвета, типографика, отступы, радиусы,
+     тени, анимации, размеры макета. Это единственное место, где задаются
+     конкретные значения цветов для светлой темы.
+
+   СЛОЙ 2. АЛЬТЕРНАТИВНЫЕ ТЕМЫ (:root[data-theme="..."])
+     Тема = переопределение семантических токенов для своего селектора.
+     Компонентный слой (СЛОЙ 3) и все остальные CSS-файлы проекта используют
+     только токены, поэтому новая тема не требует правок компонентов.
+     Встроен пример тёмной темы: data-theme="dark".
+
+   СЛОЙ 3. КОМПОНЕНТНЫЙ СЛОЙ
+     Переопределение стилей Bootstrap 5.0.2 и базовых элементов через токены.
+     Bootstrap v5.0.2 не поддерживает data-bs-theme и компилирует цвета
+     компонентов в hex, поэтому перекрываем компоненты здесь — правилами,
+     которые читают исключительно токены темы.
+
+   ПРАВИЛО: в этом файле (и в остальных CSS проекта) запрещены литеральные
+   цвета вне СЛОЯ 1/2. Компоненты ссылаются только на семантические токены.
+
+   Подробности и инструкция по созданию тем: docs/design-system.md
+   ========================================================================== */
+
+/* ==========================================================================
+   СЛОЙ 1. ТОКЕНЫ ТЕМЫ ПО УМОЛЧАНИЮ (светлая, деловая)
+   ========================================================================== */
+:root {
+    /* --- Палитра-основа (примитивы, используются для построения семантики) --- */
+    --blue-50: #e7effc;
+    --blue-100: #d5e3f9;
+    --blue-500: #2e6fd8;
+    --blue-600: #2560c0;
+    --blue-700: #1e4e9e;
+    --slate-50: #f7f9fc;
+    --slate-100: #f0f3f8;
+    --slate-200: #e6ebf2;
+    --slate-300: #d3dce8;
+    --slate-400: #b4c1d3;
+    --slate-500: #7b8a9e;
+    --slate-600: #47586c;
+    --slate-700: #2c3a4d;
+    --slate-800: #1b2735;
+    --slate-900: #121b26;
+
+    /* --- Поверхности --- */
+    --bg-page: #f3f6fa;          /* фон страницы */
+    --bg-surface: #ffffff;       /* карточки, панели, navbar, offcanvas */
+    --bg-subtle: var(--slate-100);   /* вторичные подложки (заголовки таблиц, input-group-text) */
+    --bg-hover: #e9eef6;         /* hover-состояния строк/пунктов */
+    --bg-active: #dde5ef;        /* active/нажатые состояния */
+
+    /* --- Границы --- */
+    --border-subtle: var(--slate-200);
+    --border-default: var(--slate-300);
+    --border-strong: var(--slate-400);
+
+    /* --- Текст --- */
+    --text-primary: var(--slate-800);
+    --text-secondary: var(--slate-600);
+    --text-muted: var(--slate-500);
+    --text-inverse: #ffffff;
+    --text-link: var(--blue-600);
+
+    /* --- Акцент (бренд) --- */
+    --accent: var(--blue-500);
+    --accent-hover: var(--blue-600);
+    --accent-active: var(--blue-700);
+    --accent-subtle: var(--blue-50);
+    --accent-contrast: #ffffff;
+    --focus-ring: rgba(46, 111, 216, 0.3);
+
+    /* --- Статусные цвета --- */
+    --success: #2f8a5b;
+    --success-hover: #27734c;
+    --success-subtle: #e7f4ec;
+    --danger: #c94343;
+    --danger-hover: #b03636;
+    --danger-subtle: #fbeceb;
+    --warning: #b97a16;
+    --warning-hover: #9d6610;
+    --warning-subtle: #faf2e2;
+    --info: #3a86c8;
+    --info-hover: #2f71ab;
+    --info-subtle: #e9f3fb;
+    --secondary: #5a6b80;
+    --secondary-hover: #4a596c;
+    --secondary-subtle: #eef1f6;
+
+    /* --- Типографика --- */
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+    --text-xs: 0.75rem;     /* 12px */
+    --text-sm: 0.8125rem;   /* 13px */
+    --text-base: 0.875rem;  /* 14px — основной размер делового интерфейса */
+    --text-md: 0.9375rem;   /* 15px */
+    --text-lg: 1.0625rem;   /* 17px */
+    --text-xl: 1.25rem;     /* 20px */
+    --text-2xl: 1.5rem;     /* 24px */
+    --text-3xl: 1.875rem;   /* 30px */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --leading-tight: 1.25;
+    --leading-normal: 1.45;
+
+    /* --- Отступы (шкала 4px) --- */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+
+    /* --- Радиусы --- */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 999px;
+
+    /* --- Тени --- */
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-md: 0 2px 4px -1px rgba(16, 24, 40, 0.06), 0 4px 12px -2px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 8px 24px -4px rgba(16, 24, 40, 0.12), 0 2px 8px -2px rgba(16, 24, 40, 0.06);
+
+    /* --- Анимации --- */
+    --duration-fast: 120ms;
+    --duration-base: 200ms;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* --- Макет --- */
+    --navbar-height: 78px;
+    --offcanvas-width: 400px;
+    --offcanvas-top-height: 30vh;
+
+    /* --- Legacy-алиасы (старые имена переменных из style.css) --- */
+    --headerHeigth: var(--navbar-height);
+    --offcanvasTopHeigth: var(--offcanvas-top-height);
+    --offcanvasRightWidth: var(--offcanvas-width);
+    --offcanvasLeftWidth: var(--offcanvas-width);
+}
+
+/* ==========================================================================
+   СЛОЙ 2. АЛЬТЕРНАТИВНЫЕ ТЕМЫ
+   --------------------------------------------------------------------------
+   Тема переопределяет ТОЛЬКО семантические токены. Компонентный слой и
+   остальные файлы проекта менять не нужно.
+   ========================================================================== */
+
+/* --- Тёмная деловая тема (пример / стартовый шаблон новой темы) --- */
+:root[data-theme="dark"] {
+    --bg-page: #111826;
+    --bg-surface: #1a2233;
+    --bg-subtle: #212b3e;
+    --bg-hover: #2a3650;
+    --bg-active: #33415e;
+
+    --border-subtle: #263149;
+    --border-default: #34405a;
+    --border-strong: #4a587a;
+
+    --text-primary: #e6ebf5;
+    --text-secondary: #b0bccf;
+    --text-muted: #7e8ca5;
+    --text-inverse: #111826;
+    --text-link: #7aa5f5;
+
+    --accent: #5b8def;
+    --accent-hover: #74a1f5;
+    --accent-active: #4a7cd8;
+    --accent-subtle: #22304f;
+    --accent-contrast: #0e1524;
+    --focus-ring: rgba(91, 141, 239, 0.35);
+
+    --success: #55b583;
+    --success-hover: #67c392;
+    --success-subtle: #1c3227;
+    --danger: #e06c6c;
+    --danger-hover: #e88585;
+    --danger-subtle: #3a2328;
+    --warning: #d99a3d;
+    --warning-hover: #e2aa55;
+    --warning-subtle: #382e1d;
+    --info: #63a4dd;
+    --info-hover: #7ab4e5;
+    --info-subtle: #1e2f42;
+    --secondary: #93a1b8;
+    --secondary-hover: #a5b2c6;
+    --secondary-subtle: #263043;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.4), 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 24px -4px rgba(0, 0, 0, 0.55), 0 2px 8px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Стрелка select в тёмной теме должна быть светлой */
+:root[data-theme="dark"] .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23b0bccf' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+/* ==========================================================================
+   СЛОЙ 3. КОМПОНЕНТНЫЙ СЛОЙ (Bootstrap 5.0.2 + базовые элементы)
+   Все правила читают только токены — тема переключается одним атрибутом.
+   ========================================================================== */
+
+/* --- База --- */
+body {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--text-primary);
+    background-color: var(--bg-page);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-primary);
+    font-weight: var(--font-semibold);
+    line-height: var(--leading-tight);
+}
+
+a {
+    color: var(--text-link);
+}
+
+::selection {
+    background: var(--accent-subtle);
+    color: var(--text-primary);
+}
+
+.shadow {
+    box-shadow: var(--shadow-md) !important;
+}
+
+/* Тонкие современные скроллбары */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* --- Кнопки (Bootstrap .btn) --- */
+.btn {
+    font-weight: var(--font-medium);
+    border-radius: var(--radius-sm);
+    transition:
+        color var(--duration-fast) var(--ease),
+        background-color var(--duration-fast) var(--ease),
+        border-color var(--duration-fast) var(--ease),
+        box-shadow var(--duration-fast) var(--ease);
+}
+
+.btn:focus,
+.btn:focus-visible {
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.55;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.7rem;
+    font-size: var(--text-sm);
+}
+
+/* Заполненные варианты */
+.btn-primary   { --btn-bg: var(--accent);    --btn-bg-hover: var(--accent-hover);    --btn-fg: var(--accent-contrast); }
+.btn-secondary { --btn-bg: var(--secondary); --btn-bg-hover: var(--secondary-hover); --btn-fg: #ffffff; }
+.btn-success   { --btn-bg: var(--success);   --btn-bg-hover: var(--success-hover);   --btn-fg: #ffffff; }
+.btn-danger    { --btn-bg: var(--danger);    --btn-bg-hover: var(--danger-hover);    --btn-fg: #ffffff; }
+.btn-warning   { --btn-bg: var(--warning);   --btn-bg-hover: var(--warning-hover);   --btn-fg: #ffffff; }
+.btn-info      { --btn-bg: var(--info);      --btn-bg-hover: var(--info-hover);      --btn-fg: #ffffff; }
+
+.btn-primary, .btn-secondary, .btn-success,
+.btn-danger, .btn-warning, .btn-info {
+    background-color: var(--btn-bg);
+    border-color: var(--btn-bg);
+    color: var(--btn-fg);
+}
+
+.btn-primary:hover, .btn-secondary:hover, .btn-success:hover,
+.btn-danger:hover, .btn-warning:hover, .btn-info:hover,
+.btn-primary:focus, .btn-secondary:focus, .btn-success:focus,
+.btn-danger:focus, .btn-warning:focus, .btn-info:focus,
+.btn-primary:active, .btn-secondary:active, .btn-success:active,
+.btn-danger:active, .btn-warning:active, .btn-info:active {
+    background-color: var(--btn-bg-hover);
+    border-color: var(--btn-bg-hover);
+    color: var(--btn-fg);
+}
+
+/* Контурные варианты (основной вид кнопок в конфигах: btn-outline-*) */
+.btn-outline-primary   { --btn-fg: var(--accent);    --btn-bg-hover: var(--accent);    --btn-fg-hover: var(--accent-contrast); }
+.btn-outline-secondary { --btn-fg: var(--secondary); --btn-bg-hover: var(--secondary); --btn-fg-hover: #ffffff; }
+.btn-outline-success   { --btn-fg: var(--success);   --btn-bg-hover: var(--success);   --btn-fg-hover: #ffffff; }
+.btn-outline-danger    { --btn-fg: var(--danger);    --btn-bg-hover: var(--danger);    --btn-fg-hover: #ffffff; }
+.btn-outline-warning   { --btn-fg: var(--warning);   --btn-bg-hover: var(--warning);   --btn-fg-hover: #ffffff; }
+.btn-outline-info      { --btn-fg: var(--info);      --btn-bg-hover: var(--info);      --btn-fg-hover: #ffffff; }
+
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-success,
+.btn-outline-danger, .btn-outline-warning, .btn-outline-info {
+    color: var(--btn-fg);
+    border-color: var(--btn-fg);
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover, .btn-outline-secondary:hover, .btn-outline-success:hover,
+.btn-outline-danger:hover, .btn-outline-warning:hover, .btn-outline-info:hover,
+.btn-outline-primary:focus, .btn-outline-secondary:focus, .btn-outline-success:focus,
+.btn-outline-danger:focus, .btn-outline-warning:focus, .btn-outline-info:focus,
+.btn-outline-primary:active, .btn-outline-secondary:active, .btn-outline-success:active,
+.btn-outline-danger:active, .btn-outline-warning:active, .btn-outline-info:active,
+.btn-outline-primary.active, .btn-outline-secondary.active, .btn-outline-success.active,
+.btn-outline-danger.active, .btn-outline-warning.active, .btn-outline-info.active {
+    background-color: var(--btn-bg-hover);
+    border-color: var(--btn-bg-hover);
+    color: var(--btn-fg-hover);
+}
+
+/* --- Navbar --- */
+.navbar {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: var(--space-3) var(--space-5);
+}
+
+.navbar.bg-light {
+    background-color: var(--bg-surface) !important;
+}
+
+/* Вложенный navbar (создаётся компонентом Menu внутри основной панели) */
+.navbar .navbar {
+    padding: 0;
+    border-bottom: none;
+    background-color: transparent;
+}
+
+.navbar .navbar-expand {
+    padding: 0;
+}
+
+.navbar-brand {
+    color: var(--text-primary);
+    font-weight: var(--font-semibold);
+}
+
+.navbar-light .navbar-brand,
+.navbar-light .navbar-brand:hover,
+.navbar-light .navbar-brand:focus {
+    color: var(--text-primary);
+}
+
+/* Заголовок страницы в navbar (компонент Header создаёт <div class="h5">) */
+.navbar-brand .h5,
+.navbar-brand h5 {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    text-align: left;
+}
+
+/* --- Навигация (nav-link, меню, вкладки) --- */
+.nav-link {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    transition:
+        color var(--duration-fast) var(--ease),
+        background-color var(--duration-fast) var(--ease);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--accent);
+    background-color: var(--accent-subtle);
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--text-secondary);
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus {
+    color: var(--accent);
+    background-color: var(--accent-subtle);
+}
+
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .show > .nav-link,
+.nav-link.active {
+    color: var(--accent) !important;
+    background-color: var(--accent-subtle);
+}
+
+/* Вкладки: современный underline-стиль */
+.nav-tabs {
+    border-bottom: 1px solid var(--border-default);
+    gap: var(--space-1);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    margin-bottom: -1px;
+    background: transparent;
+    padding: var(--space-2) var(--space-4);
+}
+
+.nav-tabs .nav-link:hover {
+    background: transparent;
+    color: var(--accent);
+    border-bottom-color: var(--border-strong);
+}
+
+.nav-tabs .nav-link.active {
+    background: transparent;
+    color: var(--accent) !important;
+    border-bottom-color: var(--accent);
+    font-weight: var(--font-semibold);
+}
+
+/* --- Dropdown-меню --- */
+.dropdown-menu {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-1);
+    font-size: var(--text-sm);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+    padding: calc(var(--space-2) - 2px) var(--space-3);
+    transition:
+        color var(--duration-fast) var(--ease),
+        background-color var(--duration-fast) var(--ease);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: var(--accent-subtle);
+    color: var(--accent);
+}
+
+.dropdown-toggle {
+    outline: 0;
+}
+
+/* --- Формы --- */
+.form-control,
+.form-select {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    transition:
+        border-color var(--duration-fast) var(--ease),
+        box-shadow var(--duration-fast) var(--ease);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--bg-surface);
+    border-color: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+    background-color: var(--bg-subtle);
+    color: var(--text-muted);
+}
+
+.input-group-text {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    border-radius: var(--radius-sm);
+}
+
+.form-check-input {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    transition:
+        background-color var(--duration-fast) var(--ease),
+        border-color var(--duration-fast) var(--ease);
+}
+
+.form-check-input:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.form-check-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.form-check-label {
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+}
+
+.form-label {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+/* --- Offcanvas (боковые панели) --- */
+.offcanvas {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-lg);
+}
+
+.offcanvas-start {
+    border-right: 1px solid var(--border-default);
+}
+
+.offcanvas-end {
+    border-left: 1px solid var(--border-default);
+}
+
+.offcanvas-top {
+    border-bottom: 1px solid var(--border-default);
+}
+
+.offcanvas-bottom {
+    border-top: 1px solid var(--border-default);
+}
+
+/* --- Alert (используется в manager.html) --- */
+.alert-danger {
+    background-color: var(--danger-subtle);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.alert-success {
+    background-color: var(--success-subtle);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+/* --- Card (используется в manager.html) --- */
+.card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}

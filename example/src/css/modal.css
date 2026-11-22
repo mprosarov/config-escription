@@ -1,10 +1,16 @@
+/* ==========================================================================
+   modal.css — модальные окна (vnf-modal)
+   Цвета — только из токенов темы (css/theme.css).
+   ========================================================================== */
+
 .vnf-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(16, 24, 40, 0.5);
+    backdrop-filter: blur(2px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,18 +18,20 @@
 }
 
 .vnf-modal {
-    background: white;
-    border-radius: 8px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
     width: 90%;
     max-width: 500px;
     max-height: 90vh;
     overflow: auto;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    box-shadow: var(--shadow-lg);
 }
 
 .vnf-modal-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,8 +39,9 @@
 
 .vnf-modal-title {
     margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
 }
 
 .vnf-modal-close {
@@ -42,24 +51,26 @@
     cursor: pointer;
     line-height: 1;
     padding: 0;
-    color: #666;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-fast) var(--ease);
 }
 
 .vnf-modal-close:hover {
-    color: #333;
+    color: var(--text-primary);
 }
 
 .vnf-modal-body {
-    padding: 20px;
+    padding: var(--space-5);
 }
 
 .table-row-details {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--font-sans);
 }
 
 .row-detail {
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .row-detail:last-child {
@@ -69,58 +80,64 @@
 .row-detail strong {
     display: inline-block;
     min-width: 120px;
-    color: #666;
+    color: var(--text-secondary);
+    font-weight: var(--font-medium);
 }
 
 /* Footer модального окна */
 .vnf-modal-footer {
-  padding: 12px 20px;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+    padding: var(--space-3) var(--space-5);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
 }
 
 /* Форма редактирования */
 .edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
 }
 
 .edit-form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
 }
 
 .edit-form-label {
-  font-weight: 600;
-  font-size: 13px;
-  color: #495057;
+    font-weight: var(--font-medium);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
 }
 
 .edit-form-input,
 .edit-form-textarea,
 .edit-form-select {
-  padding: 6px 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.15s ease-in-out;
-  width: 100%;
-  box-sizing: border-box;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    background: var(--bg-surface);
+    transition:
+        border-color var(--duration-fast) var(--ease),
+        box-shadow var(--duration-fast) var(--ease);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .edit-form-input:focus,
 .edit-form-textarea:focus,
 .edit-form-select:focus {
-  border-color: #86b7fe;
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: var(--accent);
+    outline: 0;
+    box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .edit-form-textarea {
-  min-height: 80px;
-  resize: vertical;
+    min-height: 80px;
+    resize: vertical;
 }
