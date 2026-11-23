@@ -1,8 +1,8 @@
 {
   "params": {
-    "dateFrom": "2026-10-15",
-    "dateTo": "2026-10-28",
-    "department": "8"
+    "dateFrom": "2026-10-08",
+    "dateTo": "2026-10-10",
+    "department": "36"
   },
   "tables": [
     {
@@ -13,7 +13,7 @@
           "title": "№ п/п",
           "visible": true,
           "hozAlign": "center",
-          "width": 442,
+          "width": 302,
           "minWidth": 40,
           "cssClass": "tabulator-col-leaf",
           "headerHozAlign": "center",
@@ -26,7 +26,7 @@
           "title": "Вид транспортно-заготовительных затрат",
           "visible": true,
           "hozAlign": "center",
-          "width": 137,
+          "width": 141,
           "minWidth": 40,
           "cssClass": "tabulator-col-leaf",
           "headerHozAlign": "center",
@@ -42,7 +42,7 @@
               "title": "Всего транспортно-заготовительных затрат",
               "visible": true,
               "hozAlign": "center",
-              "width": 137,
+              "width": 141,
               "minWidth": 40,
               "cssClass": "tabulator-col-leaf",
               "headerHozAlign": "center",
@@ -58,7 +58,7 @@
                   "title": "сырье и материалы",
                   "visible": true,
                   "hozAlign": "center",
-                  "width": 137,
+                  "width": 141,
                   "minWidth": 40,
                   "cssClass": "tabulator-col-leaf",
                   "headerHozAlign": "center",
@@ -71,7 +71,7 @@
                   "title": "покупные полуфабрикаты",
                   "visible": true,
                   "hozAlign": "center",
-                  "width": 137,
+                  "width": 141,
                   "minWidth": 40,
                   "cssClass": "tabulator-col-leaf",
                   "headerHozAlign": "center",
@@ -84,7 +84,7 @@
                   "title": "покупные комплектующие изделия",
                   "visible": true,
                   "hozAlign": "center",
-                  "width": 137,
+                  "width": 141,
                   "minWidth": 40,
                   "cssClass": "tabulator-col-leaf",
                   "headerHozAlign": "center",
@@ -104,7 +104,7 @@
               "title": "Всего транспортно-заготовительных затрат",
               "visible": true,
               "hozAlign": "center",
-              "width": 137,
+              "width": 141,
               "minWidth": 40,
               "cssClass": "tabulator-col-leaf",
               "headerHozAlign": "center",
@@ -120,7 +120,7 @@
                   "title": "сырье и материалы",
                   "visible": true,
                   "hozAlign": "center",
-                  "width": 137,
+                  "width": 141,
                   "minWidth": 40,
                   "cssClass": "tabulator-col-leaf",
                   "headerHozAlign": "center",
@@ -133,7 +133,7 @@
                   "title": "покупные полуфабрикаты",
                   "visible": true,
                   "hozAlign": "center",
-                  "width": 137,
+                  "width": 141,
                   "minWidth": 40,
                   "cssClass": "tabulator-col-leaf",
                   "headerHozAlign": "center",
@@ -146,7 +146,7 @@
                   "title": "покупные комплектующие изделия",
                   "visible": true,
                   "hozAlign": "center",
-                  "width": 142.734375,
+                  "width": 147.734375,
                   "minWidth": 40,
                   "cssClass": "tabulator-col-leaf",
                   "headerHozAlign": "center",
@@ -159,7 +159,18 @@
           ]
         }
       ],
-      "filters": []
+      "filters": [
+        {
+          "field": "idconfig",
+          "type": "like",
+          "value": "calc"
+        },
+        {
+          "field": "2",
+          "type": "<",
+          "value": "900"
+        }
+      ]
     },
     {
       "id": "table_2",
@@ -786,5 +797,5 @@
       "filters": []
     }
   ],
-  "savedAt": "2026-11-20T07:41:52.045Z"
+  "savedAt": "2026-11-23T13:58:26.496Z"
 }

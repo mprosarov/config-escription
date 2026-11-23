@@ -57,7 +57,6 @@ class PageParam {
     this.subscribers.forEach((item) =>
       item.paramChanged(this.config.id, this.paramValue),
     );
-    console.warn(`PARAM - ${this.config.id}, VALUE - ${this.paramValue}`);
   }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);

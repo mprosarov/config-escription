@@ -15,10 +15,10 @@ class LoadUserConfigAction extends BaseAction {
     });
   }
 
-  execute() {
+  async execute() {
     let configName =
       new URLSearchParams(window.location.search).get("config") || "index";
-    PageBuilder.getUserInterfaceConfig(configName);
+    PageBuilder.loadPageConfig(configName);
   }
 }
 PageBuilder.addComponent(LoadUserConfigAction.TYPE, LoadUserConfigAction);

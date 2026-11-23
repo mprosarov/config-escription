@@ -56,12 +56,8 @@ class SaveUserConfigAction extends BaseAction {
     const userConfig = { params, tables, savedAt: new Date().toISOString() };
 
     try {
-      if (location.href.indexOf("file") >= 0) {
-        URL = "http://localhost:3000/config";
-      } else {
-        URL = `http://base-s-sia-01.local/rest/krb`;
-      }
-      const url = `${URL}/saveuserinterfaceconfig?scode=${encodeURIComponent(configName)}&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
+      const baseUrl = PageBuilder.getAPIUrl();
+      const url = `${baseUrl}/saveuserinterfaceconfig?scode=${encodeURIComponent(configName)}&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
       const resp = await fetch(url, {
         method: "POST",
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },

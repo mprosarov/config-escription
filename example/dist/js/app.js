@@ -45,7 +45,9 @@ const PageBuilder = (function () {
         break;
     }
   }
-
+  function getAPIUrl() {
+    return URL;
+  }
   function getPageConfig() {
     return mainConfig;
   }
@@ -85,6 +87,7 @@ const PageBuilder = (function () {
     }
     components[type] = component;
   }
+
   function loadWithParams(configName, params) {
     // получаем все текущие GET параметры страницы
     let getParams = new URLSearchParams();
@@ -112,42 +115,49 @@ const PageBuilder = (function () {
         method: "GET",
         headers: { Accept: "application/json" },
       });
-
       if (!resp.ok) {
         throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
       }
-      const options = await resp.json();
-      // применяем настройки таблиц и параметров
-      // параметрры
-      console.warn(" options:", options);
-      for (let key in options.params) {
-        updateParam(key, options.params[key]);
-        console.log(key, getParamValue(key));
-      }
-      options.tables.forEach((table) => {
-        let tableObj = Tabulator.findTable(`#${table.id}`)[0];
-        if (!tableObj) return;
-
-        // настройки шапки таблицы
-        tableObj.setColumns(table.headers);
-        if (table.filters.length > 0) {
-          for (let i = 0; i < table.filters.length; i++) {
-            // устрановка фильтров
-            tableObj.setFilter(table.filters[i]);
-          }
-        }
-      });
+      return await resp.json();
     } catch (e) {
       console.error("Ошибка загрузки конфигурации:", e);
       return null;
     }
   }
+  function waitTableInit(tableObj) {
+    if (tableObj.initialized) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => tableObj.on("tableBuilt", () => resolve()));
+  }
+
+  async function applyUserConfigOptions(userConfig) {
+    if (!userConfig || !Array.isArray(userConfig.tables)) return;
+    for (const table of userConfig.tables) {
+      const tableObj = Tabulator.findTable(`#${table.id}`)[0];
+      if (!tableObj) continue;
+
+      await waitTableInit(tableObj); // ждём инициализации таблиц
+      tableObj.setColumns(table.headers);
+      if (table.filters && table.filters.length) {
+        tableObj.setFilter(table.filters);
+      }
+    }
+  }
+
+  function mergeUserConfigParams(config, userConfig) {
+    if (!userConfig) return config;
+    if (Array.isArray(config.pageParams) && userConfig.params) {
+      config.pageParams.forEach((p) => {
+        if (userConfig.params[p.id] !== undefined) {
+          p.init.value = userConfig.params[p.id];
+        }
+      });
+    }
+    return config;
+  }
   // Загрузить json конфигурацию страницы с сервера по имени файла
   async function loadPageConfig(configName, params = []) {
-    //console.log("configName loadPageConfig: ", configName);
-    //console.log("params loadPageConfig: ", params);
-
-    // очищаем страницу, чтобы построить новую по загруженной конфигурации
     clear();
     // лоадер
     document.body.insertAdjacentHTML(
@@ -167,22 +177,27 @@ const PageBuilder = (function () {
       //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
       //   let result = await response.json();
       //   let config = result.result;
-
-      // если файл не найден или произошла ошибка, то выводим сообщение об ошибке и завершаем работу
       if (response.status !== 200) {
         throw new Error(
           `Ошибка при загрузке файла: ${configName}. ${config.error}`,
         );
       }
       // создаем страницу по загруженной конфигурации
+      const userConfig = await getUserInterfaceConfig(configName);
+      const newConfig = mergeUserConfigParams(config, userConfig);
+
       createdComponents = [];
-      mainConfig = config;
-      createPage(config);
-      await getUserInterfaceConfig(configName);
-      // удаляем лоадер
-      loader.remove();
+      mainConfig = newConfig;
+
+      createPage(newConfig);
+      applyUserConfigOptions(userConfig).catch((e) =>
+        ActionLogger.log("error", "Ошибка применения настроек таблиц", {
+          errorMessage: e.message,
+        }),
+      );
+
+      loader.remove(); // удаляем лоадер
     } catch (error) {
-      //console.log('catch: ', error)
       loader.innerHTML = `<div class="loader-error">${error.message}</div>`;
       createdComponents = [];
 
@@ -256,8 +271,13 @@ const PageBuilder = (function () {
     );
     nodes.forEach((node) => node.parentElement.removeChild(node));
     mainConfig = null;
+    pageParams = [];
+    DS = [];
+    createdComponents = [];
+    navbar = null;
   }
   return {
+    getAPIUrl,
     getUserName,
     getUserInterfaceConfig,
     addComponent,
@@ -1586,7 +1606,6 @@ class PageParam {
     this.subscribers.forEach((item) =>
       item.paramChanged(this.config.id, this.paramValue),
     );
-    console.warn(`PARAM - ${this.config.id}, VALUE - ${this.paramValue}`);
   }
 }
 PageBuilder.addComponent(PageParam.TYPE, PageParam);
@@ -3793,12 +3812,8 @@ class SaveUserConfigAction extends BaseAction {
     const userConfig = { params, tables, savedAt: new Date().toISOString() };
 
     try {
-      if (location.href.indexOf("file") >= 0) {
-        URL = "http://localhost:3000/config";
-      } else {
-        URL = `http://base-s-sia-01.local/rest/krb`;
-      }
-      const url = `${URL}/saveuserinterfaceconfig?scode=${encodeURIComponent(configName)}&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
+      const baseUrl = PageBuilder.getAPIUrl();
+      const url = `${baseUrl}/saveuserinterfaceconfig?scode=${encodeURIComponent(configName)}&susername=${encodeURIComponent(PageBuilder.getUserName())}`;
       const resp = await fetch(url, {
         method: "POST",
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },
@@ -3844,10 +3859,10 @@ class LoadUserConfigAction extends BaseAction {
     });
   }
 
-  execute() {
+  async execute() {
     let configName =
       new URLSearchParams(window.location.search).get("config") || "index";
-    PageBuilder.getUserInterfaceConfig(configName);
+    PageBuilder.loadPageConfig(configName);
   }
 }
 PageBuilder.addComponent(LoadUserConfigAction.TYPE, LoadUserConfigAction);
