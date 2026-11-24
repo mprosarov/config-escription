@@ -2625,17 +2625,17 @@ ActionRegistry.register(DeleteAction.TYPE, DeleteAction);
  */
 
 class FilterAction extends TableAction {
-  static TYPE = 'tabulatorFilterAction';
+  static TYPE = "tabulatorFilterAction";
 
   constructor(parentElement, config, target) {
     super(parentElement, config, target);
     this.activeFilters = []; // текущие (ещё не сохранённые) фильтры
-    this.savedFilters = [];  // последние применённые фильтры
+    this.savedFilters = []; // последние применённые фильтры
     this.init();
   }
 
   init() {
-    const trigger = this.config.trigger || 'click';
+    const trigger = this.config.trigger || "click";
 
     if (this.target && this.target.addEventListener) {
       this.target.addEventListener(trigger, (e) => {
@@ -2644,7 +2644,18 @@ class FilterAction extends TableAction {
         this.openFilterModal();
       });
     } else {
-      console.warn('FilterAction: target не является DOM элементом');
+      console.warn("FilterAction: target не является DOM элементом");
+    }
+    // любое изменение фильтров таблицы — обновляем локальные копии
+    if (this.table) {
+      this.table.on("dataFiltered", (filters) => {
+        this.savedFilters = (filters || []).map((f) => ({
+          field: f.field,
+          type: f.type,
+          value: f.value,
+        }));
+        this.activeFilters = this.savedFilters.map((f) => ({ ...f }));
+      });
     }
   }
 
@@ -2654,12 +2665,20 @@ class FilterAction extends TableAction {
     // 1. Получить листовые колонки — из TableAction
     const columns = this.getLeafColumns();
     if (!columns || columns.length === 0) {
-      console.error('FilterAction: нет колонок для фильтрации');
+      console.error("FilterAction: нет колонок для фильтрации");
       return;
     }
 
+    // синхронизация с реальным состоянием таблицы
+    if (this.table && typeof this.table.getFilters === "function") {
+      this.savedFilters = this.table.getFilters().map((f) => ({
+        field: f.field,
+        type: f.type,
+        value: f.value,
+      }));
+    }
     // 2. Восстановить activeFilters из savedFilters при повторном открытии
-    this.activeFilters = this.savedFilters.map(f => ({ ...f }));
+    this.activeFilters = this.savedFilters.map((f) => ({ ...f }));
 
     // 3. Построить HTML модального окна
     const modalHtml = this.buildFilterModalHtml(columns);
@@ -2667,12 +2686,12 @@ class FilterAction extends TableAction {
     // 4. Найти модальное окно — через ModalHelper
     const modal = ModalHelper.findModal();
     if (!modal) {
-      console.error('FilterAction: модальное окно не найдено');
+      console.error("FilterAction: модальное окно не найдено");
       return;
     }
 
     // 5. Заполнить и открыть модальное окно
-    modal.setTitle('Фильтрация данных');
+    modal.setTitle("Фильтрация данных");
     modal.setContent(modalHtml);
     modal.setFooter(`
       <button type="button" class="btn btn-secondary btn-sm" id="filter-cancel-btn">Отмена</button>
@@ -2757,7 +2776,7 @@ class FilterAction extends TableAction {
       return `<div class="filter-empty">Фильтры не применены</div>`;
     }
 
-    let html = '';
+    let html = "";
     for (let i = 0; i < this.activeFilters.length; i++) {
       const f = this.activeFilters[i];
       const fieldTitle = this.getFieldTitle(f.field);
@@ -2780,26 +2799,26 @@ class FilterAction extends TableAction {
 
   setupEventListeners(modal, columns) {
     // Смена поля
-    const fieldSelect = document.getElementById('filter-field-select');
+    const fieldSelect = document.getElementById("filter-field-select");
     if (fieldSelect) {
-      fieldSelect.addEventListener('change', () => {
+      fieldSelect.addEventListener("change", () => {
         this.onFieldChange(fieldSelect.value, columns);
       });
     }
 
     // Кнопка "Применить"
-    const applyBtn = document.getElementById('filter-apply-btn');
+    const applyBtn = document.getElementById("filter-apply-btn");
     if (applyBtn) {
-      applyBtn.addEventListener('click', () => {
+      applyBtn.addEventListener("click", () => {
         this.onApplyFilter(columns);
       });
     }
 
     // Enter в поле ввода значения
-    const valueInput = document.getElementById('filter-value-input');
+    const valueInput = document.getElementById("filter-value-input");
     if (valueInput) {
-      valueInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+      valueInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
           e.preventDefault();
           this.onApplyFilter(columns);
         }
@@ -2807,10 +2826,10 @@ class FilterAction extends TableAction {
     }
 
     // Делегирование событий на кнопки удаления фильтров (динамические)
-    const activeList = document.getElementById('filter-active-list');
+    const activeList = document.getElementById("filter-active-list");
     if (activeList) {
-      activeList.addEventListener('click', (e) => {
-        const removeBtn = e.target.closest('.filter-remove-btn');
+      activeList.addEventListener("click", (e) => {
+        const removeBtn = e.target.closest(".filter-remove-btn");
         if (removeBtn) {
           const index = parseInt(removeBtn.dataset.filterIndex, 10);
           if (!isNaN(index)) {
@@ -2821,34 +2840,34 @@ class FilterAction extends TableAction {
     }
 
     // Кнопка "Сохранить"
-    const saveBtn = document.getElementById('filter-save-btn');
+    const saveBtn = document.getElementById("filter-save-btn");
     if (saveBtn) {
-      saveBtn.addEventListener('click', () => {
+      saveBtn.addEventListener("click", () => {
         this.onSave(modal);
       });
     }
 
     // Кнопка "Отмена"
-    const cancelBtn = document.getElementById('filter-cancel-btn');
+    const cancelBtn = document.getElementById("filter-cancel-btn");
     if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => {
+      cancelBtn.addEventListener("click", () => {
         this.onCancel(modal);
       });
     }
   }
 
   onFieldChange(field, columns) {
-    const infoEl = document.getElementById('filter-config-info');
-    const operatorSelect = document.getElementById('filter-operator-select');
-    const valueInput = document.getElementById('filter-value-input');
+    const infoEl = document.getElementById("filter-config-info");
+    const operatorSelect = document.getElementById("filter-operator-select");
+    const valueInput = document.getElementById("filter-value-input");
 
     if (!field) {
-      if (infoEl) infoEl.innerHTML = '<em>Выберите поле из списка выше</em>';
+      if (infoEl) infoEl.innerHTML = "<em>Выберите поле из списка выше</em>";
       return;
     }
 
     // Найти описание поля
-    const col = columns.find(c => c.field === field);
+    const col = columns.find((c) => c.field === field);
     if (col && infoEl) {
       const title = col.title || col.field;
       infoEl.innerHTML = `<strong>Поле:</strong> ${HtmlUtils.escapeHtml(title)} <span class="filter-config-field-name">(${HtmlUtils.escapeHtml(field)})</span>`;
@@ -2856,31 +2875,33 @@ class FilterAction extends TableAction {
 
     // Сбросить оператор и значение
     if (operatorSelect) operatorSelect.selectedIndex = 0;
-    if (valueInput) valueInput.value = '';
+    if (valueInput) valueInput.value = "";
     if (valueInput) valueInput.focus();
   }
 
   onApplyFilter(columns) {
-    const fieldSelect = document.getElementById('filter-field-select');
-    const operatorSelect = document.getElementById('filter-operator-select');
-    const valueInput = document.getElementById('filter-value-input');
+    const fieldSelect = document.getElementById("filter-field-select");
+    const operatorSelect = document.getElementById("filter-operator-select");
+    const valueInput = document.getElementById("filter-value-input");
 
-    const field = fieldSelect ? fieldSelect.value : '';
-    const type = operatorSelect ? operatorSelect.value : '';
-    const value = valueInput ? valueInput.value.trim() : '';
+    const field = fieldSelect ? fieldSelect.value : "";
+    const type = operatorSelect ? operatorSelect.value : "";
+    const value = valueInput ? valueInput.value.trim() : "";
 
     // Валидация
     if (!field) {
-      alert('Выберите поле для фильтрации');
+      alert("Выберите поле для фильтрации");
       return;
     }
-    if (value === '') {
-      alert('Введите значение для фильтрации');
+    if (value === "") {
+      alert("Введите значение для фильтрации");
       return;
     }
 
     // Проверка на дубликат — если такое же поле и оператор, заменяем
-    const existingIndex = this.activeFilters.findIndex(f => f.field === field && f.type === type);
+    const existingIndex = this.activeFilters.findIndex(
+      (f) => f.field === field && f.type === type,
+    );
     if (existingIndex >= 0) {
       this.activeFilters[existingIndex].value = value;
     } else {
@@ -2892,10 +2913,10 @@ class FilterAction extends TableAction {
 
     // Сбросить поля ввода для следующего фильтра
     if (operatorSelect) operatorSelect.selectedIndex = 0;
-    if (valueInput) valueInput.value = '';
-    if (fieldSelect) fieldSelect.value = '';
-    const infoEl = document.getElementById('filter-config-info');
-    if (infoEl) infoEl.innerHTML = '<em>Выберите поле из списка выше</em>';
+    if (valueInput) valueInput.value = "";
+    if (fieldSelect) fieldSelect.value = "";
+    const infoEl = document.getElementById("filter-config-info");
+    if (infoEl) infoEl.innerHTML = "<em>Выберите поле из списка выше</em>";
     if (fieldSelect) fieldSelect.focus();
   }
 
@@ -2908,49 +2929,52 @@ class FilterAction extends TableAction {
 
   onSave(modal) {
     // Сохраняем фильтры
-    this.savedFilters = this.activeFilters.map(f => ({ ...f }));
+    this.savedFilters = this.activeFilters.map((f) => ({ ...f }));
 
     // Применяем к таблице
     if (this.table) {
       if (this.savedFilters.length === 0) {
         this.table.clearFilter();
-        console.log('FilterAction: фильтры очищены');
+        console.log("FilterAction: фильтры очищены");
       } else {
         this.table.setFilter(this.savedFilters);
-        console.log('FilterAction: применены фильтры', this.savedFilters);
+        console.log("FilterAction: применены фильтры", this.savedFilters);
       }
     }
 
     modal.close();
 
     // Логируем фильтрацию
-    var tableId = this.table && this.table.element ? this.table.element.id : 'unknown';
+    var tableId =
+      this.table && this.table.element ? this.table.element.id : "unknown";
     if (this.savedFilters.length === 0) {
-      ActionLogger.log('filter', 'Очистка фильтров: ' + tableId, {
+      ActionLogger.log("filter", "Очистка фильтров: " + tableId, {
         tableId: tableId,
-        filters: []
+        filters: [],
       });
     } else {
-      var filterDesc = this.savedFilters.map(function(f) {
-        return f.field + ' ' + f.type + ' "' + f.value + '"';
-      }).join(', ');
-      ActionLogger.log('filter', 'Применение фильтра: ' + filterDesc, {
+      var filterDesc = this.savedFilters
+        .map(function (f) {
+          return f.field + " " + f.type + ' "' + f.value + '"';
+        })
+        .join(", ");
+      ActionLogger.log("filter", "Применение фильтра: " + filterDesc, {
         tableId: tableId,
-        filters: this.savedFilters
+        filters: this.savedFilters,
       });
     }
   }
 
   onCancel(modal) {
     // Восстанавливаем activeFilters из savedFilters
-    this.activeFilters = this.savedFilters.map(f => ({ ...f }));
+    this.activeFilters = this.savedFilters.map((f) => ({ ...f }));
     modal.close();
   }
 
   // ==================== ОБНОВЛЕНИЕ СПИСКА ====================
 
   updateActiveFiltersList() {
-    const container = document.getElementById('filter-active-list');
+    const container = document.getElementById("filter-active-list");
     if (!container) return;
     container.innerHTML = this.buildActiveFiltersList();
   }
@@ -2960,21 +2984,21 @@ class FilterAction extends TableAction {
   getFieldTitle(field) {
     if (!this.table) return field;
     const columns = this.getLeafColumns();
-    const col = columns.find(c => c.field === field);
-    return col ? (col.title || col.field) : field;
+    const col = columns.find((c) => c.field === field);
+    return col ? col.title || col.field : field;
   }
 
   getOperatorLabel(type) {
     const labels = {
-      '=': '=',
-      '!=': '!=',
-      '<': '<',
-      '<=': '<=',
-      '>': '>',
-      '>=': '>=',
-      'like': 'содержит',
-      'starts': 'начинается с',
-      'ends': 'заканчивается на'
+      "=": "=",
+      "!=": "!=",
+      "<": "<",
+      "<=": "<=",
+      ">": ">",
+      ">=": ">=",
+      like: "содержит",
+      starts: "начинается с",
+      ends: "заканчивается на",
     };
     return labels[type] || type;
   }
