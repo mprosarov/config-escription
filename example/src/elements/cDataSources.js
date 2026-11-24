@@ -37,7 +37,7 @@ class DataSources {
     this.execute();
   }
   async fetchQuery(query) {
-    let URL = "";
+    let API_URL = PageBuilder.getAPIUrl();
     if (location.href.indexOf("file") >= 0) {
       let test = {
         metadata: [
@@ -70,11 +70,9 @@ class DataSources {
         });
       }
       return test;
-    } else {
-      URL = "http://base-s-sia-01.vniief.local/rest/krb";
     }
     try {
-      const resp = await fetch(`${URL}/doquery`, {
+      const resp = await fetch(`${API_URL}/doquery`, {
         method: "POST",
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },
         body: query,

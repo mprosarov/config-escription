@@ -3,7 +3,10 @@
 //=========================================
 // Если запустиили локальной файл, то обращаемся к mock-серверу
 // Если страница открыта на серврере, то обращаемся к серверному api
-const API_URL = location.href.indexOf("file") >= 0 ? "http://localhost:3000/config" : "http://base-s-sia-01.local/rest/krb";
+const API_URL =
+  location.href.indexOf("file") >= 0
+    ? "http://localhost:3000/config"
+    : "http://base-s-sia-01.local/rest/krb";
 const PageBuilder = (function () {
   //   getParam(name) - который должен возвращать экземпляр компонента pageParam по переданному имени
   // getParamValue(name) - который должен возвращать занчение параметра, по имени параметра
@@ -56,13 +59,15 @@ const PageBuilder = (function () {
   //Получаем объект параметра
   function getParam(name) {
     let find = pageParams.find((param) => param.getName() === name);
-    if (!find) throw new Error("Параметр не удалось получить.Нет такого параметра");
+    if (!find)
+      throw new Error("Параметр не удалось получить.Нет такого параметра");
     return find;
   }
   //Получаем значение параметра
   function getParamValue(name) {
     let find = pageParams.find((param) => param.getName() === name);
-    if (!find) throw new Error("Значение не удалось получить.Нет такого параметра");
+    if (!find)
+      throw new Error("Значение не удалось получить.Нет такого параметра");
     return find.getValue();
   }
   //обновляем значения параметров при переключении чекбоксов и селектов
@@ -103,7 +108,7 @@ const PageBuilder = (function () {
 
   async function getUserInterfaceConfig(scode) {
     const susername = getUserName().toUpperCase();
-    const url = `${URL}/getuserinterfaceconfig?scode=${encodeURIComponent(scode)}&susername=${encodeURIComponent(susername)}`;
+    const url = `${API_URL}/getuserinterfaceconfig?scode=${encodeURIComponent(scode)}&susername=${encodeURIComponent(susername)}`;
     try {
       const resp = await fetch(url, {
         method: "GET",
@@ -166,13 +171,15 @@ const PageBuilder = (function () {
     );
     let loader = document.body.querySelector(".loader-container");
     try {
-      let response = await fetch(`${URL}?name=${configName}`);
+      let response = await fetch(`${API_URL}?name=${configName}`);
       let config = await response.json();
       //   let response = await fetch(`${URL}/getinterfaceconfig?scode=${configName}`);
       //   let result = await response.json();
       //   let config = result.result;
       if (response.status !== 200) {
-        throw new Error(`Ошибка при загрузке файла: ${configName}. ${config.error}`);
+        throw new Error(
+          `Ошибка при загрузке файла: ${configName}. ${config.error}`,
+        );
       }
       // создаем страницу по загруженной конфигурации
       const userConfig = await getUserInterfaceConfig(configName);
@@ -202,7 +209,9 @@ const PageBuilder = (function () {
   }
   function create(parentElement, config) {
     if (!components[config.type]) {
-      throw new Error(`Компонента с таким типом не существует. type=${config.type}`);
+      throw new Error(
+        `Компонента с таким типом не существует. type=${config.type}`,
+      );
     }
     return new components[config.type](parentElement, config);
   }
@@ -227,7 +236,10 @@ const PageBuilder = (function () {
       });
     }
     if (config["navbar"]) PageBuilder.createMainNavBar(config.navbar);
-    document.body.insertAdjacentHTML("beforeend", '<div class="app-page"></div>');
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="app-page"></div>',
+    );
     domPage = document.body.lastElementChild;
     if (config["page"]) {
       config.page.forEach((item) => {
@@ -253,7 +265,9 @@ const PageBuilder = (function () {
   //Очистить страницу
   function clear() {
     // проходим по всем элементам на странице и удаляем их
-    let nodes = [...document.body.children].filter((node) => node.nodeName !== "SCRIPT");
+    let nodes = [...document.body.children].filter(
+      (node) => node.nodeName !== "SCRIPT",
+    );
     nodes.forEach((node) => node.parentElement.removeChild(node));
     mainConfig = null;
     pageParams = [];
@@ -1438,7 +1452,7 @@ class DataSources {
     this.execute();
   }
   async fetchQuery(query) {
-    let URL = "";
+    let API_URL = PageBuilder.getAPIUrl();
     if (location.href.indexOf("file") >= 0) {
       let test = {
         metadata: [
@@ -1471,11 +1485,9 @@ class DataSources {
         });
       }
       return test;
-    } else {
-      URL = "http://base-s-sia-01.vniief.local/rest/krb";
     }
     try {
-      const resp = await fetch(`${URL}/doquery`, {
+      const resp = await fetch(`${API_URL}/doquery`, {
         method: "POST",
         headers: { Accept: "text/plain", "Content-Type": "text/plain" },
         body: query,
